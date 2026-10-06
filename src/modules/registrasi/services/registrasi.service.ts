@@ -1,0 +1,22 @@
+import { Registrasi } from "@/modules/models/registrasi";
+
+export default async function getRegistrasi(): Promise<Registrasi[]> {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}registrasi`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.ok) {
+      const responseBody = await response.json();
+      return responseBody.data as Registrasi[];
+    }
+    return [];
+  } catch (error) {
+    throw new Error("Ada kesalahan!");
+  }
+}
