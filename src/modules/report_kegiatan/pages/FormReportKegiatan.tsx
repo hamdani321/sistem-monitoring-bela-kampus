@@ -12,22 +12,33 @@ import {
   PayloadReportKegiatan,
 } from "../services/report-kegiatan.service";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
+import Swal from "sweetalert2";
 
 export default function FormReportKegiatan() {
   const { registrasiId } = useParams();
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [payload, setPayload] = useState<PayloadReportKegiatan>({
     namaPIC: "",
     nomorHpPIC: "",
-    file: null,
-    linkVideo: "",
+    foto: null,
+    video: "",
     deskripsi: "",
   });
 
-  const handleSubmit = () => {
-    setLoading(true);
+  const handleSubmit = async () => {
+    // setLoading(true);
     try {
-      createReportKegiatan(payload, registrasiId);
+      const result = await createReportKegiatan(payload, registrasiId);
+      if (result.success) {
+        Swal.fire({
+          title: "Sukses!",
+          text: result.message,
+          icon: "success",
+        });
+      } else {
+        setErrors(result.error);
+      }
     } catch (error) {}
   };
   return (
@@ -35,8 +46,11 @@ export default function FormReportKegiatan() {
       <ComponentCard title="Form Report Kegiatan">
         <Form onSubmit={handleSubmit}>
           <div className="mt-3">
-            <Label>Nama PIC</Label>
+            <Label>
+              Nama PIC <span className="text-red-400">*</span>
+            </Label>
             <Input
+              error={errors.errors?.nama_pic != null}
               name="nama_pic"
               value={payload.namaPIC}
               onChange={(event) => {
@@ -49,8 +63,12 @@ export default function FormReportKegiatan() {
           </div>
 
           <div className="mt-3">
-            <Label>Nomor HP PIC</Label>
+            <Label>
+              Nomor HP PIC <span className="text-red-400">*</span>
+            </Label>
             <Input
+              error={errors.errors?.nomor_hp_pic != null}
+              type="number"
               name="nomor_hp_pic"
               onChange={(event) => {
                 setPayload((prev) => ({
@@ -62,8 +80,13 @@ export default function FormReportKegiatan() {
           </div>
 
           <div className="mt-3">
-            <Label>Foto</Label>
+            <Label>
+              Foto <span className="text-red-400">*</span>
+            </Label>
             <FileInput
+              className={`border ${
+                errors.errors?.foto != null ? "border-red-400" : ""
+              }`}
               onChange={(event) => {
                 setPayload((prev) => ({
                   ...prev,
@@ -76,18 +99,21 @@ export default function FormReportKegiatan() {
           <div className="mt-3">
             <Label>Link Video</Label>
             <Input
-              value={payload.linkVideo}
+              error={errors.errors?.video != null}
+              value={payload.video}
               onChange={(event) => {
                 setPayload((prev) => ({
                   ...prev,
-                  linkVideo: event.target.value,
+                  video: event.target.value,
                 }));
               }}
             />
           </div>
 
           <div className="mt-3">
-            <Label>Deskripsi</Label>
+            <Label>
+              Deskripsi <span className="text-red-400">*</span>
+            </Label>
             <TextArea
               placeholder="Keterangan"
               value={payload.deskripsi}

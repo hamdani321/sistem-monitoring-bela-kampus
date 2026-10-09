@@ -2,10 +2,11 @@ import ComponentCard from "@/components/common/ComponentCard";
 import Input from "@/components/form/input/InputField";
 import { Mahasiswa as DataMahasiswa } from "@/modules/models/mahasiswa";
 import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AllCommunityModule, ColDef } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import MahasiswaTable from "../components/MahasiswaTable";
 const modules = [AllCommunityModule];
 
 export default function Mahasiswa() {
@@ -37,84 +38,71 @@ export default function Mahasiswa() {
     loadMahasiswa();
   }, [loadMahasiswa]);
 
-  const colDefs = useMemo<ColDef<DataMahasiswa>[]>(
-    () => [
-      {
-        headerName: "No",
-        width: 70,
-        minWidth: 70,
-        maxWidth: 70,
-        pinned: "left",
-        sortable: false,
-        filter: false,
-        resizable: false,
-        valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-        cellStyle: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
+  const colDefs: ColDef<DataMahasiswa>[] = [
+    {
+      headerName: "No",
+      width: 70,
+      minWidth: 70,
+      maxWidth: 70,
+      pinned: "left",
+      sortable: false,
+      filter: false,
+      resizable: false,
+      valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       },
+    },
 
-      {
-        field: "nama",
-        headerName: "Nama",
-        flex: 1.3,
-        minWidth: 200,
+    {
+      field: "nama",
+      headerName: "Nama",
+      flex: 1.3,
+      minWidth: 200,
+    },
+
+    {
+      field: "nim",
+      headerName: "NIM",
+      flex: 0.8,
+      minWidth: 140,
+    },
+
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 1.3,
+      minWidth: 220,
+    },
+
+    {
+      field: "jenis_kelamin",
+      headerName: "Jenis Kelamin",
+      flex: 0.8,
+      minWidth: 140,
+      valueFormatter: (params) => {
+        switch (params.value) {
+          case "L":
+            return "Laki-laki";
+
+          case "P":
+            return "Perempuan";
+
+          default:
+            return params.value ?? "-";
+        }
       },
+    },
 
-      {
-        field: "nim",
-        headerName: "NIM",
-        flex: 0.8,
-        minWidth: 140,
-      },
-
-      {
-        field: "email",
-        headerName: "Email",
-        flex: 1.3,
-        minWidth: 220,
-      },
-
-      {
-        field: "jenis_kelamin",
-        headerName: "Jenis Kelamin",
-        flex: 0.8,
-        minWidth: 140,
-        valueFormatter: (params) => {
-          switch (params.value) {
-            case "L":
-              return "Laki-laki";
-
-            case "P":
-              return "Perempuan";
-
-            default:
-              return params.value ?? "-";
-          }
-        },
-      },
-
-      {
-        field: "prodi.nama",
-        headerName: "Program Studi",
-        flex: 1.2,
-        minWidth: 200,
-      },
-    ],
-    []
-  );
-
-  const defaultColDef = useMemo<ColDef>(
-    () => ({
-      sortable: true,
-      filter: true,
-      resizable: true,
-      floatingFilter: false,
-    }),
-    []
-  );
+    {
+      field: "prodi.nama",
+      headerName: "Program Studi",
+      flex: 1.2,
+      minWidth: 200,
+    },
+  ];
 
   return (
     <ComponentCard title="Data Mahasiswa">
@@ -143,103 +131,12 @@ export default function Mahasiswa() {
         </div>
 
         {/* AG Grid */}
-        <AgGridProvider modules={modules}>
-          <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-            <div className="h-[650px] w-full">
-              <AgGridReact<DataMahasiswa>
-                rowData={mahasiswa}
-                columnDefs={colDefs}
-                defaultColDef={defaultColDef}
-                loading={loading}
-                pagination
-                paginationAutoPageSize
-                quickFilterText={quickFilter}
-                animateRows
-                suppressCellFocus
-              />
-            </div>
-          </div>
-        </AgGridProvider>
+        <MahasiswaTable
+          mahasiswa={mahasiswa}
+          quickFilter={quickFilter}
+          colDefs={colDefs}
+        />
       </div>
     </ComponentCard>
   );
 }
-
-// import { useEffect, useState } from "react";
-// import ComponentCard from "@/components/common/ComponentCard";
-
-// import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
-// import {
-//   Mahasiswa as DataMahasiswa,
-//   // Mahasiswa,
-// } from "@/modules/models/mahasiswa";
-
-// import { AgGridProvider, AgGridReact } from "ag-grid-react";
-// import { AllCommunityModule, ColDef } from "ag-grid-community";
-// import Input from "@/components/form/input/InputField";
-
-// export default function Mahasiswa() {
-//   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>();
-//   const [quickFilter, setQuickFilter] = useState("");
-//   useEffect(() => {
-//     const getDataMahasiswa = async () => {
-//       const response = await getMahasiswa();
-//       if (response.ok) {
-//         const responseBody = await response.json();
-//         setMahasiswa(responseBody.data);
-//         // setLoading(false);
-//       }
-//     };
-//     getDataMahasiswa();
-//   }, []);
-
-//   const colDefs: ColDef<DataMahasiswa>[] = [
-//     {
-//       headerName: "No",
-//       width: 80,
-//       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-//     },
-//     {
-//       field: "nama",
-//       headerName: "Nama",
-//     },
-//     {
-//       field: "nim",
-//       headerName: "NIM",
-//     },
-//     {
-//       field: "email",
-//       headerName: "Email",
-//     },
-//     { field: "jenis_kelamin", headerName: "Jenis Kelamin" },
-//     {
-//       field: "prodi.nama",
-//       headerName: "Program Studi",
-//     },
-//   ];
-//   const modules = [AllCommunityModule];
-
-//   return (
-//     <ComponentCard title="Data Mahasiswa">
-//       <Input
-//         placeholder="Cari mahasiswa"
-//         value={quickFilter}
-//         onChange={(e) => {
-//           setQuickFilter(e.target.value);
-//         }}
-//         className="mt-2 mb-2"
-//       />
-//       <AgGridProvider modules={modules}>
-//         <div style={{ height: 1000 }}>
-//           <AgGridReact
-//             rowData={mahasiswa}
-//             columnDefs={colDefs}
-//             pagination={true}
-//             paginationAutoPageSize={true}
-//             quickFilterText={quickFilter}
-//           />
-//         </div>
-//       </AgGridProvider>
-//     </ComponentCard>
-//   );
-// }

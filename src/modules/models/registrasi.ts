@@ -1,6 +1,8 @@
 import { Kelompok } from "./kelompok";
 import { Mahasiswa } from "./mahasiswa";
 import { Portal } from "./portal";
+import { RegistrasiAnggota } from "./registrasi_anggota";
+import { ReportKegiatan } from "./report_kegiatan";
 import { Sekolah } from "./sekolah";
 
 export type Registrasi = {
@@ -18,4 +20,6 @@ export type Registrasi = {
   sekolah: Sekolah;
   mahasiswa: Mahasiswa;
   kelompok: Kelompok;
+  report_kegiatan: ReportKegiatan[];
+  registrasi_anggota: RegistrasiAnggota[];
 };

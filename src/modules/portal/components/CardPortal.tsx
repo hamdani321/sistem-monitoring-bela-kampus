@@ -8,8 +8,8 @@ import CardDatePortal from "./CardDatePortal";
 type Status = "aktif" | "akan-datang" | "selesai";
 
 interface CardPortalProps {
-  portal: Portal;
-  // status?: Status;
+  portal: Portal | null;
+  alreadyRegistered: boolean;
   status?: "aktif" | "akan-datang" | "selesai";
 }
 
@@ -43,7 +43,7 @@ export default function CardPortal({
   status = "aktif",
 }: CardPortalProps) {
   const currentStatus = statusConfig[status];
-  const isRegistered = (portal.registrasi?.length ?? 0) > 0;
+  // const isRegistered = (portal.registrasi?.length ?? 0) > 0;
   const isClosed = status === "selesai";
 
   return (
@@ -76,7 +76,7 @@ export default function CardPortal({
                 </p>
 
                 <h2 className="mt-1 text-lg font-semibold text-gray-800 sm:text-xl">
-                  Tahun Ajaran {portal.tahun_ajaran?.tahun ?? "-"}
+                  Tahun Ajaran {portal?.tahun_ajaran?.tahun ?? "-"}
                 </h2>
               </div>
             </div>
@@ -98,12 +98,12 @@ export default function CardPortal({
           <div className="grid gap-3 sm:grid-cols-2">
             <CardDatePortal
               title="Tanggal Mulai"
-              tanggal={FormatDate(portal.waktu_mulai)}
+              tanggal={FormatDate(portal?.waktu_mulai)}
             />
 
             <CardDatePortal
               title="Tanggal Selesai"
-              tanggal={FormatDate(portal.waktu_selesai)}
+              tanggal={FormatDate(portal?.waktu_selesai)}
             />
           </div>
 
@@ -124,15 +124,9 @@ export default function CardPortal({
             <div className="flex flex-wrap gap-2">
               {/* Laporan */}
 
-              {/* <ComponentPermission allowedRoles={["mahasiswa"]}>
-                <Link to={`/report-kegiatan`}>
-                  <Button>Laporan</Button>
-                </Link>
-              </ComponentPermission> */}
-
               {/* Detail */}
               <ComponentPermission allowedRoles={["admin"]}>
-                <Link to={`/portal/${portal.id}`}>
+                <Link to={`/portal/${portal?.id}`}>
                   <Button variant="outline" size="sm">
                     Lihat Detail
                   </Button>
@@ -140,7 +134,7 @@ export default function CardPortal({
               </ComponentPermission>
 
               {/* Registration */}
-              <ComponentPermission allowedRoles={["mahasiswa"]}>
+              {/* <ComponentPermission allowedRoles={["mahasiswa"]}>
                 {isRegistered ? (
                   <Button size="sm" variant="primary" disabled>
                     Sudah Registrasi
@@ -152,7 +146,7 @@ export default function CardPortal({
                     </Button>
                   </Link>
                 )}
-              </ComponentPermission>
+              </ComponentPermission> */}
             </div>
           </div>
         </div>

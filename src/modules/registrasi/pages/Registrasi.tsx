@@ -15,6 +15,7 @@ import {
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 
 import getRegistrasi from "../services/registrasi.service";
+import { Link } from "react-router";
 
 const modules = [AllCommunityModule];
 
@@ -199,15 +200,19 @@ export default class Registrasi extends Component<{}, RegistrasiState> {
       },
       cellRenderer: (params: ICellRendererParams<DataRegistrasi>) => {
         return (
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => {
-              console.log("Detail:", params.data);
-            }}
-          >
-            Detail
-          </Button>
+          <>
+            <Link to={`/registrasi/${params.data?.id}`}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  console.log("Detail:", params.data);
+                }}
+              >
+                Detail
+              </Button>
+            </Link>
+          </>
         );
       },
     },

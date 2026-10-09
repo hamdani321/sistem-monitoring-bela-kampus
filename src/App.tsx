@@ -43,6 +43,7 @@ import CreateTahunAjaran from "./modules/tahun_ajaran/pages/CreateTahunAjaran";
 import Users from "./modules/users/pages/Users";
 import ReportKegiatan from "./modules/report_kegiatan/pages/ReportKegiatan";
 import FormReportKegiatan from "./modules/report_kegiatan/pages/FormReportKegiatan";
+import Report from "./modules/registrasi/pages/Report";
 
 export default function App() {
   return (
@@ -61,6 +62,7 @@ export default function App() {
 
               <Route element={<PermissionRoute allowedRoles={["admin"]} />}>
                 <Route path="/registrasi" element={<Registrasi />} />
+                <Route path="/registrasi/:id" element={<Report />} />
 
                 <Route path="/sekolah" element={<Sekolah />} />
                 <Route path="/mahasiswa" element={<Mahasiswa />} />

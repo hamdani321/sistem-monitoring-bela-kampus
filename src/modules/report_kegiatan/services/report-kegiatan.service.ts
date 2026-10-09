@@ -1,10 +1,11 @@
 import { Registrasi } from "@/modules/models/registrasi";
+import Swal from "sweetalert2";
 
 export interface PayloadReportKegiatan {
   namaPIC: string;
   nomorHpPIC: string;
   foto: File | null;
-  linkVideo: string;
+  video: string;
   deskripsi: string;
 }
 
@@ -26,9 +27,9 @@ export async function createReportKegiatan(
   form.append("registrasi_id", registrasiId);
   form.append("nama_pic", payload.namaPIC);
   form.append("nomor_hp_pic", payload.nomorHpPIC);
-  form.append("link_video", payload.linkVideo);
+  form.append("video", payload.video);
   form.append("deskripsi", payload.deskripsi);
-  form.append("foto", payload.file);
+  form.append("foto", payload.foto);
 
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}report-kegiatan`,
@@ -41,8 +42,9 @@ export async function createReportKegiatan(
     }
   );
 
+  const responseBody = await response.json();
   if (response.ok) {
-    const responseBody = await response.json();
-    console.log(responseBody);
+    return { success: true, message: "Berhasil simpan data!" };
   }
+  return { success: false, message: responseBody.message, error: responseBody };
 }
