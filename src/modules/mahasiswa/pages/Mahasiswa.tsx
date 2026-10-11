@@ -3,11 +3,11 @@ import Input from "@/components/form/input/InputField";
 import { Mahasiswa as DataMahasiswa } from "@/modules/models/mahasiswa";
 import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AllCommunityModule, ColDef } from "ag-grid-community";
-import { AgGridProvider, AgGridReact } from "ag-grid-react";
+import { useCallback, useEffect, useState } from "react";
+import { ColDef } from "ag-grid-community";
+// import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import MahasiswaTable from "../components/MahasiswaTable";
-const modules = [AllCommunityModule];
+// const modules = [AllCommunityModule];
 
 export default function Mahasiswa() {
   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>([]);
@@ -132,6 +132,7 @@ export default function Mahasiswa() {
 
         {/* AG Grid */}
         <MahasiswaTable
+          loading={loading}
           mahasiswa={mahasiswa}
           quickFilter={quickFilter}
           colDefs={colDefs}

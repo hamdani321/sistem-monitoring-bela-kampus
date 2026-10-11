@@ -1,3 +1,4 @@
+import { Kelas } from "./kelas";
 import { Prodi } from "./prodi";
 import { Undangan } from "./undangan";
 
@@ -14,5 +15,6 @@ export type Mahasiswa = {
 
   //relasi
   prodi: Prodi;
+  kelas: Kelas;
   undangan: Undangan[];
 };

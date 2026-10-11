@@ -13,7 +13,7 @@ export default function PermissionRoute({
   });
 
   if (!isRoleAllowed) {
-    return <Navigate to="*" replace state={{ from: location }} />;
+    return <Navigate to="*" />;
   }
 
   return <Outlet />;

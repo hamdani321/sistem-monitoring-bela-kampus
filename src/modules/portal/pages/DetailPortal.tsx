@@ -19,6 +19,7 @@ import { Link, useParams } from "react-router";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { Registrasi } from "@/modules/models/registrasi";
 const modules = [AllCommunityModule];
 
 export default function DetailPortal() {
@@ -60,6 +61,7 @@ export default function DetailPortal() {
         getPortalById(id),
         // getSekolah(),
       ]);
+      console.log(portalResponse);
 
       setPortal(portalResponse.data.portal);
       setSekolah(portalResponse.data.sekolah);
@@ -98,7 +100,7 @@ export default function DetailPortal() {
   // AG GRID COLUMN DEFINITIONS
   // =========================================================
 
-  const colDefs = useMemo<ColDef<(typeof registrasi)[number]>[]>(
+  const colDefs = useMemo<ColDef<Registrasi>[]>(
     () => [
       {
         headerName: "No",
@@ -127,9 +129,7 @@ export default function DetailPortal() {
         flex: 1.7,
         minWidth: 280,
         autoHeight: true,
-        cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
-        ) => {
+        cellRenderer: (params: ICellRendererParams<Registrasi>) => {
           const mahasiswa = params.data?.mahasiswa;
 
           if (!mahasiswa) {
@@ -164,7 +164,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 140,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => (
           <span className="font-medium text-gray-700 dark:text-gray-300">
             {params.data?.nim_mahasiswa ?? "-"}
@@ -181,7 +181,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 150,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const jenisKelamin = params.data?.mahasiswa?.jenis_kelamin;
 
@@ -206,7 +206,7 @@ export default function DetailPortal() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const tipe = params.data?.tipe;
 
@@ -220,13 +220,27 @@ export default function DetailPortal() {
           );
         },
       },
+      {
+        headerName: "Jumlah Anggota",
+        flex: 0.8,
+        minWidth: 130,
+        cellRenderer: (params: ICellRendererParams<Registrasi>) => {
+          const registrasiAnggota = params.data?.registrasi_anggota;
+
+          return (
+            <span className="text-sm text-gray-700 dark:text-gray-300">
+              {registrasiAnggota?.length ?? ""}
+            </span>
+          );
+        },
+      },
 
       {
         headerName: "Sekolah",
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const sekolah = params.data?.sekolah;
 
@@ -243,7 +257,7 @@ export default function DetailPortal() {
       //   headerName: "Sekolah",
       // },
     ],
-    []
+    [],
   );
 
   // =========================================================
@@ -259,7 +273,7 @@ export default function DetailPortal() {
       autoHeaderHeight: true,
       floatingFilter: false,
     }),
-    []
+    [],
   );
 
   // =========================================================
@@ -441,13 +455,13 @@ export default function DetailPortal() {
           {/* Toolbar */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+              {/* <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
                 Daftar Registrasi
               </h3>
 
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Gunakan pencarian untuk menemukan data dengan cepat.
-              </p>
+              </p> */}
             </div>
 
             <div className="w-full sm:w-72">
@@ -520,7 +534,7 @@ export default function DetailPortal() {
 
             {sekolah.map((item) => {
               const sudahDipakai = portal?.registrasi?.some(
-                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id
+                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id,
               );
 
               const latitude = Number(item.latitude);

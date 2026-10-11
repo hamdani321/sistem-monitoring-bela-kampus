@@ -8,10 +8,12 @@ export default function MahasiswaTable({
   mahasiswa,
   colDefs,
   quickFilter,
+  loading,
 }: {
   mahasiswa: DataMahasiswa[];
   colDefs: ColDef<DataMahasiswa>[];
   quickFilter: string;
+  loading: boolean;
 }) {
   //   const colDefs = useMemo<ColDef<DataMahasiswa>[]>(
   //     () => [
@@ -89,7 +91,7 @@ export default function MahasiswaTable({
       resizable: true,
       floatingFilter: false,
     }),
-    []
+    [],
   );
 
   return (
@@ -101,7 +103,7 @@ export default function MahasiswaTable({
               rowData={mahasiswa}
               columnDefs={colDefs}
               defaultColDef={defaultColDef}
-              //   loading={loading}
+              loading={loading}
               pagination
               paginationAutoPageSize
               quickFilterText={quickFilter}

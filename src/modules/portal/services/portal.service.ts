@@ -1,5 +1,9 @@
 import { Portal } from "@/modules/models/portal";
+import { Registrasi } from "@/modules/models/registrasi";
+import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import { RegistrasiPortal } from "@/modules/types/registrasi-portal";
+import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
+import Swal from "sweetalert2";
 
 export async function getPortal() {
   return await fetch(`${import.meta.env.VITE_API_URL}portal`, {
@@ -11,7 +15,7 @@ export async function getPortal() {
   });
 }
 
-export async function getPortalById(id: number) {
+export async function getPortalById(id: string | undefined) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}portal/${id}`, {
     method: "GET",
     headers: {
@@ -21,8 +25,22 @@ export async function getPortalById(id: number) {
   });
 
   const responseBody = await response.json();
-  console.log(responseBody);
+  return responseBody;
+}
 
+export async function getPortalByIdForRegistration(id: string | undefined) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}portal/registrasi/${id}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
+  );
+
+  const responseBody = await response.json();
   return responseBody;
 }
 
@@ -68,44 +86,6 @@ export async function createPortal({
   }
 }
 
-// export async function createPortal({
-//   tahunAjaran,
-//   waktuMulai,
-//   waktuSelesai,
-// }: {
-//   tahunAjaran: string;
-//   waktuMulai: string;
-//   waktuSelesai: string;
-// }) {
-//   try {
-//     const portal: Portal = {
-//       id: 0,
-//       tahun_ajaran_id: parseInt(tahunAjaran),
-//       waktu_mulai: waktuMulai,
-//       waktu_selesai: waktuSelesai,
-//       kelompok: null,
-//       tahun_ajaran: null,
-//     };
-
-//     const response = await fetch(`${import.meta.env.VITE_API_URL}portal`, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//       },
-//       body: JSON.stringify(portal),
-//     });
-//     // if (response.ok) {
-//     const responseBody = await response.json();
-
-//     return { success: true, message: responseBody.message };
-//     // }
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
 export async function registrasiPortal(dataRegistrasi: RegistrasiPortal) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}registrasi`, {
     method: "POST",
@@ -116,4 +96,66 @@ export async function registrasiPortal(dataRegistrasi: RegistrasiPortal) {
     body: JSON.stringify(dataRegistrasi),
   });
   return response;
+}
+
+export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}registrasi-anggota/${registrasiId}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
+  );
+
+  if (response.ok) {
+    const responseBody = await response.json();
+
+    return {
+      registrasi_anggota: responseBody.data
+        .registrasi_anggota as RegistrasiAnggota[],
+      registrasi: responseBody.data.registrasi as Registrasi,
+    };
+  }
+
+  throw new Error("Ada kesalahan!");
+}
+
+export async function createReportKegiatan(
+  payloadReportKegiatan: ReportKegiatanPayload,
+) {
+  const formData: FormData = new FormData();
+  formData.append("nama_pic", payloadReportKegiatan.nama_pic);
+  formData.append("nomor_hp_pic", payloadReportKegiatan.nomor_hp_pic);
+  formData.append("foto", payloadReportKegiatan.foto);
+  formData.append("video", payloadReportKegiatan.link_video);
+  formData.append("deskripsi", payloadReportKegiatan.deskripsi);
+  formData.append("registrasi_id", payloadReportKegiatan.registrasi_id);
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}report-kegiatan`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    },
+  );
+
+  if (response.ok) {
+    Swal.fire({
+      title: "Sukses!",
+      text: "Berhasil simpan data report!",
+      icon: "success",
+    });
+  } else {
+    Swal.fire({
+      title: "Oops!",
+      text: "Gagal simpan data report!",
+      icon: "error",
+    });
+  }
 }

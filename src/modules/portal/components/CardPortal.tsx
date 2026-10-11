@@ -4,12 +4,17 @@ import { FormatDate } from "@/modules/utils/date-formatter";
 import { Portal } from "@/modules/models/portal";
 import { Link } from "react-router";
 import CardDatePortal from "./CardDatePortal";
+import Alert from "@/components/ui/alert/Alert";
+import { Registrasi } from "@/modules/models/registrasi";
+import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 
 type Status = "aktif" | "akan-datang" | "selesai";
 
 interface CardPortalProps {
   portal: Portal | null;
-  alreadyRegistered: boolean;
+  registrasi: Registrasi | null;
+  anggotaRegistrasi: RegistrasiAnggota | null;
+  canRegister: boolean;
   status?: "aktif" | "akan-datang" | "selesai";
 }
 
@@ -41,13 +46,15 @@ const statusConfig: Record<
 export default function CardPortal({
   portal,
   status = "aktif",
+  canRegister,
+  registrasi,
+  anggotaRegistrasi,
 }: CardPortalProps) {
   const currentStatus = statusConfig[status];
-  // const isRegistered = (portal.registrasi?.length ?? 0) > 0;
   const isClosed = status === "selesai";
 
   return (
-    <div className="w-full max-w-4xl">
+    <div className="w-full max-w-4xl animate-fade-in">
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="p-5 sm:p-6">
           {/* Header */}
@@ -76,7 +83,8 @@ export default function CardPortal({
                 </p>
 
                 <h2 className="mt-1 text-lg font-semibold text-gray-800 sm:text-xl">
-                  Tahun Ajaran {portal?.tahun_ajaran?.tahun ?? "-"}
+                  Tahun Ajaran{" "}
+                  {`${portal?.tahun_ajaran?.tahun} (${portal?.tahun_ajaran?.jenis})`}
                 </h2>
               </div>
             </div>
@@ -86,7 +94,6 @@ export default function CardPortal({
               className={`flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium ${currentStatus.className}`}
             >
               <span className={`h-2 w-2 rounded-full ${currentStatus.dot}`} />
-
               {currentStatus.label}
             </div>
           </div>
@@ -105,6 +112,25 @@ export default function CardPortal({
               title="Tanggal Selesai"
               tanggal={FormatDate(portal?.waktu_selesai)}
             />
+          </div>
+
+          <div className="mt-3">
+            {canRegister ? (
+              <></>
+            ) : (
+              <>
+                <div>
+                  <Alert
+                    variant="success"
+                    title="Sukses!"
+                    message="Anda sudah terdaftar di portal bela kampus ini!"
+                    showLink={false}
+                    linkHref="/"
+                    linkText="Learn more"
+                  />
+                </div>
+              </>
+            )}
           </div>
 
           {/* Footer */}
@@ -133,20 +159,29 @@ export default function CardPortal({
                 </Link>
               </ComponentPermission>
 
-              {/* Registration */}
-              {/* <ComponentPermission allowedRoles={["mahasiswa"]}>
-                {isRegistered ? (
-                  <Button size="sm" variant="primary" disabled>
-                    Sudah Registrasi
-                  </Button>
-                ) : (
-                  <Link to={`/portal/registrasi/${portal.id}`}>
-                    <Button size="sm" variant="primary" disabled={isClosed}>
-                      {isClosed ? "Registrasi Ditutup" : "Mulai Registrasi"}
-                    </Button>
-                  </Link>
-                )}
-              </ComponentPermission> */}
+              {canRegister ? (
+                <>
+                  <ComponentPermission allowedRoles={["mahasiswa"]}>
+                    <Link to={`/portal/registrasi/${portal?.id}`}>
+                      <Button size="sm" variant="primary" disabled={isClosed}>
+                        Registrasi
+                      </Button>
+                    </Link>
+                  </ComponentPermission>
+                </>
+              ) : (
+                <>
+                  <ComponentPermission allowedRoles={["mahasiswa"]}>
+                    <Link
+                      to={`/portal/registrasi/${registrasi?.id ?? anggotaRegistrasi?.registrasi_id}/report`}
+                    >
+                      <Button size="sm" variant="primary">
+                        Report
+                      </Button>
+                    </Link>
+                  </ComponentPermission>
+                </>
+              )}
             </div>
           </div>
         </div>

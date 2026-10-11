@@ -51,7 +51,7 @@ function MapBounds({ sekolah }: { sekolah: DataSekolah[] }) {
       .filter((item) => isValidCoordinate(item.latitude, item.longitude))
       .map(
         (item) =>
-          [Number(item.latitude), Number(item.longitude)] as [number, number]
+          [Number(item.latitude), Number(item.longitude)] as [number, number],
       );
 
     if (coordinates.length === 0) {
@@ -67,7 +67,7 @@ function MapBounds({ sekolah }: { sekolah: DataSekolah[] }) {
       (bounds, coordinate) => bounds.extend(coordinate),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       // (require("leaflet") as any).LatLngBounds()
-      new LatLngBounds()
+      new LatLngBounds(),
     );
 
     map.fitBounds(bounds, {
@@ -104,7 +104,7 @@ export default function Sekolah() {
       setError(
         error instanceof Error
           ? error.message
-          : "Terjadi kesalahan saat mengambil data sekolah."
+          : "Terjadi kesalahan saat mengambil data sekolah.",
       );
     } finally {
       setLoading(false);
@@ -291,7 +291,7 @@ export default function Sekolah() {
         },
       },
     ],
-    []
+    [],
   );
 
   const defaultColDef = useMemo<ColDef>(
@@ -300,7 +300,7 @@ export default function Sekolah() {
       filter: true,
       resizable: true,
     }),
-    []
+    [],
   );
 
   return (
@@ -460,121 +460,3 @@ export default function Sekolah() {
     </div>
   );
 }
-
-// import { useEffect, useState } from "react";
-// import ComponentCard from "../../../components/common/ComponentCard";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHeader,
-//   TableRow,
-// } from "../../../components/ui/table";
-// import { Sekolah as DataSekolah } from "../../models/sekolah";
-// import { getSekolah } from "../services/sekolah.service";
-// import Button from "../../../components/ui/button/Button";
-// import { Link } from "react-router";
-
-// import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-// import Spinner from "../../../components/ui/spinner/Spinner";
-// import BasicMessage from "../../../components/ui/messages/BasicMessage";
-// import { AllCommunityModule, ColDef } from "ag-grid-community";
-// import { AgGridProvider, AgGridReact } from "ag-grid-react";
-
-// export default function Sekolah() {
-//   const [sekolah, setSekolah] = useState<DataSekolah[]>();
-//   // const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const getDataSekolah = async () => {
-//       const response = await getSekolah();
-//       if (response.ok) {
-//         const responseBody = await response.json();
-//         setSekolah(responseBody.data);
-//         // setLoading(false);
-//       }
-//     };
-//     getDataSekolah();
-//   }, []);
-//   const colDefs: ColDef<DataSekolah>[] = [
-//     {
-//       headerName: "No",
-//       width: 80,
-//       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-//     },
-//     {
-//       field: "nama",
-//       headerName: "Nama",
-//     },
-//     {
-//       field: "email",
-//       headerName: "Email",
-//     },
-//     {
-//       field: "alamat",
-//       headerName: "Alamat",
-//     },
-//     {
-//       field: "telepon",
-//       headerName: "Telepon",
-//     },
-
-//     {
-//       field: "latitude",
-//       headerName: "Latitude",
-//     },
-//     {
-//       field: "longitude",
-//       headerName: "longitude",
-//     },
-//   ];
-
-//   const modules = [AllCommunityModule];
-
-//   return (
-//     <>
-//       <ComponentCard title="Data Sekolah">
-//         <Link to={"/sekolah/create"}>
-//           <Button variant="primary" size="sm" className="m-3">
-//             Tambah
-//           </Button>
-//         </Link>
-//         <AgGridProvider modules={modules}>
-//           <div style={{ height: 1000 }}>
-//             <AgGridReact
-//               rowData={sekolah}
-//               columnDefs={colDefs}
-//               pagination={true}
-//               paginationAutoPageSize={true}
-//               // quickFilterText={quickFilter}
-//             />
-//           </div>
-//         </AgGridProvider>
-//       </ComponentCard>
-
-//       <ComponentCard title="Peta sekolah">
-//         <MapContainer
-//           center={[0.3296148, 101.0327029]}
-//           zoom={13}
-//           style={{ height: "500px", width: "100%" }}
-//         >
-//           <TileLayer
-//             attribution="&copy; OpenStreetMap contributors"
-//             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//           />
-
-//           {sekolah?.map((item) => {
-//             return (
-//               <Marker
-//                 key={`Marke${item.id}`}
-//                 position={[Number(item.latitude), Number(item.longitude)]}
-//               >
-//                 <Popup>{item.nama}</Popup>
-//               </Marker>
-//             );
-//           })}
-//         </MapContainer>
-//       </ComponentCard>
-//     </>
-//   );
-// }

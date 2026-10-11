@@ -17,7 +17,6 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
-import ComponentPermission from "@/context/ComponentPermission";
 import { useAuth } from "@/context/UseAuth";
 
 type NavItem = {
@@ -54,11 +53,11 @@ const navItems: NavItem[] = [
     path: "/portal",
   },
 
-  {
-    icon: <CalenderIcon />,
-    name: "Kelompok",
-    path: "/kelompok",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Kelompok",
+  //   path: "/kelompok",
+  // },
   {
     icon: <CalenderIcon />,
     name: "Undangan",
@@ -79,11 +78,11 @@ const navItems: NavItem[] = [
     name: "Users",
     path: "/users",
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Laporan Kegiatan",
-    path: "/report-kegiatan",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Laporan Kegiatan",
+  //   path: "/report-kegiatan",
+  // },
   // {
   //   icon: <UserCircleIcon />,
   //   name: "User Profile",
@@ -151,14 +150,14 @@ const AppSidebar: React.FC = () => {
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
     (path: string) => location.pathname === path,
-    [location.pathname]
+    [location.pathname],
   );
 
   useEffect(() => {
@@ -218,20 +217,13 @@ const AppSidebar: React.FC = () => {
         "Mahasiswa",
         "Registrasi",
         "Portal",
-        "Kelompok",
         "Tahun Ajaran",
         "Users",
       ];
     }
 
     if (role == "mahasiswa") {
-      return [
-        "Dashboard",
-        "Portal",
-        "Undangan",
-        "Kelompok",
-        "Laporan Kegiatan",
-      ];
+      return ["Dashboard", "Portal", "Undangan"];
     }
     return [];
   });
@@ -242,131 +234,7 @@ const AppSidebar: React.FC = () => {
         const canRender = menuToRender.includes(nav.name);
 
         if (!canRender) return null;
-        // return (
-        //   <ComponentPermission allowedRoles="">
-        //     <li key={nav.name}>
-        //       {nav.subItems ? (
-        //         <button
-        //           onClick={() => handleSubmenuToggle(index, menuType)}
-        //           className={`menu-item group ${
-        //             openSubmenu?.type === menuType &&
-        //             openSubmenu?.index === index
-        //               ? "menu-item-active"
-        //               : "menu-item-inactive"
-        //           } cursor-pointer ${
-        //             !isExpanded && !isHovered
-        //               ? "lg:justify-center"
-        //               : "lg:justify-start"
-        //           }`}
-        //         >
-        //           <span
-        //             className={`menu-item-icon-size  ${
-        //               openSubmenu?.type === menuType &&
-        //               openSubmenu?.index === index
-        //                 ? "menu-item-icon-active"
-        //                 : "menu-item-icon-inactive"
-        //             }`}
-        //           >
-        //             {nav.icon}
-        //           </span>
-        //           {(isExpanded || isHovered || isMobileOpen) && (
-        //             <span className="menu-item-text">{nav.name}</span>
-        //           )}
-        //           {(isExpanded || isHovered || isMobileOpen) && (
-        //             <ChevronDownIcon
-        //               className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-        //                 openSubmenu?.type === menuType &&
-        //                 openSubmenu?.index === index
-        //                   ? "rotate-180 text-brand-500"
-        //                   : ""
-        //               }`}
-        //             />
-        //           )}
-        //         </button>
-        //       ) : (
-        //         nav.path && (
-        //           <Link
-        //             to={nav.path}
-        //             className={`menu-item group ${
-        //               isActive(nav.path)
-        //                 ? "menu-item-active"
-        //                 : "menu-item-inactive"
-        //             }`}
-        //           >
-        //             <span
-        //               className={`menu-item-icon-size ${
-        //                 isActive(nav.path)
-        //                   ? "menu-item-icon-active"
-        //                   : "menu-item-icon-inactive"
-        //               }`}
-        //             >
-        //               {nav.icon}
-        //             </span>
-        //             {(isExpanded || isHovered || isMobileOpen) && (
-        //               <span className="menu-item-text">{nav.name}</span>
-        //             )}
-        //           </Link>
-        //         )
-        //       )}
-        //       {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
-        //         <div
-        //           ref={(el) => {
-        //             subMenuRefs.current[`${menuType}-${index}`] = el;
-        //           }}
-        //           className="overflow-hidden transition-all duration-300"
-        //           style={{
-        //             height:
-        //               openSubmenu?.type === menuType &&
-        //               openSubmenu?.index === index
-        //                 ? `${subMenuHeight[`${menuType}-${index}`]}px`
-        //                 : "0px",
-        //           }}
-        //         >
-        //           <ul className="mt-2 space-y-1 ml-9">
-        //             {nav.subItems.map((subItem) => (
-        //               <li key={subItem.name}>
-        //                 <Link
-        //                   to={subItem.path}
-        //                   className={`menu-dropdown-item ${
-        //                     isActive(subItem.path)
-        //                       ? "menu-dropdown-item-active"
-        //                       : "menu-dropdown-item-inactive"
-        //                   }`}
-        //                 >
-        //                   {subItem.name}
-        //                   <span className="flex items-center gap-1 ml-auto">
-        //                     {subItem.new && (
-        //                       <span
-        //                         className={`ml-auto ${
-        //                           isActive(subItem.path)
-        //                             ? "menu-dropdown-badge-active"
-        //                             : "menu-dropdown-badge-inactive"
-        //                         } menu-dropdown-badge`}
-        //                       >
-        //                         new
-        //                       </span>
-        //                     )}
-        //                     {subItem.pro && (
-        //                       <span
-        //                         className={`ml-auto ${
-        //                           isActive(subItem.path)
-        //                             ? "menu-dropdown-badge-active"
-        //                             : "menu-dropdown-badge-inactive"
-        //                         } menu-dropdown-badge`}
-        //                       >
-        //                         pro
-        //                       </span>
-        //                     )}
-        //                   </span>
-        //                 </Link>
-        //               </li>
-        //             ))}
-        //           </ul>
-        //         </div>
-        //       )}
-        //     </li>
-        //   </ComponentPermission>
-        // );
+
         return (
           <li key={nav.name}>
             {nav.subItems ? (
@@ -500,8 +368,8 @@ const AppSidebar: React.FC = () => {
           isExpanded || isMobileOpen
             ? "w-[290px]"
             : isHovered
-            ? "w-[290px]"
-            : "w-[90px]"
+              ? "w-[290px]"
+              : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}

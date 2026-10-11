@@ -13,6 +13,8 @@ export default async function getRegistrasi(): Promise<Registrasi[]> {
 
     if (response.ok) {
       const responseBody = await response.json();
+      console.log(responseBody);
+
       return responseBody.data as Registrasi[];
     }
     return [];
@@ -22,7 +24,7 @@ export default async function getRegistrasi(): Promise<Registrasi[]> {
 }
 
 export async function getRegistrasiById(
-  id: string | undefined
+  id: string | undefined,
 ): Promise<Registrasi> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}registrasi/${id}`,
@@ -33,7 +35,7 @@ export async function getRegistrasiById(
         Accept: "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
   const responseBody = await response.json();
   return responseBody.data as Registrasi;

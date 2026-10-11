@@ -26,25 +26,22 @@ import Home from "./pages/Dashboard/Home";
 import Sekolah from "./modules/sekolah/pages/Sekolah";
 import Dashboard from "./modules/dashboard/pages/Dashboard";
 import Mahasiswa from "./modules/mahasiswa/pages/Mahasiswa";
-import Kelompok from "./modules/kelompok/pages/Kelompok";
+// import Kelompok from "./modules/kelompok/pages/Kelompok";
 import Portal from "./modules/portal/pages/Portal";
 import DetailPortal from "./modules/portal/pages/DetailPortal";
 import { CreatePortal } from "./modules/portal/pages/CreatePortal";
 import Login from "./modules/auth/pages/Login";
 import { ProtectionRoutes } from "./context/ProtectionRoutes";
-import KelompokPortal from "./modules/portal/pages/KelompokPortal";
 import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
-import { KelompokAnggota } from "./modules/kelompok/pages/KelompokAnggota";
+// import { KelompokAnggota } from "./modules/kelompok/pages/KelompokAnggota";
 import Undangan from "./modules/undangan/pages/Undangan";
 import Registrasi from "./modules/registrasi/pages/Registrasi";
 import PermissionRoute from "./context/PermissionRoute";
 import TahunAjaran from "./modules/tahun_ajaran/pages/TahunAjaran";
 import CreateTahunAjaran from "./modules/tahun_ajaran/pages/CreateTahunAjaran";
 import Users from "./modules/users/pages/Users";
-import ReportKegiatan from "./modules/report_kegiatan/pages/ReportKegiatan";
-import FormReportKegiatan from "./modules/report_kegiatan/pages/FormReportKegiatan";
 import Report from "./modules/registrasi/pages/Report";
-
+import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
 export default function App() {
   return (
     <>
@@ -58,49 +55,47 @@ export default function App() {
 
               {/* Costum Route */}
 
-              <Route path="/dashboard" element={<Dashboard />} />
-
+              {/* Route yang hanya bisa diakses admin */}
               <Route element={<PermissionRoute allowedRoles={["admin"]} />}>
                 <Route path="/registrasi" element={<Registrasi />} />
                 <Route path="/registrasi/:id" element={<Report />} />
 
                 <Route path="/sekolah" element={<Sekolah />} />
                 <Route path="/mahasiswa" element={<Mahasiswa />} />
+
+                {/* Portal */}
+                <Route path="/portal/:id" element={<DetailPortal />} />
+                <Route path="/portal/create" element={<CreatePortal />} />
+
+                <Route path="/tahun-ajaran" element={<TahunAjaran />} />
+                <Route
+                  path="/tahun-ajaran/create"
+                  element={<CreateTahunAjaran />}
+                />
+
+                <Route path="/users" element={<Users />} />
               </Route>
 
-              <Route path="/kelompok" element={<Kelompok />} />
-              <Route
-                path="/kelompok/member/:id"
-                element={<KelompokAnggota />}
-              />
+              {/* Route yang hanya bisa diakses mahasiswa */}
+              <Route element={<PermissionRoute allowedRoles={["mahasiswa"]} />}>
+                <Route
+                  path="/portal/registrasi/:portalId"
+                  element={<RegistrasiPortal />}
+                />
+
+                <Route
+                  path="/portal/registrasi/:registrasiId/report"
+                  element={<ReportKegiatanPage />}
+                />
+              </Route>
+
+              {/* Route yang bisa diakses oleh kedua role */}
+              <Route path="/dashboard" element={<Dashboard />} />
 
               <Route path="/portal" element={<Portal />} />
-              <Route path="/portal/:id" element={<DetailPortal />} />
-              <Route path="/portal/create" element={<CreatePortal />} />
-              <Route
-                path="/portal/registrasi/:portalId"
-                element={<RegistrasiPortal />}
-              />
-              <Route
-                path="/portal/kelompok/:kelompokId"
-                element={<KelompokPortal />}
-              />
 
               <Route path="/undangan" element={<Undangan />} />
 
-              <Route path="/tahun-ajaran" element={<TahunAjaran />} />
-              <Route
-                path="/tahun-ajaran/create"
-                element={<CreateTahunAjaran />}
-              />
-
-              <Route path="/users" element={<Users />} />
-
-              <Route path="/report-kegiatan" element={<ReportKegiatan />} />
-              <Route
-                path="/report-kegiatan/registrasi/:registrasiId"
-                element={<FormReportKegiatan />}
-              />
               {/* Costum Route */}
 
               {/* Others Page */}

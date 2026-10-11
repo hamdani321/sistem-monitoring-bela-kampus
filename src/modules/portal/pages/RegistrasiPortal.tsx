@@ -5,7 +5,11 @@ import Select from "@/components/form/Select";
 import Button from "@/components/ui/button/Button";
 import { Sekolah } from "@/modules/models/sekolah";
 import React, { useEffect, useState } from "react";
-import { getPortalById, registrasiPortal } from "../services/portal.service";
+import {
+  getPortalById,
+  getPortalByIdForRegistration,
+  registrasiPortal,
+} from "../services/portal.service";
 import { RegistrasiPortal as DataRegistrasiPortal } from "@/modules/types/registrasi-portal";
 import { useNavigate, useParams } from "react-router";
 import Spinner from "@/components/ui/spinner/Spinner";
@@ -13,34 +17,61 @@ import Swal from "sweetalert2";
 import { Portal } from "@/modules/models/portal";
 import { Mahasiswa } from "@/modules/models/mahasiswa";
 import MahasiswaTable from "@/modules/mahasiswa/components/MahasiswaTable";
-
 import { ICellRendererParams } from "ag-grid-community";
 import { FormatDate } from "@/modules/utils/date-formatter";
 import CardInfo from "../components/CardInfo";
+
+interface RegistrasiErrors {
+  message: string;
+  errors: {
+    portal_id: string[] | null;
+    tipe: string[] | null;
+    sekolah_id: string[] | null;
+    anggota_registrasi: string[] | null;
+    "anggota_registrasi.0.nim": string[] | null;
+    "anggota_registrasi.1.nim": string[] | null;
+    "anggota_registrasi.2.nim": string[] | null;
+    "anggota_registrasi.3.nim": string[] | null;
+    "anggota_registrasi.4.nim": string[] | null;
+  };
+}
+
 export default function RegistrasiPortal() {
   const [portal, setPortal] = useState<Portal>();
   const [sekolah, setSekolah] = useState<Sekolah[]>();
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
   const [tipe, setTipe] = useState("");
   const [selectSekolah, setSelectSekolah] = useState("");
-  // const [namaKelompok, setNamaKelompok] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [anggotaRegistrasi, setAnggotaRegistrasi] = useState<Mahasiswa[]>([]);
-
-  const [errors, setErrors] = useState({});
-
+  const [errors, setErrors] = useState<RegistrasiErrors>({
+    message: "",
+    errors: {
+      portal_id: null,
+      anggota_registrasi: null,
+      sekolah_id: null,
+      tipe: null,
+      "anggota_registrasi.0.nim": null,
+      "anggota_registrasi.1.nim": null,
+      "anggota_registrasi.2.nim": null,
+      "anggota_registrasi.3.nim": null,
+      "anggota_registrasi.4.nim": null,
+    },
+  });
   const navigate = useNavigate();
-
-  const params = useParams();
+  const { portalId } = useParams();
 
   useEffect(() => {
     const getPortal = async () => {
-      const response = await getPortalById(params.portalId);
+      const response = await getPortalByIdForRegistration(portalId);
       console.log("Data portal ", response);
       setPortal(response.data.portal);
       setSekolah(response.data.sekolah);
       setMahasiswa(response.data.mahasiswa);
+
+      if (response.data.portal.registrasi.length > 0) {
+        navigate("/portal");
+      }
     };
 
     getPortal();
@@ -61,7 +92,7 @@ export default function RegistrasiPortal() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     setLoading(true);
     const dataRegistrasi: DataRegistrasiPortal = {
-      portal_id: params.portalId,
+      portal_id: portalId,
       sekolah_id: selectSekolah,
       tipe: tipe,
       anggota_registrasi: anggotaRegistrasi,
@@ -78,10 +109,9 @@ export default function RegistrasiPortal() {
       }).then(() => {
         navigate("/portal");
       });
-    } else {
+    } else if (response.status == 422) {
       const responseBody = await response.json();
-
-      setErrors(responseBody.errors);
+      setErrors(responseBody);
     }
 
     setLoading(false);
@@ -217,9 +247,9 @@ export default function RegistrasiPortal() {
               }
               onChange={handleChangeSekolah}
               placeholder="Pilih Sekolah"
-              className={`border ${errors?.sekolah_id ? "border-red-600" : ""}`}
+              className={`border ${errors.errors?.sekolah_id ? "border-red-600" : ""}`}
             />
-            {errors.sekolah_id?.map((message, index) => (
+            {errors.errors.sekolah_id?.map((message, index) => (
               <span className="text-red-600" key={`error-sekolah${index}`}>
                 {message}
               </span>
@@ -237,9 +267,9 @@ export default function RegistrasiPortal() {
               ]}
               onChange={handleChangeTipe}
               placeholder="Pilih Tipe"
-              className={`border ${errors.tipe ? "border-red-600" : ""}`}
+              className={`border ${errors.errors.tipe ? "border-red-600" : ""}`}
             />
-            {errors.tipe?.map((message, index) => (
+            {errors.errors.tipe?.map((message, index) => (
               <span className="text-red-600" key={`error-tipe${index}`}>
                 {message}
               </span>
@@ -250,7 +280,9 @@ export default function RegistrasiPortal() {
             <>
               <div className="mt-3">
                 <div className="mb-3">
-                  <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                  <div
+                    className={`border ${errors.errors.anggota_registrasi != null ? "border-red-400" : ""} overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900`}
+                  >
                     {/* Header */}
                     <div className="border-b border-gray-200 px-5 py-4 dark:border-gray-800">
                       <div className="flex items-center justify-between">
@@ -354,16 +386,9 @@ export default function RegistrasiPortal() {
                                     type="button"
                                     onClick={() => {
                                       const newData = anggotaRegistrasi.filter(
-                                        (item) => item.id != mahasiswa.id
+                                        (item) => item.id != mahasiswa.id,
                                       );
-                                      console.log(newData);
-
                                       setAnggotaRegistrasi(newData);
-                                      // setAnggotaRegistrasi((prev) => {
-                                      //   return prev.filter(
-                                      //     (item) => item.nim == mahasiswa.nim
-                                      //   );
-                                      // });
                                     }}
                                   >
                                     Hapus
@@ -409,10 +434,44 @@ export default function RegistrasiPortal() {
                       </table>
                     </div>
                   </div>
+                  {errors.errors.anggota_registrasi?.map((error) => (
+                    <span className="text-red-400">{error}</span>
+                  ))}
+                  {errors.errors["anggota_registrasi.0.nim"]?.map((error) => (
+                    <>
+                      <span className="text-red-400">{error}</span>
+                      <br />
+                    </>
+                  ))}
+                  {errors.errors["anggota_registrasi.1.nim"]?.map((error) => (
+                    <>
+                      <span className="text-red-400">{error}</span>
+                      <br />
+                    </>
+                  ))}
+                  {errors.errors["anggota_registrasi.2.nim"]?.map((error) => (
+                    <>
+                      <span className="text-red-400">{error}</span>
+                      <br />
+                    </>
+                  ))}
+                  {errors.errors["anggota_registrasi.3.nim"]?.map((error) => (
+                    <>
+                      <span className="text-red-400">{error}</span>
+                      <br />
+                    </>
+                  ))}
+                  {errors.errors["anggota_registrasi.4.nim"]?.map((error) => (
+                    <>
+                      <span className="text-red-400">{error}</span>
+                      <br />
+                    </>
+                  ))}
                 </div>
 
                 <div className="mb-3">
                   <MahasiswaTable
+                    loading={loading}
                     mahasiswa={mahasiswa}
                     quickFilter=""
                     colDefs={[
@@ -475,7 +534,7 @@ export default function RegistrasiPortal() {
                           justifyContent: "center",
                         },
                         cellRenderer: (
-                          params: ICellRendererParams<Mahasiswa>
+                          params: ICellRendererParams<Mahasiswa>,
                         ) => {
                           const mahasiswa = params.data;
                           return (
@@ -507,7 +566,7 @@ export default function RegistrasiPortal() {
                                 setAnggotaRegistrasi((prev) => {
                                   if (
                                     prev.some(
-                                      (item) => item.id === mahasiswa.id
+                                      (item) => item.id === mahasiswa.id,
                                     )
                                   ) {
                                     return prev;
