@@ -1,6 +1,7 @@
 import { Portal } from "@/modules/models/portal";
 import { Registrasi } from "@/modules/models/registrasi";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
+import { ReportKegiatan } from "@/modules/models/report_kegiatan";
 import { RegistrasiPortal } from "@/modules/types/registrasi-portal";
 import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
 import Swal from "sweetalert2";
@@ -37,7 +38,7 @@ export async function getPortalByIdForRegistration(id: string | undefined) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    },
+    }
   );
 
   const responseBody = await response.json();
@@ -107,7 +108,7 @@ export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
         Accept: "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    },
+    }
   );
 
   if (response.ok) {
@@ -117,6 +118,7 @@ export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
       registrasi_anggota: responseBody.data
         .registrasi_anggota as RegistrasiAnggota[],
       registrasi: responseBody.data.registrasi as Registrasi,
+      report_kegiatan: responseBody.data.report_kegiatan as ReportKegiatan[],
     };
   }
 
@@ -124,7 +126,7 @@ export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
 }
 
 export async function createReportKegiatan(
-  payloadReportKegiatan: ReportKegiatanPayload,
+  payloadReportKegiatan: ReportKegiatanPayload
 ) {
   const formData: FormData = new FormData();
   formData.append("nama_pic", payloadReportKegiatan.nama_pic);
@@ -142,7 +144,7 @@ export async function createReportKegiatan(
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: formData,
-    },
+    }
   );
 
   if (response.ok) {

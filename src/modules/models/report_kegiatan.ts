@@ -1,3 +1,5 @@
+import { Mahasiswa } from "./mahasiswa";
+
 export type ReportKegiatan = {
   id: number;
   registrasi_id: number;
@@ -8,4 +10,7 @@ export type ReportKegiatan = {
   deskripsi: string;
   created_at: string;
   updated_at: string;
+
+  //relasi
+  mahasiswa: Mahasiswa;
 };

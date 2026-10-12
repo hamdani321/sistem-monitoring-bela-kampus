@@ -1,7 +1,7 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import { Registrasi } from "@/modules/models/registrasi";
 import { Component, ReactNode, useMemo } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { getRegistrasiById } from "../services/registrasi.service";
 import {
   AllCommunityModule,
@@ -10,6 +10,7 @@ import {
 } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { ReportKegiatan } from "@/modules/models/report_kegiatan";
+import Button from "@/components/ui/button/Button";
 
 const modules = [AllCommunityModule];
 
@@ -61,7 +62,6 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
       headerName: "Nama PIC",
       flex: 1.4,
       minWidth: 220,
-
       cellRenderer: (params: ICellRendererParams<ReportKegiatan>) => {
         return (
           <div className="py-2">
@@ -70,13 +70,114 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
             </div>
 
             <div className="mt-1 text-xs text-gray-400">
-              ID: {params.data?.id ?? "-"}
+              Nomor HP : {params.data?.nomor_hp_pic ?? "-"}
             </div>
           </div>
         );
       },
 
       autoHeight: true,
+    },
+
+    {
+      headerName: "Video",
+      field: "video",
+      minWidth: 160,
+      maxWidth: 190,
+      flex: 1,
+      sortable: false,
+      filter: false,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params: ICellRendererParams<ReportKegiatan>) => {
+        const videoUrl = params.data?.video;
+
+        if (!videoUrl?.trim()) {
+          return (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.47 4.47a.75.75 0 0 1 1.06 0l10 10a.75.75 0 1 1-1.06 1.06l-10-10a.75.75 0 0 1 0-1.06Z"
+                  clipRule="evenodd"
+                />
+                <path d="M10 2a8 8 0 1 0 8 8 8 8 0 0 0-8-8Zm0 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Z" />
+              </svg>
+              Tidak ada video
+            </span>
+          );
+        }
+
+        return (
+          <a
+            href={videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Lihat video kegiatan"
+            className="group inline-flex items-center gap-2 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-600 ring-1 ring-inset ring-rose-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-rose-600 hover:text-white hover:shadow-md hover:shadow-rose-600/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 dark:bg-rose-500/10 dark:text-rose-400 dark:ring-rose-500/20 dark:hover:bg-rose-600 dark:hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5 shrink-0"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="m10 8 6 4-6 4V8Z" fill="currentColor" stroke="none" />
+            </svg>
+
+            <span>Lihat Video</span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7M7 7h10v10" />
+            </svg>
+          </a>
+        );
+      },
+    },
+
+    {
+      headerName: "Aksi",
+      field: "video",
+      minWidth: 160,
+      maxWidth: 190,
+      flex: 1,
+      sortable: false,
+      filter: false,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params: ICellRendererParams<ReportKegiatan>) => {
+        const reportKegiatan = params.data;
+
+        return (
+          <Link to={`/report-kegiatan/${reportKegiatan?.id}`}>
+            <Button size="sm">Detail</Button>
+          </Link>
+        );
+      },
     },
   ];
 

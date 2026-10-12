@@ -7,6 +7,7 @@ export type Portal = {
   tahun_ajaran_id: number;
   waktu_mulai: string;
   waktu_selesai: string;
+  status: "AKTIF" | "NONAKTIF";
   created_at?: string;
   updated_at?: string;
 

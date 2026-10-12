@@ -1,7 +1,7 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import { Component, ReactNode } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   createReportKegiatan,
   getAnggotaRegistrasi,
@@ -9,9 +9,11 @@ import {
 import { AllCommunityModule, ColDef } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { Registrasi } from "@/modules/models/registrasi";
+import { ReportKegiatan as DataReportKegiatan } from "@/modules/models/report_kegiatan";
 import { FormatDate } from "@/modules/utils/date-formatter";
 import ModalLaporanKegiatan from "../components/ModalLaporanKegiatan";
 import MapView from "../components/MapView";
+import Button from "@/components/ui/button/Button";
 const modules = [AllCommunityModule];
 export default function ReportKegiatanPage() {
   const { registrasiId } = useParams();
@@ -27,6 +29,7 @@ interface ReportKegiatanState {
   loadingSubmit: boolean;
   registrasi_anggota: RegistrasiAnggota[];
   registrasi: Registrasi | null;
+  report_kegiatan: DataReportKegiatan[];
   openModalLaporanKegiatan: boolean;
 }
 
@@ -38,6 +41,7 @@ class ReportKegiatan extends Component<
     loading: true,
     loadingSubmit: false,
     registrasi_anggota: [],
+    report_kegiatan: [],
     registrasi: null,
     openModalLaporanKegiatan: false,
   };
@@ -49,6 +53,7 @@ class ReportKegiatan extends Component<
     this.setState({
       registrasi_anggota: data.registrasi_anggota,
       registrasi: data.registrasi,
+      report_kegiatan: data.report_kegiatan,
       loading: false,
     });
   };
@@ -116,6 +121,65 @@ class ReportKegiatan extends Component<
     },
   ];
 
+  colDefsReportKegiatan: ColDef<DataReportKegiatan>[] = [
+    {
+      headerName: "No",
+      width: 70,
+      minWidth: 70,
+      maxWidth: 70,
+      pinned: "left",
+      sortable: false,
+      filter: false,
+      resizable: false,
+      valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+    },
+
+    {
+      field: "nama_pic",
+      headerName: "Nama PIC",
+      flex: 1.3,
+      minWidth: 200,
+    },
+
+    {
+      field: "nomor_hp_pic",
+      headerName: "Nomor PIC",
+      flex: 0.8,
+      minWidth: 140,
+    },
+
+    {
+      field: "mahasiswa.email",
+      headerName: "Email",
+      flex: 1.3,
+      minWidth: 220,
+    },
+
+    {
+      field: "mahasiswa.jenis_kelamin",
+      headerName: "Jenis Kelamin",
+      flex: 0.8,
+      minWidth: 140,
+      valueFormatter: (params) => {
+        switch (params.value) {
+          case "L":
+            return "Laki-laki";
+
+          case "P":
+            return "Perempuan";
+
+          default:
+            return params.value ?? "-";
+        }
+      },
+    },
+  ];
+
   defaultColDef = {
     sortable: true,
     filter: true,
@@ -127,6 +191,7 @@ class ReportKegiatan extends Component<
     const {
       registrasi_anggota,
       registrasi,
+      report_kegiatan,
       loading,
       loadingSubmit,
       openModalLaporanKegiatan,
@@ -153,8 +218,31 @@ class ReportKegiatan extends Component<
             </span>
           </div>
 
+          <Link to={"/portal"}>
+            <Button
+              size="sm"
+              startIcon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              }
+              variant="primary"
+            >
+              Kembali
+            </Button>
+          </Link>
+
           {/* Informasi Portal */}
-          <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <section className="mt-3 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-white px-5 py-5 sm:px-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
@@ -412,6 +500,24 @@ class ReportKegiatan extends Component<
               this.setState({ loadingSubmit: false });
             }}
           />
+
+          <AgGridProvider modules={modules}>
+            <div className="w-full overflow-hidden rounded-lg border border-gray-200">
+              <div className="h-[320px] w-full">
+                <AgGridReact<ReportKegiatan>
+                  rowData={report_kegiatan}
+                  columnDefs={this.colDefsReportKegiatan}
+                  defaultColDef={this.defaultColDef}
+                  loading={loading}
+                  pagination
+                  paginationAutoPageSize
+                  // quickFilterText={quickFilter}
+                  animateRows
+                  suppressCellFocus
+                />
+              </div>
+            </div>
+          </AgGridProvider>
         </ComponentCard>
       </>
     );

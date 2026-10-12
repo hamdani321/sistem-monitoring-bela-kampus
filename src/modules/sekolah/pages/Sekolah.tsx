@@ -16,12 +16,19 @@ import Input from "@/components/form/input/InputField";
 import { Sekolah as DataSekolah } from "@/modules/models/sekolah";
 import { getSekolah } from "../services/sekolah.service";
 
-import { LatLngBounds } from "leaflet";
+import { Icon, LatLngBounds } from "leaflet";
 
 const modules = [AllCommunityModule];
 
 const DEFAULT_CENTER: [number, number] = [0.3296148, 101.0327029];
 const DEFAULT_ZOOM = 13;
+
+const blueIcon = new Icon({
+  iconUrl: "/images/icons/blue-icon.png",
+  iconSize: [40, 40],
+  iconAnchor: [22, 94],
+  popupAnchor: [-3, -76],
+});
 
 /**
  * Mengecek apakah koordinat valid.
@@ -51,7 +58,7 @@ function MapBounds({ sekolah }: { sekolah: DataSekolah[] }) {
       .filter((item) => isValidCoordinate(item.latitude, item.longitude))
       .map(
         (item) =>
-          [Number(item.latitude), Number(item.longitude)] as [number, number],
+          [Number(item.latitude), Number(item.longitude)] as [number, number]
       );
 
     if (coordinates.length === 0) {
@@ -67,7 +74,7 @@ function MapBounds({ sekolah }: { sekolah: DataSekolah[] }) {
       (bounds, coordinate) => bounds.extend(coordinate),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       // (require("leaflet") as any).LatLngBounds()
-      new LatLngBounds(),
+      new LatLngBounds()
     );
 
     map.fitBounds(bounds, {
@@ -104,7 +111,7 @@ export default function Sekolah() {
       setError(
         error instanceof Error
           ? error.message
-          : "Terjadi kesalahan saat mengambil data sekolah.",
+          : "Terjadi kesalahan saat mengambil data sekolah."
       );
     } finally {
       setLoading(false);
@@ -291,7 +298,7 @@ export default function Sekolah() {
         },
       },
     ],
-    [],
+    []
   );
 
   const defaultColDef = useMemo<ColDef>(
@@ -300,7 +307,7 @@ export default function Sekolah() {
       filter: true,
       resizable: true,
     }),
-    [],
+    []
   );
 
   return (
@@ -425,6 +432,7 @@ export default function Sekolah() {
 
                 return (
                   <Marker
+                    icon={blueIcon}
                     key={`school-marker-${item.id}`}
                     position={[latitude, longitude]}
                   >

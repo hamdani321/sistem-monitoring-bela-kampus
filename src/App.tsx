@@ -42,6 +42,7 @@ import CreateTahunAjaran from "./modules/tahun_ajaran/pages/CreateTahunAjaran";
 import Users from "./modules/users/pages/Users";
 import Report from "./modules/registrasi/pages/Report";
 import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
+import DetailReport from "./modules/registrasi/pages/DetailReport";
 export default function App() {
   return (
     <>
@@ -74,6 +75,11 @@ export default function App() {
                 />
 
                 <Route path="/users" element={<Users />} />
+
+                <Route
+                  path="/report-kegiatan/:reportKegiatanId"
+                  element={<DetailReport />}
+                />
               </Route>
 
               {/* Route yang hanya bisa diakses mahasiswa */}
