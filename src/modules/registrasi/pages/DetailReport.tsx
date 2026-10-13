@@ -297,41 +297,6 @@ class DetailReportPage extends Component<
                     event.currentTarget.style.display = "none";
                   }}
                 />
-
-                {/* {fotoUrl ? (
-                  <img
-                    src={fotoUrl}
-                    alt="Dokumentasi kegiatan"
-                    className="max-h-[480px] w-full bg-slate-100 object-contain"
-                    onError={(event) => {
-                      event.currentTarget.style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <div className="flex min-h-64 flex-col items-center justify-center bg-slate-50 px-6 py-12 text-center">
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        className="h-8 w-8"
-                        aria-hidden="true"
-                      >
-                        <rect x="3" y="3" width="18" height="18" rx="3" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <path d="m21 15-5-5L5 21" />
-                      </svg>
-                    </div>
-
-                    <p className="font-semibold text-slate-700">
-                      Foto belum tersedia
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                      Belum ada dokumentasi foto untuk kegiatan ini.
-                    </p>
-                  </div>
-                )} */}
               </section>
 
               {/* Deskripsi */}

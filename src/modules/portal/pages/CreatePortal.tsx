@@ -21,11 +21,6 @@ export function CreatePortal() {
   useEffect(() => {
     const tahunAjaran = async () => {
       const dataTahunAjaran = await getTahunAjaran();
-      // console.log(
-      //   dataTahunAjaran?.flatMap((item) => {
-      //     return { value: item.id, label: item.nama };
-      //   })
-      // );
 
       setDataTahunAjaran(dataTahunAjaran);
     };

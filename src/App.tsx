@@ -29,7 +29,6 @@ import Mahasiswa from "./modules/mahasiswa/pages/Mahasiswa";
 // import Kelompok from "./modules/kelompok/pages/Kelompok";
 import Portal from "./modules/portal/pages/Portal";
 import DetailPortal from "./modules/portal/pages/DetailPortal";
-import { CreatePortal } from "./modules/portal/pages/CreatePortal";
 import Login from "./modules/auth/pages/Login";
 import { ProtectionRoutes } from "./context/ProtectionRoutes";
 import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
@@ -43,6 +42,8 @@ import Users from "./modules/users/pages/Users";
 import Report from "./modules/registrasi/pages/Report";
 import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
 import DetailReport from "./modules/registrasi/pages/DetailReport";
+import DataPortal from "./modules/data_portal/pages/DataPortal";
+import { CreatePortal } from "./modules/data_portal/pages/CreatePortal";
 export default function App() {
   return (
     <>
@@ -66,7 +67,11 @@ export default function App() {
 
                 {/* Portal */}
                 <Route path="/portal/:id" element={<DetailPortal />} />
-                <Route path="/portal/create" element={<CreatePortal />} />
+
+                {/* Data Portal */}
+
+                <Route path="/data-portal" element={<DataPortal />} />
+                <Route path="/data-portal/create" element={<CreatePortal />} />
 
                 <Route path="/tahun-ajaran" element={<TahunAjaran />} />
                 <Route

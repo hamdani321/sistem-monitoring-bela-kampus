@@ -3,6 +3,7 @@ import { NavigateFunction, useNavigate } from "react-router";
 import Switch from "../components/Switch";
 import { Portal } from "@/modules/models/portal";
 import { getDataDashboard } from "../services/dashboard.service";
+import ComponentPermission from "@/context/ComponentPermission";
 
 // type PortalStatus = "Aktif" | "Akan Datang" | "Selesai";
 type PortalStatus = "AKTIF" | "NONAKTIF";
@@ -486,25 +487,27 @@ class DashboardPage extends Component<
                 </p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  window.location.href = "/portal/create";
-                }}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-600/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="h-4 w-4"
-                  aria-hidden="true"
+              <ComponentPermission allowedRoles={["admin"]}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.location.href = "/portal/create";
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-600/20 transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-200"
                 >
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-                Tambah Portal
-              </button>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                  Tambah Portal
+                </button>
+              </ComponentPermission>
             </div>
 
             {/* Search and filter */}
@@ -624,7 +627,24 @@ class DashboardPage extends Component<
                       </td>
 
                       <td className="px-6 py-4 text-center">
-                        <Switch />
+                        <Switch
+                          checked={portal.status == "AKTIF"}
+                          onChange={() => {
+                            this.setState((prevState) => ({
+                              portals: prevState.portals.map((item) =>
+                                item.id === portal.id
+                                  ? {
+                                      ...item,
+                                      status:
+                                        item.status === "AKTIF"
+                                          ? "NONAKTIF"
+                                          : "AKTIF",
+                                    }
+                                  : item
+                              ),
+                            }));
+                          }}
+                        />
                         {/* <button
                           type="button"
                           onClick={() => {
