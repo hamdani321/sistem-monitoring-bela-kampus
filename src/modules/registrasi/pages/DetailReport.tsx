@@ -68,6 +68,7 @@ class DetailReportPage extends Component<
 
     try {
       const result = await getDataReportKegiatan(this.props.reportKegiatanId);
+      console.log("report ", result);
 
       this.setState({
         report_kegiatan: result ?? null,

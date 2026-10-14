@@ -1,64 +1,65 @@
 import Button from "@/components/ui/button/Button";
 import { Portal } from "@/modules/models/portal";
 import { TahunAjaran } from "@/modules/models/tahun_ajaran";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router";
+import getDataPortal from "../services/data-portal.service";
 // import type { Portal, TahunAjaran } from "../types";
 
-const dummyTahunAjaran: TahunAjaran[] = [
-  {
-    id: 1,
-    nama: "Tahun Ajaran 2026/2027",
-    tahun: "2026/2027",
-    jenis: "Ganjil",
-    created_at: "2026-01-01T00:00:00",
-    updated_at: "2026-01-01T00:00:00",
-  },
-  {
-    id: 2,
-    nama: "Tahun Ajaran 2025/2026",
-    tahun: "2025/2026",
-    jenis: "Genap",
-    created_at: "2025-01-01T00:00:00",
-    updated_at: "2025-01-01T00:00:00",
-  },
-  {
-    id: 3,
-    nama: "Tahun Ajaran 2027/2028",
-    tahun: "2027/2028",
-    jenis: "Ganjil",
-    created_at: "2026-01-01T00:00:00",
-    updated_at: "2026-01-01T00:00:00",
-  },
-];
+// const dummyTahunAjaran: TahunAjaran[] = [
+//   {
+//     id: 1,
+//     nama: "Tahun Ajaran 2026/2027",
+//     tahun: "2026/2027",
+//     jenis: "Ganjil",
+//     created_at: "2026-01-01T00:00:00",
+//     updated_at: "2026-01-01T00:00:00",
+//   },
+//   {
+//     id: 2,
+//     nama: "Tahun Ajaran 2025/2026",
+//     tahun: "2025/2026",
+//     jenis: "Genap",
+//     created_at: "2025-01-01T00:00:00",
+//     updated_at: "2025-01-01T00:00:00",
+//   },
+//   {
+//     id: 3,
+//     nama: "Tahun Ajaran 2027/2028",
+//     tahun: "2027/2028",
+//     jenis: "Ganjil",
+//     created_at: "2026-01-01T00:00:00",
+//     updated_at: "2026-01-01T00:00:00",
+//   },
+// ];
 
-const dummyPortals: Portal[] = [
-  {
-    id: 1,
-    tahun_ajaran_id: 1,
-    waktu_mulai: "2026-09-01T00:00:00",
-    waktu_selesai: "2026-12-31T23:59:59",
-    status: "AKTIF",
-    tahun_ajaran: dummyTahunAjaran[0],
-  },
-  {
-    id: 2,
-    tahun_ajaran_id: 2,
-    waktu_mulai: "2026-02-01T00:00:00",
-    waktu_selesai: "2026-06-30T23:59:59",
-    status: "NONAKTIF",
-    tahun_ajaran: dummyTahunAjaran[1],
-  },
-  {
-    id: 3,
-    tahun_ajaran_id: 3,
-    waktu_mulai: "2027-02-01T00:00:00",
-    waktu_selesai: "2027-06-30T23:59:59",
-    status: "NONAKTIF",
-    tahun_ajaran: dummyTahunAjaran[2],
-  },
-];
+// const dummyPortals: Portal[] = [
+//   {
+//     id: 1,
+//     tahun_ajaran_id: 1,
+//     waktu_mulai: "2026-09-01T00:00:00",
+//     waktu_selesai: "2026-12-31T23:59:59",
+//     status: "AKTIF",
+//     tahun_ajaran: dummyTahunAjaran[0],
+//   },
+//   {
+//     id: 2,
+//     tahun_ajaran_id: 2,
+//     waktu_mulai: "2026-02-01T00:00:00",
+//     waktu_selesai: "2026-06-30T23:59:59",
+//     status: "NONAKTIF",
+//     tahun_ajaran: dummyTahunAjaran[1],
+//   },
+//   {
+//     id: 3,
+//     tahun_ajaran_id: 3,
+//     waktu_mulai: "2027-02-01T00:00:00",
+//     waktu_selesai: "2027-06-30T23:59:59",
+//     status: "NONAKTIF",
+//     tahun_ajaran: dummyTahunAjaran[2],
+//   },
+// ];
 
 type StatusTampilan = "AKTIF" | "NONAKTIF" | "AKAN_DATANG" | "SELESAI";
 
@@ -96,21 +97,24 @@ const formatDate = (value: string) =>
     year: "numeric",
   });
 
-const inputClass =
-  "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50";
+// const inputClass =
+//   "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50";
 
 export default function DataPortal() {
-  const [portals, setPortals] = useState<Portal[]>(dummyPortals);
-  const [showModal, setShowModal] = useState(false);
+  // const [portals, setPortals] = useState<Portal[]>(dummyPortals);
+  const [portals, setPortals] = useState<Portal[]>([]);
+  // const [showModal, setShowModal] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+  const fetchDataPortal = useCallback(async () => {
+    const dataPortal = await getDataPortal();
+    setPortals(dataPortal.data);
+    setIsLoading(false);
+  }, []);
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    fetchDataPortal();
   }, []);
 
   const [form, setForm] = useState({
@@ -141,53 +145,6 @@ export default function DataPortal() {
           : portal
       )
     );
-  };
-
-  // Tambah portal baru berdasarkan type Portal.
-  const handleAddPortal = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!form.tahun_ajaran_id || !form.waktu_mulai || !form.waktu_selesai) {
-      return;
-    }
-
-    if (form.waktu_selesai < form.waktu_mulai) {
-      alert("Waktu selesai harus setelah waktu mulai.");
-      return;
-    }
-
-    const tahunAjaranId = Number(form.tahun_ajaran_id);
-
-    const tahunAjaran =
-      dummyTahunAjaran.find((item) => item.id === tahunAjaranId) ?? null;
-
-    if (!tahunAjaran) {
-      alert("Tahun ajaran tidak ditemukan.");
-      return;
-    }
-
-    const now = new Date().toISOString();
-
-    const newPortal: Portal = {
-      id: Date.now(),
-      tahun_ajaran_id: tahunAjaran.id,
-      waktu_mulai: form.waktu_mulai,
-      waktu_selesai: form.waktu_selesai,
-      status: "NONAKTIF",
-      tahun_ajaran: tahunAjaran,
-      created_at: now,
-      updated_at: now,
-    };
-
-    setPortals((previous) => [...previous, newPortal]);
-
-    setForm({
-      tahun_ajaran_id: "",
-      waktu_mulai: "",
-      waktu_selesai: "",
-    });
-
-    setShowModal(false);
   };
 
   if (isLoading) {
@@ -524,13 +481,20 @@ export default function DataPortal() {
                       </button>
                     </div>
 
-                    <button
+                    <Link
+                      className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700"
+                      to={`/data-portal/${portal.id}`}
+                    >
+                      Lihat Detail <span>→</span>
+                    </Link>
+
+                    {/* <button
                       type="button"
                       onClick={() => console.log("Detail portal:", portal.id)}
                       className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700"
                     >
                       Lihat Detail <span>→</span>
-                    </button>
+                    </button> */}
                   </article>
                 );
               })}
@@ -549,7 +513,7 @@ export default function DataPortal() {
       </div>
 
       {/* Modal Tambah Portal */}
-      {showModal && (
+      {/* {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-sm"
           onClick={() => setShowModal(false)}
@@ -686,7 +650,7 @@ export default function DataPortal() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
     </main>
   );
 }

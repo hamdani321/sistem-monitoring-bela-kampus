@@ -29,10 +29,6 @@ export default function Portal() {
         setPortal(responseBody.data.portal);
         setRegistrasi(responseBody.data.registrasi);
         setAnggotaRegistrasi(responseBody.data.registrasi_anggota);
-        // console.log(
-        //   responseBody.data.registrasi == null ||
-        //     responseBody.data.registrasi_anggota == null,
-        // );
 
         setLoading(false);
       }
@@ -43,13 +39,13 @@ export default function Portal() {
   return (
     <>
       <ComponentCard title="Data Portal">
-        <ComponentPermission allowedRoles={["admin"]}>
+        {/* <ComponentPermission allowedRoles={["admin"]}>
           <Link to={"/portal/create"}>
             <Button variant="primary" size="sm" className="m-3">
               Tambah Portal
             </Button>
           </Link>
-        </ComponentPermission>
+        </ComponentPermission> */}
 
         {loading ? (
           <>

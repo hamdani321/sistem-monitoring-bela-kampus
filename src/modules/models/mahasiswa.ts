@@ -1,5 +1,7 @@
 import { Kelas } from "./kelas";
 import { Prodi } from "./prodi";
+import { Registrasi } from "./registrasi";
+import { RegistrasiAnggota } from "./registrasi_anggota";
 import { Undangan } from "./undangan";
 
 export type Mahasiswa = {
@@ -17,4 +19,6 @@ export type Mahasiswa = {
   prodi: Prodi;
   kelas: Kelas;
   undangan: Undangan[];
+  registrasi: Registrasi[];
+  registrasi_anggota: RegistrasiAnggota[];
 };

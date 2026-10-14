@@ -22,18 +22,13 @@ import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Home from "./pages/Dashboard/Home";
 import Sekolah from "./modules/sekolah/pages/Sekolah";
 import Dashboard from "./modules/dashboard/pages/Dashboard";
 import Mahasiswa from "./modules/mahasiswa/pages/Mahasiswa";
-// import Kelompok from "./modules/kelompok/pages/Kelompok";
 import Portal from "./modules/portal/pages/Portal";
-import DetailPortal from "./modules/portal/pages/DetailPortal";
 import Login from "./modules/auth/pages/Login";
 import { ProtectionRoutes } from "./context/ProtectionRoutes";
 import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
-// import { KelompokAnggota } from "./modules/kelompok/pages/KelompokAnggota";
-import Undangan from "./modules/undangan/pages/Undangan";
 import Registrasi from "./modules/registrasi/pages/Registrasi";
 import PermissionRoute from "./context/PermissionRoute";
 import TahunAjaran from "./modules/tahun_ajaran/pages/TahunAjaran";
@@ -44,6 +39,8 @@ import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
 import DetailReport from "./modules/registrasi/pages/DetailReport";
 import DataPortal from "./modules/data_portal/pages/DataPortal";
 import { CreatePortal } from "./modules/data_portal/pages/CreatePortal";
+import DetailPortal from "./modules/data_portal/pages/DetailPortal";
+import CreateSekolah from "./modules/sekolah/pages/CreateSekolah";
 export default function App() {
   return (
     <>
@@ -63,15 +60,18 @@ export default function App() {
                 <Route path="/registrasi/:id" element={<Report />} />
 
                 <Route path="/sekolah" element={<Sekolah />} />
+                <Route path="/sekolah/create" element={<CreateSekolah />} />
+
                 <Route path="/mahasiswa" element={<Mahasiswa />} />
 
                 {/* Portal */}
-                <Route path="/portal/:id" element={<DetailPortal />} />
+                {/* <Route path="/portal/:id" element={<DetailPortal />} /> */}
 
                 {/* Data Portal */}
 
                 <Route path="/data-portal" element={<DataPortal />} />
                 <Route path="/data-portal/create" element={<CreatePortal />} />
+                <Route path="/data-portal/:id" element={<DetailPortal />} />
 
                 <Route path="/tahun-ajaran" element={<TahunAjaran />} />
                 <Route
@@ -89,6 +89,7 @@ export default function App() {
 
               {/* Route yang hanya bisa diakses mahasiswa */}
               <Route element={<PermissionRoute allowedRoles={["mahasiswa"]} />}>
+                <Route path="/portal" element={<Portal />} />
                 <Route
                   path="/portal/registrasi/:portalId"
                   element={<RegistrasiPortal />}
@@ -102,10 +103,8 @@ export default function App() {
 
               {/* Route yang bisa diakses oleh kedua role */}
               <Route path="/dashboard" element={<Dashboard />} />
-
-              <Route path="/portal" element={<Portal />} />
-
-              <Route path="/undangan" element={<Undangan />} />
+              {/* <Route path="/portal" element={<Portal />} /> */}
+              {/* <Route path="/undangan" element={<Undangan />} /> */}
 
               {/* Costum Route */}
 

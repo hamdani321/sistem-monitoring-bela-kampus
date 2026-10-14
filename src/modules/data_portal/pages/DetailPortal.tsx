@@ -20,6 +20,8 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Registrasi } from "@/modules/models/registrasi";
+import { Mahasiswa } from "@/modules/models/mahasiswa";
+import MahasiswaTable from "../components/MahasiswaTable";
 const modules = [AllCommunityModule];
 
 export default function DetailPortal() {
@@ -38,6 +40,7 @@ export default function DetailPortal() {
   });
   const [portal, setPortal] = useState<DataPortal>();
   const [sekolah, setSekolah] = useState<Sekolah[]>([]);
+  const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quickFilter, setQuickFilter] = useState("");
@@ -65,6 +68,7 @@ export default function DetailPortal() {
 
       setPortal(portalResponse.data.portal);
       setSekolah(portalResponse.data.sekolah);
+      setMahasiswa(portalResponse.data.mahasiswa);
       // setSekolah(sekolahResponse.data ?? []);
     } catch (error) {
       console.error("Gagal mengambil detail portal:", error);
@@ -164,7 +168,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 140,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => (
           <span className="font-medium text-gray-700 dark:text-gray-300">
             {params.data?.nim_mahasiswa ?? "-"}
@@ -181,7 +185,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 150,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const jenisKelamin = params.data?.mahasiswa?.jenis_kelamin;
 
@@ -206,7 +210,7 @@ export default function DetailPortal() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const tipe = params.data?.tipe;
 
@@ -240,7 +244,7 @@ export default function DetailPortal() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const sekolah = params.data?.sekolah;
 
@@ -257,7 +261,7 @@ export default function DetailPortal() {
       //   headerName: "Sekolah",
       // },
     ],
-    [],
+    []
   );
 
   // =========================================================
@@ -273,7 +277,7 @@ export default function DetailPortal() {
       autoHeaderHeight: true,
       floatingFilter: false,
     }),
-    [],
+    []
   );
 
   // =========================================================
@@ -492,6 +496,7 @@ export default function DetailPortal() {
                   <AgGridReact<(typeof registrasi)[number]>
                     rowData={registrasi}
                     columnDefs={colDefs}
+                    // loading={loading}
                     defaultColDef={defaultColDef}
                     quickFilterText={quickFilter}
                     pagination
@@ -509,6 +514,12 @@ export default function DetailPortal() {
           )}
         </div>
       </ComponentCard>
+
+      {/* =====================================================
+          Mahasiswa MAP
+      ===================================================== */}
+
+      <MahasiswaTable data={mahasiswa} />
 
       {/* =====================================================
           SCHOOL MAP
@@ -534,7 +545,7 @@ export default function DetailPortal() {
 
             {sekolah.map((item) => {
               const sudahDipakai = portal?.registrasi?.some(
-                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id,
+                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id
               );
 
               const latitude = Number(item.latitude);

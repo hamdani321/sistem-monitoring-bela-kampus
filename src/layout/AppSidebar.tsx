@@ -216,7 +216,7 @@ const AppSidebar: React.FC = () => {
         "Sekolah",
         "Mahasiswa",
         "Registrasi",
-        "Portal",
+        // "Portal",
         "Data Portal",
         "Tahun Ajaran",
         "Users",

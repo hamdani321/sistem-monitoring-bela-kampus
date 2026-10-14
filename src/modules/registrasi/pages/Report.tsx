@@ -5,6 +5,8 @@ import { Component, ReactNode } from "react";
 import { Link, useParams } from "react-router";
 import { getRegistrasiById } from "../services/registrasi.service";
 
+import { GraduationCap } from "lucide-react";
+
 import {
   AllCommunityModule,
   ColDef,
@@ -12,6 +14,8 @@ import {
 } from "ag-grid-community";
 
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
+import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
+import TabelAnggotaRegistrasi from "../components/TabelAnggotaRegistrasi";
 
 const modules = [AllCommunityModule];
 
@@ -27,6 +31,7 @@ interface ReportPageProps {
 
 interface ReportPageState {
   registrasi: Registrasi | null;
+  registasiAnggota: RegistrasiAnggota | null;
   loading: boolean;
   refreshing: boolean;
   quickFilter: string;
@@ -36,6 +41,7 @@ interface ReportPageState {
 class ReportPage extends Component<ReportPageProps, ReportPageState> {
   state: ReportPageState = {
     registrasi: null,
+    registasiAnggota: null,
     loading: true,
     refreshing: false,
     quickFilter: "",
@@ -57,6 +63,7 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
 
     try {
       const result = await getRegistrasiById(this.props.id);
+      console.log("Result : ", result);
 
       if (!result) {
         this.setState({
@@ -713,6 +720,13 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
             </div>
           </div>
         </div>
+
+        {/* Tabel Anggota Kegiatan */}
+        <ComponentCard title="Data Anggota Kegiatan">
+          <TabelAnggotaRegistrasi
+            mahasiswaData={registrasi?.registrasi_anggota}
+          />
+        </ComponentCard>
 
         {/* Tabel Report */}
         <ComponentCard title="Daftar Report Kegiatan">

@@ -1,7 +1,9 @@
+import { Mahasiswa } from "@/modules/models/mahasiswa";
 import { Portal } from "@/modules/models/portal";
 import { Registrasi } from "@/modules/models/registrasi";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import { ReportKegiatan } from "@/modules/models/report_kegiatan";
+import { Sekolah } from "@/modules/models/sekolah";
 import { RegistrasiPortal } from "@/modules/types/registrasi-portal";
 import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
 import Swal from "sweetalert2";
@@ -16,6 +18,15 @@ export async function getPortal() {
   });
 }
 
+interface DetailPortalAPIResponse {
+  success: boolean;
+  message: string;
+  data: {
+    mahasiswa: Mahasiswa[];
+    portal: Portal;
+    sekolah: Sekolah[];
+  };
+}
 export async function getPortalById(id: string | undefined) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}portal/${id}`, {
     method: "GET",
@@ -26,7 +37,7 @@ export async function getPortalById(id: string | undefined) {
   });
 
   const responseBody = await response.json();
-  return responseBody;
+  return responseBody as DetailPortalAPIResponse;
 }
 
 export async function getPortalByIdForRegistration(id: string | undefined) {
