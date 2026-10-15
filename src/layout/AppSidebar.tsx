@@ -65,6 +65,16 @@ const navItems: NavItem[] = [
   },
   {
     icon: <CalenderIcon />,
+    name: "Kelas",
+    path: "/kelas",
+  },
+  {
+    icon: <CalenderIcon />,
+    name: "Prodi",
+    path: "/prodi",
+  },
+  {
+    icon: <CalenderIcon />,
     name: "Registrasi",
     path: "/registrasi",
   },
@@ -216,7 +226,8 @@ const AppSidebar: React.FC = () => {
         "Sekolah",
         "Mahasiswa",
         "Registrasi",
-        // "Portal",
+        "Kelas",
+        "Prodi",
         "Data Portal",
         "Tahun Ajaran",
         "Users",

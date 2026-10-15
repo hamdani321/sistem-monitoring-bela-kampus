@@ -4,7 +4,7 @@ import {
   Route,
   BrowserRouter,
 } from "react-router";
-import SignIn from "./pages/AuthPages/SignIn";
+// import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
 import UserProfiles from "./pages/UserProfiles";
@@ -41,6 +41,9 @@ import DataPortal from "./modules/data_portal/pages/DataPortal";
 import { CreatePortal } from "./modules/data_portal/pages/CreatePortal";
 import DetailPortal from "./modules/data_portal/pages/DetailPortal";
 import CreateSekolah from "./modules/sekolah/pages/CreateSekolah";
+import CreateMahasiswa from "./modules/mahasiswa/pages/CreateMahasiswa";
+import Kelas from "./modules/kelas/pages/Kelas";
+import Prodi from "./modules/prodi/pages/Prodi";
 export default function App() {
   return (
     <>
@@ -63,6 +66,11 @@ export default function App() {
                 <Route path="/sekolah/create" element={<CreateSekolah />} />
 
                 <Route path="/mahasiswa" element={<Mahasiswa />} />
+                <Route path="/mahasiswa/create" element={<CreateMahasiswa />} />
+
+                <Route path="/kelas" element={<Kelas />} />
+
+                <Route path="/prodi" element={<Prodi />} />
 
                 {/* Portal */}
                 {/* <Route path="/portal/:id" element={<DetailPortal />} /> */}

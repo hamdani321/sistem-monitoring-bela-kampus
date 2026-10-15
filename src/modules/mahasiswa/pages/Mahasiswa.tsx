@@ -6,6 +6,8 @@ import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ColDef } from "ag-grid-community";
 import MahasiswaTable from "../components/MahasiswaTable";
+import { Link } from "react-router";
+import Button from "@/components/ui/button/Button";
 
 export default function Mahasiswa() {
   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>([]);
@@ -236,7 +238,68 @@ export default function Mahasiswa() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 p-6 text-white shadow-lg shadow-blue-600/10 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 p-6 text-white shadow-lg shadow-blue-900/10 sm:p-8">
+        <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-white/10" />
+        <div className="absolute -bottom-20 right-28 h-40 w-40 rounded-full bg-white/10" />
+
+        <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/20">
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 5.5A2.5 2.5 0 016.5 3H20v18H6.5A2.5 2.5 0 014 18.5v-13zM4 18.5A2.5 2.5 0 016.5 16H20M8 7h7M8 11h5"
+                />
+              </svg>
+            </div>
+
+            <div>
+              <p className="text-sm font-medium uppercase tracking-wider text-blue-100">
+                Manajemen Akademik
+              </p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+                Mahasiswa
+              </h1>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-blue-100 sm:text-base">
+                Kelola data mahasiswa
+              </p>
+            </div>
+          </div>
+
+          <Link to="/mahasiswa/create" className="relative shrink-0">
+            <Button
+              variant="primary"
+              className="w-full border border-white/20 bg-blue-500 text-blue-700 shadow-sm hover:bg-blue-50 sm:w-auto"
+            >
+              <span className="inline-flex items-center gap-2">
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 5v14M5 12h14"
+                  />
+                </svg>
+                Tambah Mahasiswa
+              </span>
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {/* <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 p-6 text-white shadow-lg shadow-blue-600/10 sm:p-8">
         <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-48 w-48 rounded-full bg-indigo-300/20 blur-2xl" />
 
@@ -276,7 +339,7 @@ export default function Mahasiswa() {
             </svg>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Error */}
       {error && (
@@ -560,149 +623,3 @@ export default function Mahasiswa() {
     </div>
   );
 }
-
-// Lama
-
-// import ComponentCard from "@/components/common/ComponentCard";
-// import Input from "@/components/form/input/InputField";
-// import { Mahasiswa as DataMahasiswa } from "@/modules/models/mahasiswa";
-// import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
-
-// import { useCallback, useEffect, useState } from "react";
-// import { ColDef } from "ag-grid-community";
-// // import { AgGridProvider, AgGridReact } from "ag-grid-react";
-// import MahasiswaTable from "../components/MahasiswaTable";
-// // const modules = [AllCommunityModule];
-
-// export default function Mahasiswa() {
-//   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>([]);
-//   const [quickFilter, setQuickFilter] = useState("");
-//   const [loading, setLoading] = useState(true);
-
-//   const loadMahasiswa = useCallback(async () => {
-//     try {
-//       setLoading(true);
-
-//       const response = await getMahasiswa();
-
-//       if (!response.ok) {
-//         throw new Error("Gagal mengambil data mahasiswa");
-//       }
-
-//       const responseBody = await response.json();
-
-//       setMahasiswa(responseBody.data ?? []);
-//     } catch (error) {
-//       console.error("Gagal mengambil data mahasiswa:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     loadMahasiswa();
-//   }, [loadMahasiswa]);
-
-//   const colDefs: ColDef<DataMahasiswa>[] = [
-//     {
-//       headerName: "No",
-//       width: 70,
-//       minWidth: 70,
-//       maxWidth: 70,
-//       pinned: "left",
-//       sortable: false,
-//       filter: false,
-//       resizable: false,
-//       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-//       cellStyle: {
-//         display: "flex",
-//         alignItems: "center",
-//         justifyContent: "center",
-//       },
-//     },
-
-//     {
-//       field: "nama",
-//       headerName: "Nama",
-//       flex: 1.3,
-//       minWidth: 200,
-//     },
-
-//     {
-//       field: "nim",
-//       headerName: "NIM",
-//       flex: 0.8,
-//       minWidth: 140,
-//     },
-
-//     {
-//       field: "email",
-//       headerName: "Email",
-//       flex: 1.3,
-//       minWidth: 220,
-//     },
-
-//     {
-//       field: "jenis_kelamin",
-//       headerName: "Jenis Kelamin",
-//       flex: 0.8,
-//       minWidth: 140,
-//       valueFormatter: (params) => {
-//         switch (params.value) {
-//           case "L":
-//             return "Laki-laki";
-
-//           case "P":
-//             return "Perempuan";
-
-//           default:
-//             return params.value ?? "-";
-//         }
-//       },
-//     },
-
-//     {
-//       field: "prodi.nama",
-//       headerName: "Program Studi",
-//       flex: 1.2,
-//       minWidth: 200,
-//     },
-//   ];
-
-//   return (
-//     <ComponentCard title="Data Mahasiswa">
-//       <div className="space-y-4">
-//         {/* Toolbar */}
-//         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-//           <div>
-//             <h3 className="text-sm font-medium text-gray-800">
-//               Daftar Mahasiswa
-//             </h3>
-
-//             <p className="text-sm text-gray-500">
-//               Kelola dan lihat data mahasiswa.
-//             </p>
-//           </div>
-
-//           <div className="w-full sm:w-72">
-//             <Input
-//               placeholder="Cari mahasiswa..."
-//               value={quickFilter}
-//               onChange={(e) => {
-//                 setQuickFilter(e.target.value);
-//               }}
-//             />
-//           </div>
-//         </div>
-
-//         {/* AG Grid */}
-//         <MahasiswaTable
-//           loading={loading}
-//           mahasiswa={mahasiswa}
-//           quickFilter={quickFilter}
-//           colDefs={colDefs}
-//         />
-//       </div>
-//     </ComponentCard>
-//   );
-// }

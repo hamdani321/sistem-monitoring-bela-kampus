@@ -194,9 +194,7 @@ class DetailReportPage extends Component<
     const report = report_kegiatan;
 
     // const fotoUrl = this.getValidUrl(report.foto);
-    const fotoUrl = `http://localhost:8000/storage/${report.foto}`;
-    console.log(fotoUrl);
-
+    const fotoUrl = `${import.meta.env.VITE_ASSETS_URL}${report.foto}`;
     const videoUrl = this.getValidUrl(report.video);
     const nomorHp = report.nomor_hp_pic?.trim();
     const whatsappUrl = this.getWhatsAppUrl(nomorHp);

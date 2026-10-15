@@ -1,23 +1,20 @@
-import { useMemo, useState } from "react";
 import {
   Search,
   Users,
   UserRound,
   GraduationCap,
-  ChevronLeft,
-  ChevronRight,
   MoreHorizontal,
   Mail,
 } from "lucide-react";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 
-type Mahasiswa = {
-  id: number;
-  nama: string;
-  nim: string;
-  email: string;
-  jenis_kelamin: "Laki-laki" | "Perempuan";
-};
+// type Mahasiswa = {
+//   id: number;
+//   nama: string;
+//   nim: string;
+//   email: string;
+//   jenis_kelamin: "Laki-laki" | "Perempuan";
+// };
 
 export default function TabelAnggotaRegistrasi({
   mahasiswaData,
