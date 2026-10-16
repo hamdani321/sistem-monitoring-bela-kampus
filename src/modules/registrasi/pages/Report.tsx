@@ -5,8 +5,6 @@ import { Component, ReactNode } from "react";
 import { Link, useParams } from "react-router";
 import { getRegistrasiById } from "../services/registrasi.service";
 
-import { GraduationCap } from "lucide-react";
-
 import {
   AllCommunityModule,
   ColDef,
@@ -16,6 +14,8 @@ import {
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import TabelAnggotaRegistrasi from "../components/TabelAnggotaRegistrasi";
+import Badge from "@/components/ui/badge/Badge";
+import { UserIcon } from "lucide-react";
 
 const modules = [AllCommunityModule];
 
@@ -293,7 +293,7 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
 
         return (
           <Link
-            to={`/report-kegiatan/${report.id}`}
+            to={`/registrasi/report-kegiatan/${report.id}`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           >
             <svg
@@ -596,8 +596,17 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
                       {registrasi.tipe || "Tidak diketahui"}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Status: {registrasi.status || "-"}
+                  <p className="mt-2 text-sm flex text-gray-500 dark:text-gray-400">
+                    Status :{" "}
+                    <span
+                      className={`ms-1 ${
+                        registrasi.status === "Pending"
+                          ? "text-red-600"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {registrasi.status ?? "-"}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -724,7 +733,7 @@ class ReportPage extends Component<ReportPageProps, ReportPageState> {
         {/* Tabel Anggota Kegiatan */}
         <ComponentCard title="Data Anggota Kegiatan">
           <TabelAnggotaRegistrasi
-            mahasiswaData={registrasi?.registrasi_anggota}
+            registrasi_anggota={registrasi?.registrasi_anggota}
           />
         </ComponentCard>
 

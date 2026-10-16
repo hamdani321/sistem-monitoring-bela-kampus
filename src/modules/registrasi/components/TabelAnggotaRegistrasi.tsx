@@ -17,10 +17,17 @@ import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 // };
 
 export default function TabelAnggotaRegistrasi({
-  mahasiswaData,
+  registrasi_anggota,
 }: {
-  mahasiswaData: RegistrasiAnggota[] | null;
+  registrasi_anggota: RegistrasiAnggota[] | null;
 }) {
+  const totalLakiLaki = registrasi_anggota?.filter(
+    (item) => item.mahasiswa.jenis_kelamin === "Laki-laki"
+  ).length;
+  const totalPerempuan = registrasi_anggota?.filter(
+    (item) => item.mahasiswa.jenis_kelamin === "Perempuan"
+  ).length;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -39,7 +46,7 @@ export default function TabelAnggotaRegistrasi({
         </div>
 
         <span className="w-fit rounded-full bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-700">
-          {mahasiswaData?.length} Mahasiswa
+          {registrasi_anggota?.length} Mahasiswa
         </span>
       </div>
 
@@ -47,21 +54,23 @@ export default function TabelAnggotaRegistrasi({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <StatCard
           title="Total Mahasiswa"
-          value={mahasiswaData?.length ?? 0}
+          value={registrasi_anggota?.length}
           icon={<Users size={22} />}
           color="blue"
         />
 
         <StatCard
           title="Laki-laki"
-          value={2}
+          // value={2}
+          value={totalLakiLaki}
           icon={<UserRound size={22} />}
           color="teal"
         />
 
         <StatCard
           title="Perempuan"
-          value={1}
+          // value={1}
+          value={totalPerempuan}
           icon={<UserRound size={22} />}
           color="pink"
         />
@@ -82,7 +91,7 @@ export default function TabelAnggotaRegistrasi({
             </thead>
 
             <tbody className="divide-y divide-gray-100">
-              {mahasiswaData?.map((m) => {
+              {registrasi_anggota?.map((m) => {
                 console.log(m);
 
                 const initials = m.mahasiswa.nama
@@ -158,7 +167,7 @@ export default function TabelAnggotaRegistrasi({
                 );
               })}
 
-              {mahasiswaData?.length === 0 && (
+              {registrasi_anggota?.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-5 py-16 text-center">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">

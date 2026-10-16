@@ -101,6 +101,13 @@ const statistics = [
   },
 ];
 
+const colorStyles: Record<string, string> = {
+  indigo: "bg-indigo-50 text-indigo-600",
+  blue: "bg-sky-50 text-sky-600",
+  violet: "bg-violet-50 text-violet-600",
+  amber: "bg-amber-50 text-amber-600",
+};
+
 export default function Dashboard() {
   const navigate = useNavigate();
   return (
@@ -131,23 +138,6 @@ class DashboardPage extends Component<
       year: "numeric",
     }).format(new Date(date));
   }
-
-  // get filteredPortals() {
-  //   const { search, statusFilter, portals } = this.state;
-
-  //   return portals.filter((portal) => {
-  //     const matchesSearch = [
-  //       portal.id,
-  //       portal.tahun_ajaran?.nama,
-  //       portal.waktu_mulai,
-  //     ].some((value) => value.toLowerCase().includes(search.toLowerCase()));
-
-  //     const matchesStatus =
-  //       statusFilter === "Semua" || portal.status === statusFilter;
-
-  //     return matchesSearch && matchesStatus;
-  //   });
-  // }
 
   renderIcon(icon: string) {
     const common = {
@@ -229,18 +219,6 @@ class DashboardPage extends Component<
 
   render(): ReactNode {
     const { search, statusFilter, currentPage, portals } = this.state;
-    // const filteredPortals = this.filteredPortals;
-    // const totalPages = Math.max(
-    //   1,
-    //   Math.ceil(filteredPortals.length / this.pageSize)
-    // );
-
-    // const page = Math.min(currentPage, totalPages);
-    // const startIndex = (page - 1) * this.pageSize;
-    // const paginatedPortals = filteredPortals.slice(
-    //   startIndex,
-    //   startIndex + this.pageSize
-    // );
 
     return (
       <div className="min-h-screen bg-slate-50">
@@ -301,13 +279,6 @@ class DashboardPage extends Component<
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {statistics.map((item) => {
-                const colorStyles: Record<string, string> = {
-                  indigo: "bg-indigo-50 text-indigo-600",
-                  blue: "bg-sky-50 text-sky-600",
-                  violet: "bg-violet-50 text-violet-600",
-                  amber: "bg-amber-50 text-amber-600",
-                };
-
                 return (
                   <div
                     key={item.title}
@@ -645,25 +616,6 @@ class DashboardPage extends Component<
                             }));
                           }}
                         />
-                        {/* <button
-                          type="button"
-                          onClick={() => {
-                            this.props.navigate("/sekolah");
-                          }}
-                          aria-label={`Lihat detail ${portal.nama}`}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600"
-                        >
-                          <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            className="h-4 w-4"
-                            aria-hidden="true"
-                          >
-                            <path d="M7 17 17 7M7 7h10v10" />
-                          </svg>
-                        </button> */}
                       </td>
                     </tr>
                   ))}
@@ -696,46 +648,6 @@ class DashboardPage extends Component<
                 </tbody>
               </table>
             </div>
-
-            {/* Pagination */}
-            {/* <div className="flex flex-col gap-4 border-t border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-              <p className="text-sm text-slate-500">
-                Menampilkan{" "}
-                <span className="font-semibold text-slate-700">
-                  {filteredPortals.length === 0 ? 0 : startIndex + 1}–
-                  {Math.min(startIndex + this.pageSize, filteredPortals.length)}
-                </span>{" "}
-                dari{" "}
-                <span className="font-semibold text-slate-700">
-                  {filteredPortals.length}
-                </span>{" "}
-                portal
-              </p>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={page <= 1}
-                  onClick={() => this.setState({ currentPage: page - 1 })}
-                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Sebelumnya
-                </button>
-
-                <span className="px-2 text-sm font-semibold text-slate-700">
-                  {page} / {totalPages}
-                </span>
-
-                <button
-                  type="button"
-                  disabled={page >= totalPages}
-                  onClick={() => this.setState({ currentPage: page + 1 })}
-                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Berikutnya
-                </button>
-              </div>
-            </div> */}
           </section>
 
           <footer className="pb-4 text-center text-xs text-slate-400">

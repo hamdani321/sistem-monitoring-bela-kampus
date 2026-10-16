@@ -15,75 +15,6 @@ export default function MahasiswaTable({
   quickFilter: string;
   loading: boolean;
 }) {
-  //   const colDefs = useMemo<ColDef<DataMahasiswa>[]>(
-  //     () => [
-  //       {
-  //         headerName: "No",
-  //         width: 70,
-  //         minWidth: 70,
-  //         maxWidth: 70,
-  //         pinned: "left",
-  //         sortable: false,
-  //         filter: false,
-  //         resizable: false,
-  //         valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-  //         cellStyle: {
-  //           display: "flex",
-  //           alignItems: "center",
-  //           justifyContent: "center",
-  //         },
-  //       },
-
-  //       {
-  //         field: "nama",
-  //         headerName: "Nama",
-  //         flex: 1.3,
-  //         minWidth: 200,
-  //       },
-
-  //       {
-  //         field: "nim",
-  //         headerName: "NIM",
-  //         flex: 0.8,
-  //         minWidth: 140,
-  //       },
-
-  //       {
-  //         field: "email",
-  //         headerName: "Email",
-  //         flex: 1.3,
-  //         minWidth: 220,
-  //       },
-
-  //       {
-  //         field: "jenis_kelamin",
-  //         headerName: "Jenis Kelamin",
-  //         flex: 0.8,
-  //         minWidth: 140,
-  //         valueFormatter: (params) => {
-  //           switch (params.value) {
-  //             case "L":
-  //               return "Laki-laki";
-
-  //             case "P":
-  //               return "Perempuan";
-
-  //             default:
-  //               return params.value ?? "-";
-  //           }
-  //         },
-  //       },
-
-  //       {
-  //         field: "prodi.nama",
-  //         headerName: "Program Studi",
-  //         flex: 1.2,
-  //         minWidth: 200,
-  //       },
-  //     ],
-  //     []
-  //   );
-
   const defaultColDef = useMemo<ColDef>(
     () => ({
       sortable: true,
@@ -91,7 +22,7 @@ export default function MahasiswaTable({
       resizable: true,
       floatingFilter: false,
     }),
-    [],
+    []
   );
 
   return (

@@ -42,8 +42,8 @@ import { CreatePortal } from "./modules/data_portal/pages/CreatePortal";
 import DetailPortal from "./modules/data_portal/pages/DetailPortal";
 import CreateSekolah from "./modules/sekolah/pages/CreateSekolah";
 import CreateMahasiswa from "./modules/mahasiswa/pages/CreateMahasiswa";
-import Kelas from "./modules/kelas/pages/Kelas";
 import Prodi from "./modules/prodi/pages/Prodi";
+import { Kelas } from "./modules/kelas/pages/Kelas";
 export default function App() {
   return (
     <>
@@ -61,6 +61,10 @@ export default function App() {
               <Route element={<PermissionRoute allowedRoles={["admin"]} />}>
                 <Route path="/registrasi" element={<Registrasi />} />
                 <Route path="/registrasi/:id" element={<Report />} />
+                <Route
+                  path="/registrasi/report-kegiatan/:reportKegiatanId"
+                  element={<DetailReport />}
+                />
 
                 <Route path="/sekolah" element={<Sekolah />} />
                 <Route path="/sekolah/create" element={<CreateSekolah />} />
@@ -88,11 +92,6 @@ export default function App() {
                 />
 
                 <Route path="/users" element={<Users />} />
-
-                <Route
-                  path="/report-kegiatan/:reportKegiatanId"
-                  element={<DetailReport />}
-                />
               </Route>
 
               {/* Route yang hanya bisa diakses mahasiswa */}

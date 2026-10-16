@@ -17,6 +17,8 @@ import { Link } from "react-router";
 
 import getRegistrasi from "../services/registrasi.service";
 import ComponentCard from "@/components/common/ComponentCard";
+import CardDataRegistrasi from "../components/CardDataRegistrasi";
+import HeaderRegistrasi from "../components/HeaderRegistrasi";
 
 const modules = [AllCommunityModule];
 
@@ -52,6 +54,7 @@ export default class Registrasi extends Component<
 
     try {
       const data = await getRegistrasi();
+      console.log("Bnayk : ", data);
 
       this.setState({
         registrasi: data ?? [],
@@ -117,7 +120,6 @@ export default class Registrasi extends Component<
       width: 75,
       minWidth: 75,
       maxWidth: 75,
-      pinned: "left",
       sortable: false,
       filter: false,
       resizable: false,
@@ -197,16 +199,27 @@ export default class Registrasi extends Component<
       },
     },
     {
+      headerName: "Jumlah Anggota",
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params: ICellRendererParams<DataRegistrasi>) => {
+        const registrasi_anggota = params.data?.registrasi_anggota;
+        return <span>{registrasi_anggota?.length}</span>;
+      },
+    },
+    {
       headerName: "Status",
       field: "status",
       flex: 0.85,
       minWidth: 135,
       cellRenderer: (params: ICellRendererParams<DataRegistrasi>) => {
         const status = params.data?.status;
-
         return (
           <div className="flex h-full items-center">
-            <Badge variant="light" color={this.getStatusColor(status)}>
+            <Badge variant="solid" color={this.getStatusColor(status)}>
               {status ?? "-"}
             </Badge>
           </div>
@@ -228,9 +241,9 @@ export default class Registrasi extends Component<
     },
     {
       headerName: "Aksi",
-      width: 125,
-      minWidth: 125,
-      maxWidth: 125,
+      width: 100,
+      minWidth: 100,
+      maxWidth: 100,
       pinned: "right",
       sortable: false,
       filter: false,
@@ -248,26 +261,52 @@ export default class Registrasi extends Component<
         }
 
         return (
-          <Link to={`/registrasi/${id}`}>
-            <Button variant="outline" size="sm">
-              <span className="inline-flex items-center gap-1">
-                Detail
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+          <>
+            <div className="flex h-full flex-col items-start justify-center gap-1">
+              <Link to={`/registrasi/${id}`}>
+                <Button
+                  size="sm"
+                  variant="primary"
+                  className="!h-7 !min-h-0 !px-2 !py-1 !text-xs"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m9 18 6-6-6-6"
-                  />
-                </svg>
-              </span>
-            </Button>
-          </Link>
+                  Detail
+                </Button>
+              </Link>
+
+              <Button
+                size="sm"
+                variant="primary"
+                className="!h-7 !min-h-0 !bg-green-500 !px-2 !py-1 !text-xs hover:!bg-green-600"
+              >
+                Accept
+              </Button>
+            </div>
+
+            {/* <Link to={`/registrasi/${id}`}>
+              <Button variant="primary" size="sm">
+                <span className="inline-flex items-center gap-1">
+                  Detail
+                  <svg
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m9 18 6-6-6-6"
+                    />
+                  </svg>
+                </span>
+              </Button>
+            </Link>
+
+            <Button size="sm" variant="primary" className="bg-green-500">
+              Accept
+            </Button> */}
+          </>
         );
       },
     },
@@ -299,7 +338,8 @@ export default class Registrasi extends Component<
     return (
       <div className="space-y-6">
         {/* HEADER */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 p-6 text-white shadow-lg shadow-blue-900/10 sm:p-8">
+        <HeaderRegistrasi loading={loading} />
+        {/* <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 p-6 text-white shadow-lg shadow-blue-900/10 sm:p-8">
           <div className="absolute -right-10 -top-16 h-48 w-48 rounded-full bg-white/10" />
           <div className="absolute -bottom-20 right-28 h-40 w-40 rounded-full bg-white/10" />
 
@@ -346,141 +386,111 @@ export default class Registrasi extends Component<
               </span>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* STATISTIK */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {/* Total */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Registrasi
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-800 dark:text-white">
-                  {loading ? "—" : registrasi.length}
-                </h2>
-                <p className="mt-1 text-xs text-gray-500">
-                  Seluruh pendaftaran
-                </p>
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
-                <svg
-                  className="h-6 w-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <CardDataRegistrasi
+            backgroundColor="bg-blue-50"
+            color="text-blue-600"
+            title="Total Registrasi"
+            loading={loading}
+            icon={
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6"
+                />
+              </svg>
+            }
+            value={registrasi.length}
+            text="Seluruh pendaftaran"
+          />
 
           {/* Individu */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Registrasi Individu
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-800 dark:text-white">
-                  {loading ? "—" : totalIndividu}
-                </h2>
-                <p className="mt-1 text-xs text-gray-500">
-                  Pendaftaran perorangan
-                </p>
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
-                <svg
-                  className="h-6 w-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <circle cx="12" cy="8" r="4" />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 21v-2a8 8 0 0116 0v2"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <CardDataRegistrasi
+            color="text-violet-600"
+            title="Registrasi Individu"
+            loading={loading}
+            icon={
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 21v-2a8 8 0 0116 0v2"
+                />
+              </svg>
+            }
+            value={totalIndividu}
+            text="Pendaftaran Perorangan"
+            backgroundColor="bg-violet-50"
+          />
 
           {/* Kelompok */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Registrasi Kelompok
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-800 dark:text-white">
-                  {loading ? "—" : totalKelompok}
-                </h2>
-                <p className="mt-1 text-xs text-gray-500">
-                  Pendaftaran berkelompok
-                </p>
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
-                <svg
-                  className="h-6 w-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM16 3.2a4 4 0 010 7.6M18 15h.5a3.5 3.5 0 013.5 3.5V21"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <CardDataRegistrasi
+            color="text-amber-600"
+            title="Registrasi Kelompok"
+            loading={loading}
+            icon={
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM16 3.2a4 4 0 010 7.6M18 15h.5a3.5 3.5 0 013.5 3.5V21"
+                />
+              </svg>
+            }
+            value={totalKelompok}
+            text="Pendaftaran Kelompok"
+            backgroundColor="bg-amber-50"
+          />
 
           {/* Pending */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Menunggu Verifikasi
-                </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-800 dark:text-white">
-                  {loading ? "—" : totalPending}
-                </h2>
-                <p className="mt-1 text-xs text-gray-500">Status pending</p>
-              </div>
-
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
-                <svg
-                  className="h-6 w-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 7v5l3 2"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+          <CardDataRegistrasi
+            color="text-orange-600"
+            title="Menunggu Verifikasi"
+            loading={loading}
+            icon={
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <circle cx="12" cy="12" r="9" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 7v5l3 2"
+                />
+              </svg>
+            }
+            value={totalPending}
+            text="Status Pending"
+            backgroundColor="bg-orange-50"
+          />
         </section>
 
         {/* TABEL */}

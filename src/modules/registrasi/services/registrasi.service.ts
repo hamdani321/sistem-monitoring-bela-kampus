@@ -12,12 +12,10 @@ export default async function getRegistrasi(): Promise<Registrasi[]> {
       },
     });
 
-    if (response.ok) {
-      const responseBody = await response.json();
-      console.log(responseBody);
+    const responseBody = await response.json();
 
-      return responseBody.data as Registrasi[];
-    }
+    return responseBody.data as Registrasi[];
+
     return [];
   } catch (error) {
     throw new Error("Ada kesalahan!");

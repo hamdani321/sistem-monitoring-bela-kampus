@@ -235,7 +235,7 @@ const AppSidebar: React.FC = () => {
     }
 
     if (role == "mahasiswa") {
-      return ["Dashboard", "Portal", "Undangan"];
+      return ["Dashboard", "Portal"];
     }
     return [];
   });
