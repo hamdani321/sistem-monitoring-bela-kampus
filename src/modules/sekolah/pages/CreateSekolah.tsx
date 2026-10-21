@@ -1,29 +1,9 @@
 import { useState } from "react";
-// import {
-//   School,
-//   Mail,
-//   MapPin,
-//   Phone,
-//   Navigation,
-//   Globe,
-//   ArrowLeft,
-//   Save,
-//   RotateCcw,
-//   MapPinned,
-// } from "lucide-react";
 import ComponentCard from "@/components/common/ComponentCard";
 import { Sekolah } from "@/modules/models/sekolah";
 import { createSekolah } from "../services/sekolah.service";
 import Swal from "sweetalert2";
-
-// type FormSekolah = {
-//   nama: string;
-//   email: string;
-//   alamat: string;
-//   telepon: string;
-//   latitude: string;
-//   longitude: string;
-// };
+import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 
 const initialForm: Sekolah = {
   nama: "",
@@ -42,6 +22,7 @@ export default function CreateSekolah() {
   const [errors, setErrors] = useState<Partial<Record<keyof Sekolah, string>>>(
     {}
   );
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -106,8 +87,11 @@ export default function CreateSekolah() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!validate()) return;
+    setLoading(true);
+    if (!validate()) {
+      setLoading(false);
+      return;
+    }
 
     // Hubungkan ke API Laravel di sini.
 
@@ -118,25 +102,14 @@ export default function CreateSekolah() {
         text: "Berhasil tambah sekolah!",
         icon: "success",
       });
+      setLoading(false);
     } catch (error) {}
-    // console.log("Data sekolah:", {
-    //   ...form,
-    //   latitude: Number(form.latitude),
-    //   longitude: Number(form.longitude),
-    // });
   };
 
   const handleReset = () => {
     setForm(initialForm);
     setErrors({});
   };
-
-  //   const inputClass = (field: keyof FormSekolah) =>
-  //     `w-full rounded-xl border bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:bg-white focus:ring-4 ${
-  //       errors[field]
-  //         ? "border-red-300 focus:border-red-500 focus:ring-red-100"
-  //         : "border-gray-200 focus:border-blue-500 focus:ring-blue-100"
-  //     }`;
 
   return (
     <ComponentCard title="Form Tambah Sekolah">
@@ -363,23 +336,32 @@ export default function CreateSekolah() {
           </button>
 
           <button
+            disabled={loading}
             type="submit"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20"
           >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            Simpan Sekolah
+            {loading ? (
+              <>
+                <ButtonSpinner text="Please Wait..." />
+              </>
+            ) : (
+              <>
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Simpan Sekolah
+              </>
+            )}
           </button>
         </div>
       </form>
