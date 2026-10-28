@@ -72,6 +72,7 @@ export async function createPortal({
     waktu_selesai: waktuSelesai,
     kelompok: null,
     tahun_ajaran: null,
+    status: "AKTIF",
   };
 
   const response = await fetch(`${import.meta.env.VITE_API_URL}portal`, {
@@ -142,10 +143,12 @@ export async function createReportKegiatan(
   const formData: FormData = new FormData();
   formData.append("nama_pic", payloadReportKegiatan.nama_pic);
   formData.append("nomor_hp_pic", payloadReportKegiatan.nomor_hp_pic);
-  formData.append("foto", payloadReportKegiatan.foto);
+  if (payloadReportKegiatan.foto) {
+    formData.append("foto", payloadReportKegiatan.foto);
+  }
   formData.append("video", payloadReportKegiatan.link_video);
   formData.append("deskripsi", payloadReportKegiatan.deskripsi);
-  formData.append("registrasi_id", payloadReportKegiatan.registrasi_id);
+  formData.append("registrasi_id", String(payloadReportKegiatan.registrasi_id));
 
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}report-kegiatan`,

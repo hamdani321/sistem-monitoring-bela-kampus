@@ -19,7 +19,7 @@ import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 export default function TabelAnggotaRegistrasi({
   registrasi_anggota,
 }: {
-  registrasi_anggota: RegistrasiAnggota[] | null;
+  registrasi_anggota: RegistrasiAnggota[] | undefined;
 }) {
   const totalLakiLaki = registrasi_anggota?.filter(
     (item) => item.mahasiswa.jenis_kelamin === "Laki-laki"
@@ -235,7 +235,7 @@ export default function TabelAnggotaRegistrasi({
 
 type StatCardProps = {
   title: string;
-  value: number;
+  value: number | undefined;
   icon: React.ReactNode;
   color: "blue" | "teal" | "pink";
 };

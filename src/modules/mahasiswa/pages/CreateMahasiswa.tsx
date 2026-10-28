@@ -1,5 +1,5 @@
 import Form from "@/components/form/Form";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type MahasiswaPayload = {
   nama: string;
@@ -27,9 +27,9 @@ export default function CreateMahasiswa() {
     password_confirmation: "",
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = () => {
     // const formData = new FormData(e.currentTarget);
     // const data = Object.fromEntries(formData.entries());
 
@@ -41,9 +41,9 @@ export default function CreateMahasiswa() {
     "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
   const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
 
-  async function fetchDataForm() {
-    const [response] = await Promise.all([]);
-  }
+  // async function fetchDataForm() {
+  //   const [response] = await Promise.all([]);
+  // }
 
   useEffect(() => {}, []);
 

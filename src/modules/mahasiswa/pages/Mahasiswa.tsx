@@ -4,10 +4,22 @@ import { Mahasiswa as DataMahasiswa } from "@/modules/models/mahasiswa";
 import { getMahasiswa } from "@/modules/mahasiswa/service/mahasiswa.service";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ColDef } from "ag-grid-community";
+import { CellStyle, ColDef, ICellRendererParams } from "ag-grid-community";
 import MahasiswaTable from "../components/MahasiswaTable";
 import { Link } from "react-router";
 import Button from "@/components/ui/button/Button";
+
+const nomorCellStyle: CellStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#6b7280",
+};
+
+const nimCellStyle: CellStyle = {
+  color: "#6b7280",
+  fontWeight: 500,
+};
 
 export default function Mahasiswa() {
   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>([]);
@@ -90,12 +102,7 @@ export default function Mahasiswa() {
         filter: false,
         resizable: false,
         valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-        cellStyle: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#6b7280",
-        },
+        cellStyle: nomorCellStyle,
       },
       {
         field: "nama",
@@ -103,62 +110,67 @@ export default function Mahasiswa() {
         flex: 1.3,
         minWidth: 220,
         autoHeight: true,
-        cellRenderer: (params: { value?: string }) => (
-          <div className="flex h-full items-center gap-3 py-2">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-sm font-bold uppercase text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
-              {params.value?.trim().charAt(0) || "M"}
-            </div>
+        cellRenderer: (params: ICellRendererParams<DataMahasiswa>) => {
+          const nama = params.value as string | undefined;
 
-            <div className="min-w-0">
-              <p className="truncate font-semibold text-gray-800 dark:text-white/90">
-                {params.value || "-"}
-              </p>
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Mahasiswa
-              </p>
+          return (
+            <div className="flex h-full items-center gap-3 py-2">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-sm font-bold uppercase text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+                {nama?.trim().charAt(0) || "M"}
+              </div>
+
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-gray-800 dark:text-white/90">
+                  {nama || "-"}
+                </p>
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Mahasiswa
+                </p>
+              </div>
             </div>
-          </div>
-        ),
+          );
+        },
       },
       {
         field: "nim",
         headerName: "NIM",
         flex: 0.8,
         minWidth: 140,
-        cellStyle: {
-          color: "#6b7280",
-          fontWeight: "500",
-        },
+        cellStyle: nimCellStyle,
       },
       {
         field: "email",
         headerName: "Email",
         flex: 1.3,
         minWidth: 230,
-        cellRenderer: (params: { value?: string }) => (
-          <div className="flex items-center gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              className="h-4 w-4 shrink-0 text-gray-400"
-              aria-hidden="true"
-            >
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m4 7 8 6 8-6"
-              />
-            </svg>
+        cellRenderer: (params: ICellRendererParams<DataMahasiswa>) => {
+          const email = params.value as string | undefined;
 
-            <span className="truncate text-sm text-gray-600 dark:text-gray-300">
-              {params.value || "-"}
-            </span>
-          </div>
-        ),
+          return (
+            <div className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                className="h-4 w-4 shrink-0 text-gray-400"
+                aria-hidden="true"
+              >
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m4 7 8 6 8-6"
+                />
+              </svg>
+
+              <span className="truncate text-sm text-gray-600 dark:text-gray-300">
+                {email || "-"}
+              </span>
+            </div>
+          );
+        },
       },
       {
         field: "jenis_kelamin",
@@ -175,7 +187,7 @@ export default function Mahasiswa() {
               return params.value ?? "-";
           }
         },
-        cellRenderer: (params: { valueFormatted?: string; value?: string }) => {
+        cellRenderer: (params: ICellRendererParams<DataMahasiswa>) => {
           const jenisKelamin = params.value;
           const isLakiLaki = jenisKelamin === "L";
           const isPerempuan = jenisKelamin === "P";
@@ -186,11 +198,18 @@ export default function Mahasiswa() {
             ? "bg-pink-50 text-pink-700 ring-pink-600/20 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-pink-500/20"
             : "bg-gray-100 text-gray-600 ring-gray-500/20 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600/30";
 
+          const label =
+            jenisKelamin === "L"
+              ? "Laki-laki"
+              : jenisKelamin === "P"
+              ? "Perempuan"
+              : "-";
+
           return (
             <span
               className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset ${colorClass}`}
             >
-              {params.valueFormatted || "-"}
+              {label}
             </span>
           );
         },
@@ -200,40 +219,201 @@ export default function Mahasiswa() {
         headerName: "Program Studi",
         flex: 1.2,
         minWidth: 200,
-        cellRenderer: (params: { value?: string }) => (
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                className="h-4 w-4"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 9 12 4l9 5-9 5-9-5Z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7 12v5c3 2.5 7 2.5 10 0v-5M21 9v6"
-                />
-              </svg>
-            </div>
+        cellRenderer: (params: ICellRendererParams<DataMahasiswa>) => {
+          const namaProdi = params.value as string | undefined;
 
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {params.value || "-"}
-            </span>
-          </div>
-        ),
+          return (
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 9 12 4l9 5-9 5-9-5Z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7 12v5c3 2.5 7 2.5 10 0v-5M21 9v6"
+                  />
+                </svg>
+              </div>
+
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {namaProdi || "-"}
+              </span>
+            </div>
+          );
+        },
       },
-    ]
-    // [],
+    ],
+    []
   );
+
+  // const colDefs = useMemo<ColDef<DataMahasiswa>[]>(
+  //   () => [
+  //     {
+  //       headerName: "No",
+  //       width: 70,
+  //       minWidth: 70,
+  //       maxWidth: 70,
+  //       pinned: "left",
+  //       sortable: false,
+  //       filter: false,
+  //       resizable: false,
+  //       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+  //       cellStyle: {
+  //         display: "flex",
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //         color: "#6b7280",
+  //       },
+  //     },
+  //     {
+  //       field: "nama",
+  //       headerName: "Nama Mahasiswa",
+  //       flex: 1.3,
+  //       minWidth: 220,
+  //       autoHeight: true,
+  //       cellRenderer: (params: { value?: string }) => (
+  //         <div className="flex h-full items-center gap-3 py-2">
+  //           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-sm font-bold uppercase text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+  //             {params.value?.trim().charAt(0) || "M"}
+  //           </div>
+
+  //           <div className="min-w-0">
+  //             <p className="truncate font-semibold text-gray-800 dark:text-white/90">
+  //               {params.value || "-"}
+  //             </p>
+  //             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+  //               Mahasiswa
+  //             </p>
+  //           </div>
+  //         </div>
+  //       ),
+  //     },
+  //     {
+  //       field: "nim",
+  //       headerName: "NIM",
+  //       flex: 0.8,
+  //       minWidth: 140,
+  //       cellStyle: {
+  //         color: "#6b7280",
+  //         fontWeight: "500",
+  //       },
+  //     },
+  //     {
+  //       field: "email",
+  //       headerName: "Email",
+  //       flex: 1.3,
+  //       minWidth: 230,
+  //       cellRenderer: (params: { value?: string }) => (
+  //         <div className="flex items-center gap-2">
+  //           <svg
+  //             xmlns="http://www.w3.org/2000/svg"
+  //             viewBox="0 0 24 24"
+  //             fill="none"
+  //             stroke="currentColor"
+  //             strokeWidth="1.7"
+  //             className="h-4 w-4 shrink-0 text-gray-400"
+  //             aria-hidden="true"
+  //           >
+  //             <rect x="3" y="5" width="18" height="14" rx="2" />
+  //             <path
+  //               strokeLinecap="round"
+  //               strokeLinejoin="round"
+  //               d="m4 7 8 6 8-6"
+  //             />
+  //           </svg>
+
+  //           <span className="truncate text-sm text-gray-600 dark:text-gray-300">
+  //             {params.value || "-"}
+  //           </span>
+  //         </div>
+  //       ),
+  //     },
+  //     {
+  //       field: "jenis_kelamin",
+  //       headerName: "Jenis Kelamin",
+  //       flex: 0.9,
+  //       minWidth: 150,
+  //       valueFormatter: (params) => {
+  //         switch (params.value) {
+  //           case "L":
+  //             return "Laki-laki";
+  //           case "P":
+  //             return "Perempuan";
+  //           default:
+  //             return params.value ?? "-";
+  //         }
+  //       },
+  //       cellRenderer: (params: { valueFormatted?: string; value?: string }) => {
+  //         const jenisKelamin = params.value;
+  //         const isLakiLaki = jenisKelamin === "L";
+  //         const isPerempuan = jenisKelamin === "P";
+
+  //         const colorClass = isLakiLaki
+  //           ? "bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-blue-500/20"
+  //           : isPerempuan
+  //           ? "bg-pink-50 text-pink-700 ring-pink-600/20 dark:bg-pink-500/10 dark:text-pink-400 dark:ring-pink-500/20"
+  //           : "bg-gray-100 text-gray-600 ring-gray-500/20 dark:bg-gray-800 dark:text-gray-300 dark:ring-gray-600/30";
+
+  //         return (
+  //           <span
+  //             className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset ${colorClass}`}
+  //           >
+  //             {params.valueFormatted || "-"}
+  //           </span>
+  //         );
+  //       },
+  //     },
+  //     {
+  //       field: "prodi.nama",
+  //       headerName: "Program Studi",
+  //       flex: 1.2,
+  //       minWidth: 200,
+  //       cellRenderer: (params: { value?: string }) => (
+  //         <div className="flex items-center gap-2">
+  //           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400">
+  //             <svg
+  //               xmlns="http://www.w3.org/2000/svg"
+  //               viewBox="0 0 24 24"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               strokeWidth="1.7"
+  //               className="h-4 w-4"
+  //               aria-hidden="true"
+  //             >
+  //               <path
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //                 d="M3 9 12 4l9 5-9 5-9-5Z"
+  //               />
+  //               <path
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //                 d="M7 12v5c3 2.5 7 2.5 10 0v-5M21 9v6"
+  //               />
+  //             </svg>
+  //           </div>
+
+  //           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+  //             {params.value || "-"}
+  //           </span>
+  //         </div>
+  //       ),
+  //     },
+  //   ],
+  //   []
+  // );
 
   return (
     <div className="space-y-6">

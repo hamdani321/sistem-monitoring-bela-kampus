@@ -1,8 +1,5 @@
-import Button from "@/components/ui/button/Button";
 import { Portal } from "@/modules/models/portal";
-import { TahunAjaran } from "@/modules/models/tahun_ajaran";
 import { useCallback, useEffect, useState } from "react";
-import type { FormEvent } from "react";
 import { Link } from "react-router";
 import getDataPortal from "../services/data-portal.service";
 // import type { Portal, TahunAjaran } from "../types";
@@ -117,11 +114,11 @@ export default function DataPortal() {
     fetchDataPortal();
   }, []);
 
-  const [form, setForm] = useState({
-    tahun_ajaran_id: "",
-    waktu_mulai: "",
-    waktu_selesai: "",
-  });
+  // const [form, setForm] = useState({
+  //   tahun_ajaran_id: "",
+  //   waktu_mulai: "",
+  //   waktu_selesai: "",
+  // });
 
   // Portal yang statusnya AKTIF dan sedang dalam periode pelaksanaan.
   const activePortals = portals.filter(

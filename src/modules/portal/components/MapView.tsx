@@ -5,7 +5,6 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { Sekolah } from "@/modules/models/sekolah";
-import { useState } from "react";
 
 // Memastikan ikon marker tampil dengan benar pada Vite
 L.Icon.Default.mergeOptions({
@@ -15,10 +14,10 @@ L.Icon.Default.mergeOptions({
 });
 
 interface MapViewProps {
-  latitude: number;
-  longitude: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
   title?: string;
-  sekolah: Sekolah | null;
+  sekolah: Sekolah | null | undefined;
 }
 
 export default function MapView({

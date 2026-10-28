@@ -116,14 +116,14 @@ export default class MahasiswaTable extends Component<Props, State> {
           <Badge
             variant="solid"
             color={
-              mahasiswa?.registrasi?.length > 0 ||
-              mahasiswa?.registrasi_anggota?.length > 0
+              mahasiswa!.registrasi?.length > 0 ||
+              mahasiswa!.registrasi_anggota?.length > 0
                 ? "success"
                 : "error"
             }
           >
-            {mahasiswa?.registrasi?.length > 0 ||
-            mahasiswa?.registrasi_anggota?.length > 0
+            {mahasiswa!.registrasi?.length > 0 ||
+            mahasiswa!.registrasi_anggota?.length > 0
               ? "Sudah Registrasi"
               : "Belum Registrasi"}
           </Badge>

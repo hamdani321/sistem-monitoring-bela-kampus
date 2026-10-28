@@ -370,7 +370,7 @@ class DetailReportPage extends Component<
 
                   {this.renderInfo(
                     "NIM Mahasiswa",
-                    report.nim_mahasiswa,
+                    report.mahasiswa.nim,
                     <svg
                       viewBox="0 0 24 24"
                       fill="none"

@@ -123,7 +123,7 @@ export default class Users extends Component<{}, State> {
         alignItems: "center",
         justifyContent: "center",
       },
-      cellRenderer: (params: ICellRendererParams<DataUser>) => {
+      cellRenderer: () => {
         return (
           <Button variant="primary" size="sm">
             Reset

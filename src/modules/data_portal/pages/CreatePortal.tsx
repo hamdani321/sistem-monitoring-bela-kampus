@@ -90,11 +90,9 @@ export function CreatePortal() {
 
       if (result.success) {
         await Swal.fire({
-          icon: result.icon,
-          title: "Berhasil!",
+          icon: "success",
+          title: "Sukses!",
           text: result.message,
-          confirmButtonText: "Mengerti",
-          confirmButtonColor: "#2563eb",
         });
 
         setTahunAjar("");
@@ -384,7 +382,6 @@ export function CreatePortal() {
             {/* Tombol aksi */}
             <div className="flex flex-col-reverse justify-end gap-3 border-t border-gray-200 pt-5 dark:border-gray-800 sm:flex-row">
               <Button
-                type="button"
                 variant="outline"
                 disabled={loading}
                 onClick={() => {

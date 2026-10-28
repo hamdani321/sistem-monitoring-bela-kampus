@@ -4,13 +4,12 @@ import {
   Users,
   BookOpen,
   CalendarDays,
-  Hash,
   School,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getKelas } from "../services/kelas.service";
 import KelasTable from "../components/KelasTable";
-import { ColDef, ICellRendererParams } from "ag-grid-community";
+import { CellStyle, ColDef, ICellRendererParams } from "ag-grid-community";
 import { FormatDate } from "@/modules/utils/date-formatter";
 // import KelasTable from "../components/KelasTable";
 
@@ -80,40 +79,63 @@ export const Kelas = () => {
     fetchDataKelas();
   }, []);
 
+  const nomorCellStyle: CellStyle = useMemo(
+    () => ({
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#64748b",
+      fontWeight: "500",
+    }),
+    []
+  );
+
   const colDefs = useMemo<ColDef<DataKelas>[]>(
     () => [
       {
         headerName: "No.",
-        width: 85,
-        minWidth: 75,
-        maxWidth: 95,
+        width: 76,
+        minWidth: 76,
+        maxWidth: 76,
         sortable: false,
         filter: false,
+        resizable: false,
         valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-        cellClass:
-          "flex items-center justify-center text-slate-500 font-medium",
+        cellStyle: {
+          ...nomorCellStyle,
+          paddingLeft: "12px",
+          paddingRight: "12px",
+        },
       },
       {
         headerName: "Nama Kelas",
         field: "nama",
-        flex: 1.3,
-        minWidth: 210,
+        flex: 1.4,
+        minWidth: 230,
+        cellStyle: {
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        },
         cellRenderer: (params: ICellRendererParams<DataKelas>) => {
           const kelas = params.data;
 
-          if (!kelas) return "-";
+          if (!kelas) {
+            return <span className="text-sm text-slate-400">-</span>;
+          }
 
           return (
-            <div className="flex h-full items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
-                <Users size={20} strokeWidth={1.8} />
+            <div className="flex h-full items-center gap-3 py-2">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-inset ring-indigo-100">
+                <Users size={19} strokeWidth={1.8} />
               </div>
 
               <div className="min-w-0">
-                <p className="truncate font-semibold text-slate-800">
-                  {kelas.nama}
+                <p className="truncate text-sm font-semibold text-slate-800">
+                  {kelas.nama || "-"}
                 </p>
-                <p className="mt-1 text-xs text-slate-400">Kelas #{kelas.id}</p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Kode kelas #{kelas.id}
+                </p>
               </div>
             </div>
           );
@@ -122,100 +144,96 @@ export const Kelas = () => {
       {
         headerName: "Program Studi",
         field: "prodi_id",
-        flex: 1,
-        minWidth: 170,
-        cellRenderer: (params: ICellRendererParams<DataKelas>) => (
-          <div className="flex h-full items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
-              <BookOpen size={17} strokeWidth={1.8} />
-            </div>
+        flex: 1.1,
+        minWidth: 190,
+        cellStyle: {
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        },
+        cellRenderer: (params: ICellRendererParams<DataKelas>) => {
+          const prodiId = params.value;
 
-            <div>
-              <p className="text-xs text-slate-400">Program Studi</p>
-              <span className="mt-0.5 inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-700">
-                ID {params.value ?? "-"}
-              </span>
+          return (
+            <div className="flex h-full items-center gap-3 py-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                <BookOpen size={18} strokeWidth={1.8} />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-xs text-slate-400">Program Studi</p>
+                {prodiId != null ? (
+                  <span className="mt-1 inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-700">
+                    ID {prodiId}
+                  </span>
+                ) : (
+                  <p className="mt-1 text-sm text-slate-400">
+                    Belum ditentukan
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        ),
+          );
+        },
       },
       {
-        headerName: "Dosen",
+        headerName: "Dosen Pengampu",
         field: "dosen_id",
-        flex: 1,
-        minWidth: 160,
-        cellRenderer: (params: ICellRendererParams<DataKelas>) => (
-          <div className="flex h-full items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
-              <GraduationCap size={18} strokeWidth={1.8} />
-            </div>
+        flex: 1.1,
+        minWidth: 190,
+        cellStyle: {
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        },
+        cellRenderer: (params: ICellRendererParams<DataKelas>) => {
+          const dosenId = params.value;
 
-            <div>
-              <p className="text-xs text-slate-400">Dosen Pengampu</p>
-              <p className="mt-0.5 text-sm font-medium text-slate-700">
-                ID {params.value ?? "-"}
-              </p>
+          return (
+            <div className="flex h-full items-center gap-3 py-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-100">
+                <GraduationCap size={19} strokeWidth={1.8} />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-xs text-slate-400">Dosen Pengampu</p>
+                <p className="mt-1 truncate text-sm font-medium text-slate-700">
+                  {dosenId != null ? `ID ${dosenId}` : "Belum ditentukan"}
+                </p>
+              </div>
             </div>
-          </div>
-        ),
+          );
+        },
       },
       {
         headerName: "Tanggal Dibuat",
         field: "created_at",
-        flex: 1,
-        minWidth: 175,
-        cellRenderer: (params: ICellRendererParams<DataKelas>) => (
-          <div className="flex h-full items-center gap-2.5">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-              <CalendarDays size={17} strokeWidth={1.8} />
-            </div>
+        flex: 1.1,
+        minWidth: 200,
+        cellStyle: {
+          paddingLeft: "16px",
+          paddingRight: "16px",
+        },
+        cellRenderer: (params: ICellRendererParams<DataKelas>) => {
+          const tanggal = params.value;
 
-            <div>
-              <p className="text-sm font-medium text-slate-700">
-                {FormatDate(params.value)}
-              </p>
-              <p className="mt-0.5 text-xs text-slate-400">
-                Tanggal registrasi
-              </p>
+          return (
+            <div className="flex h-full items-center gap-3 py-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                <CalendarDays size={18} strokeWidth={1.8} />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-slate-700">
+                  {tanggal ? FormatDate(tanggal) : "-"}
+                </p>
+                <p className="mt-1 text-xs text-slate-400">Tanggal pembuatan</p>
+              </div>
             </div>
-          </div>
-        ),
+          );
+        },
       },
     ],
     []
   );
-
-  // const colDefs = useMemo<ColDef<DataKelas>[]>(
-  //   () => [
-  //     {
-  //       headerName: "No.",
-  //       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-  //       width: 80,
-  //       sortable: false,
-  //     },
-  //     {
-  //       headerName: "Nama Kelas",
-  //       field: "nama",
-  //       flex: 1,
-  //     },
-  //     {
-  //       headerName: "Program Studi ID",
-  //       field: "prodi_id",
-  //       flex: 1,
-  //     },
-  //     {
-  //       headerName: "Dosen ID",
-  //       field: "dosen_id",
-  //       flex: 1,
-  //     },
-  //     {
-  //       headerName: "Tanggal Dibuat",
-  //       field: "created_at",
-  //       flex: 1,
-  //     },
-  //   ],
-  //   []
-  // );
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-2">

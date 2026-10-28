@@ -443,8 +443,8 @@ class ReportKegiatan extends Component<
 
         <ComponentCard title="Peta Sekolah" className="mt-4">
           <MapView
-            latitude={registrasi?.sekolah?.latitude}
-            longitude={registrasi?.sekolah?.longitude}
+            latitude={Number(registrasi?.sekolah?.latitude)}
+            longitude={Number(registrasi?.sekolah?.longitude)}
             sekolah={registrasi?.sekolah}
             title="Lokasi Bela Kampus"
           />
@@ -504,7 +504,7 @@ class ReportKegiatan extends Component<
           <AgGridProvider modules={modules}>
             <div className="w-full overflow-hidden rounded-lg border border-gray-200">
               <div className="h-[320px] w-full">
-                <AgGridReact<ReportKegiatan>
+                <AgGridReact<DataReportKegiatan>
                   rowData={report_kegiatan}
                   columnDefs={this.colDefsReportKegiatan}
                   defaultColDef={this.defaultColDef}

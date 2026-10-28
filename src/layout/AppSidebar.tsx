@@ -3,21 +3,27 @@ import { Link, useLocation } from "react-router";
 
 // Assume these icons are imported from an icon library
 import {
-  // BoxCubeIcon,
+  BoxCubeIcon,
   CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  // ListIcon,
-  // PageIcon,
-  // PieChartIcon,
-  // PlugInIcon,
-  // TableIcon,
-  // UserCircleIcon,
+  PlugInIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { useAuth } from "@/context/UseAuth";
+import {
+  BuildingComplexPlus,
+  CalendarFold,
+  DoorClosed,
+  DoorOpen,
+  GraduationCap,
+  PieChartIcon,
+  School,
+  SquareUser,
+  Users,
+} from "lucide-react";
 
 type NavItem = {
   name: string;
@@ -27,34 +33,28 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  // {
-  //   icon: <GridIcon />,
-  //   name: "Dashboard",
-  //   subItems: [{ name: "Ecommerce", path: "/", pro: false }],
-  // },
   {
     icon: <GridIcon />,
     name: "Dashboard",
     path: "/dashboard",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <School />,
     name: "Sekolah",
     path: "/sekolah",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <SquareUser />,
     name: "Mahasiswa",
     path: "/mahasiswa",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <DoorOpen />,
     name: "Portal",
     path: "/portal",
   },
-
   {
-    icon: <CalenderIcon />,
+    icon: <DoorOpen />,
     name: "Data Portal",
     path: "/data-portal",
   },
@@ -64,89 +64,61 @@ const navItems: NavItem[] = [
     path: "/undangan",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <DoorClosed />,
     name: "Kelas",
     path: "/kelas",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <GraduationCap />,
     name: "Prodi",
     path: "/prodi",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <BuildingComplexPlus />,
     name: "Registrasi",
     path: "/registrasi",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <CalendarFold />,
     name: "Tahun Ajaran",
     path: "/tahun-ajaran",
   },
   {
-    icon: <CalenderIcon />,
+    icon: <Users />,
     name: "Users",
     path: "/users",
   },
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Laporan Kegiatan",
-  //   path: "/report-kegiatan",
-  // },
-  // {
-  //   icon: <UserCircleIcon />,
-  //   name: "User Profile",
-  //   path: "/profile",
-  // },
-  // {
-  //   name: "Forms",
-  //   icon: <ListIcon />,
-  //   subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
-  // },
-  // {
-  //   name: "Tables",
-  //   icon: <TableIcon />,
-  //   subItems: [{ name: "Basic Tables", path: "/basic-tables", pro: false }],
-  // },
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
-  // },
 ];
 
 const othersItems: NavItem[] = [
-  // {
-  //   icon: <PieChartIcon />,
-  //   name: "Charts",
-  //   subItems: [
-  //     { name: "Line Chart", path: "/line-chart", pro: false },
-  //     { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: <BoxCubeIcon />,
-  //   name: "UI Elements",
-  //   subItems: [
-  //     { name: "Alerts", path: "/alerts", pro: false },
-  //     { name: "Avatar", path: "/avatars", pro: false },
-  //     { name: "Badge", path: "/badge", pro: false },
-  //     { name: "Buttons", path: "/buttons", pro: false },
-  //     { name: "Images", path: "/images", pro: false },
-  //     { name: "Videos", path: "/videos", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: <PlugInIcon />,
-  //   name: "Authentication",
-  //   subItems: [
-  //     { name: "Sign In", path: "/signin", pro: false },
-  //     { name: "Sign Up", path: "/signup", pro: false },
-  //   ],
-  // },
+  {
+    icon: <PieChartIcon />,
+    name: "Charts",
+    subItems: [
+      { name: "Line Chart", path: "/line-chart", pro: false },
+      { name: "Bar Chart", path: "/bar-chart", pro: false },
+    ],
+  },
+  {
+    icon: <BoxCubeIcon />,
+    name: "UI Elements",
+    subItems: [
+      { name: "Alerts", path: "/alerts", pro: false },
+      { name: "Avatar", path: "/avatars", pro: false },
+      { name: "Badge", path: "/badge", pro: false },
+      { name: "Buttons", path: "/buttons", pro: false },
+      { name: "Images", path: "/images", pro: false },
+      { name: "Videos", path: "/videos", pro: false },
+    ],
+  },
+  {
+    icon: <PlugInIcon />,
+    name: "Authentication",
+    subItems: [
+      { name: "Sign In", path: "/signin", pro: false },
+      { name: "Sign Up", path: "/signup", pro: false },
+    ],
+  },
 ];
 
 const AppSidebar: React.FC = () => {
@@ -172,6 +144,23 @@ const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     let submenuMatched = false;
+
+    // const items = navItems;
+
+    // items.forEach((nav, index) => {
+    //   if (nav.subItems) {
+    //     nav.subItems.forEach((subItem) => {
+    //       if (isActive(subItem.path)) {
+    //         setOpenSubmenu({
+    //           type: "main",
+    //           index,
+    //         });
+    //         submenuMatched = true;
+    //       }
+    //     });
+    //   }
+    // });
+
     ["main", "others"].forEach((menuType) => {
       const items = menuType === "main" ? navItems : othersItems;
       items.forEach((nav, index) => {
@@ -442,7 +431,7 @@ const AppSidebar: React.FC = () => {
               </h2>
               {renderMenuItems(navItems, "main")}
             </div>
-            <div className="">
+            {/* <div className="">
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
                   !isExpanded && !isHovered
@@ -457,7 +446,7 @@ const AppSidebar: React.FC = () => {
                 )}
               </h2>
               {renderMenuItems(othersItems, "others")}
-            </div>
+            </div> */}
           </div>
         </nav>
         {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}

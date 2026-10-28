@@ -9,14 +9,6 @@ type Props = {
   loadingSubmit: boolean;
 };
 
-// const initialForm: FormData = {
-//   nama_pic: "",
-//   nomor_hp_pic: "",
-//   foto: null,
-//   link_video: "",
-//   deskripsi: "",
-// };
-
 export default function ModalLaporanKegiatan({
   open,
   loadingSubmit,
@@ -39,7 +31,7 @@ export default function ModalLaporanKegiatan({
 
   const updateField = (
     field: keyof ReportKegiatanPayload,
-    value: string | File | null,
+    value: string | File | null
   ) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -249,7 +241,7 @@ export default function ModalLaporanKegiatan({
                       onChange={(e) =>
                         updateField(
                           "nomor_hp_pic",
-                          e.target.value.replace(/\D/g, ""),
+                          e.target.value.replace(/\D/g, "")
                         )
                       }
                       placeholder="81234567890"

@@ -5,6 +5,7 @@ import Button from "@/components/ui/button/Button";
 import type { TahunAjaran as DataTahunAjaran } from "@/modules/models/tahun_ajaran";
 import {
   AllCommunityModule,
+  CellStyle,
   type ColDef,
   type ICellRendererParams,
 } from "ag-grid-community";
@@ -14,6 +15,19 @@ import getTahunAjaran from "../services/tahun-ajaran.service";
 import { Link } from "react-router";
 
 const modules = [AllCommunityModule];
+
+const nomorCellStyle: CellStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#64748b",
+};
+
+const aksiCellStyle: CellStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
 
 export default function TahunAjaran() {
   const [data, setData] = useState<DataTahunAjaran[]>([]);
@@ -62,12 +76,7 @@ export default function TahunAjaran() {
         filter: false,
         resizable: false,
         valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-        cellStyle: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#64748b",
-        },
+        cellStyle: nomorCellStyle,
       },
       {
         headerName: "Tahun Ajaran",
@@ -164,11 +173,7 @@ export default function TahunAjaran() {
         filter: false,
         resizable: false,
         pinned: "right",
-        cellStyle: {
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
+        cellStyle: aksiCellStyle,
         cellRenderer: (params: ICellRendererParams<DataTahunAjaran>) => (
           <Button
             variant="outline"
@@ -198,9 +203,161 @@ export default function TahunAjaran() {
           </Button>
         ),
       },
-    ]
-    // []
+    ],
+    []
   );
+
+  // const colDefs = useMemo<ColDef<DataTahunAjaran>[]>(
+  //   () => [
+  //     {
+  //       headerName: "No.",
+  //       width: 75,
+  //       minWidth: 75,
+  //       maxWidth: 75,
+  //       pinned: "left",
+  //       sortable: false,
+  //       filter: false,
+  //       resizable: false,
+  //       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
+  //       cellStyle: {
+  //         display: "flex",
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //         color: "#64748b",
+  //       },
+  //     },
+  //     {
+  //       headerName: "Tahun Ajaran",
+  //       field: "nama",
+  //       flex: 1.6,
+  //       minWidth: 220,
+  //       cellRenderer: (params: ICellRendererParams<DataTahunAjaran>) => (
+  //         <div className="flex h-full items-center gap-3 py-2">
+  //           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+  //             <svg
+  //               className="h-5 w-5"
+  //               viewBox="0 0 24 24"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               strokeWidth="1.8"
+  //             >
+  //               <rect x="3" y="4" width="18" height="17" rx="2" />
+  //               <path
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //                 d="M16 2v4M8 2v4M3 9h18M8 13h3M8 17h7"
+  //               />
+  //             </svg>
+  //           </div>
+
+  //           <div className="min-w-0">
+  //             <p className="truncate font-semibold text-gray-800 dark:text-white">
+  //               {params.data?.nama ?? "-"}
+  //             </p>
+  //             <p className="mt-1 text-xs text-gray-500">Periode akademik</p>
+  //           </div>
+  //         </div>
+  //       ),
+  //     },
+  //     {
+  //       headerName: "Tahun",
+  //       field: "tahun",
+  //       flex: 0.8,
+  //       minWidth: 130,
+  //       cellClass: "font-medium text-gray-700",
+  //     },
+  //     {
+  //       headerName: "Tipe Semester",
+  //       field: "jenis",
+  //       flex: 0.9,
+  //       minWidth: 150,
+  //       cellRenderer: (params: ICellRendererParams<DataTahunAjaran>) => {
+  //         const jenis = params.data?.jenis;
+
+  //         return (
+  //           <div className="flex h-full items-center">
+  //             <Badge
+  //               variant="light"
+  //               color={jenis === "Ganjil" ? "success" : "info"}
+  //             >
+  //               <span className="inline-flex items-center gap-1.5">
+  //                 <span
+  //                   className={`h-1.5 w-1.5 rounded-full ${
+  //                     jenis === "Ganjil" ? "bg-green-500" : "bg-blue-500"
+  //                   }`}
+  //                 />
+  //                 {jenis ?? "-"}
+  //               </span>
+  //             </Badge>
+  //           </div>
+  //         );
+  //       },
+  //     },
+  //     {
+  //       headerName: "Dibuat Pada",
+  //       field: "created_at",
+  //       flex: 1,
+  //       minWidth: 160,
+  //       valueFormatter: (params) => {
+  //         if (!params.value) return "-";
+
+  //         const date = new Date(params.value);
+
+  //         if (Number.isNaN(date.getTime())) return "-";
+
+  //         return new Intl.DateTimeFormat("id-ID", {
+  //           day: "2-digit",
+  //           month: "short",
+  //           year: "numeric",
+  //         }).format(date);
+  //       },
+  //     },
+  //     {
+  //       headerName: "Aksi",
+  //       width: 125,
+  //       minWidth: 125,
+  //       maxWidth: 125,
+  //       sortable: false,
+  //       filter: false,
+  //       resizable: false,
+  //       pinned: "right",
+  //       cellStyle: {
+  //         display: "flex",
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //       },
+  //       cellRenderer: (params: ICellRendererParams<DataTahunAjaran>) => (
+  //         <Button
+  //           variant="outline"
+  //           size="sm"
+  //           onClick={() => {
+  //             if (params.data) {
+  //               console.log("Detail tahun ajaran:", params.data);
+  //             }
+  //           }}
+  //         >
+  //           <span className="inline-flex items-center gap-1.5">
+  //             Detail
+  //             <svg
+  //               className="h-4 w-4"
+  //               viewBox="0 0 24 24"
+  //               fill="none"
+  //               stroke="currentColor"
+  //               strokeWidth="2"
+  //             >
+  //               <path
+  //                 strokeLinecap="round"
+  //                 strokeLinejoin="round"
+  //                 d="m9 18 6-6-6-6"
+  //               />
+  //             </svg>
+  //           </span>
+  //         </Button>
+  //       ),
+  //     },
+  //   ],
+  //   []
+  // );
 
   const defaultColDef = useMemo<ColDef<DataTahunAjaran>>(
     () => ({

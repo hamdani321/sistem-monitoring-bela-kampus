@@ -14,9 +14,6 @@ import {
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import TabelAnggotaRegistrasi from "../components/TabelAnggotaRegistrasi";
-import Badge from "@/components/ui/badge/Badge";
-import { UserIcon } from "lucide-react";
-
 const modules = [AllCommunityModule];
 
 export default function Report() {

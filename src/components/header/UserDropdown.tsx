@@ -5,7 +5,7 @@ import { useAuth } from "@/context/UseAuth";
 import Swal from "sweetalert2";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, roles, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   function toggleDropdown() {
     setIsOpen(!isOpen);

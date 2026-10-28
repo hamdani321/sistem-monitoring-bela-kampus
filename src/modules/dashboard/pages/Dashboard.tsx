@@ -218,7 +218,7 @@ class DashboardPage extends Component<
   }
 
   render(): ReactNode {
-    const { search, statusFilter, currentPage, portals } = this.state;
+    const { search, statusFilter, portals } = this.state;
 
     return (
       <div className="min-h-screen bg-slate-50">

@@ -3,7 +3,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "../../../components/form/Label";
 import Select from "@/components/form/Select";
 import Button from "@/components/ui/button/Button";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "../services/portal.service";
 import Swal from "sweetalert2";
 import Form from "@/components/form/Form";
@@ -16,7 +16,7 @@ export function CreatePortal() {
   const [waktuSelesai, setWaktuSelesai] = useState("");
   const [loading, setLoading] = useState(false);
   const [dataTahunAjaran, setDataTahunAjaran] = useState<TahunAjaran[]>();
-  const [errors, setErrors] = useState({});
+  // const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const tahunAjaran = async () => {
@@ -28,7 +28,7 @@ export function CreatePortal() {
     tahunAjaran();
   }, []);
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async () => {
     // event.preventDefault();
 
     setLoading(true);
@@ -41,18 +41,18 @@ export function CreatePortal() {
       });
       if (result.success) {
         Swal.fire({
-          icon: result.icon,
+          icon: "success",
           text: result.message,
         });
       } else {
-        setErrors(result.errors);
+        // setErrors(result.errors);
       }
     } catch (error) {
       // console.error("Gagal membuat portal : ", error);
 
       if (error instanceof Error) {
         console.log(error.message);
-        setErrors(error.message);
+        // setErrors(error.message);
       } else {
         console.log("Terjadi kesalahan yang tidak diketahui.");
       }
@@ -75,7 +75,7 @@ export function CreatePortal() {
             <Select
               options={
                 dataTahunAjaran?.map((tahunAjaran) => ({
-                  value: tahunAjaran.id,
+                  value: String(tahunAjaran.id),
                   label: `${tahunAjaran.nama} (${tahunAjaran.jenis})`,
                 })) ?? []
               }
@@ -93,7 +93,7 @@ export function CreatePortal() {
             <DatePicker
               id="waktu_mulai"
               placeholder="Pilih Tanggal Mulai"
-              onChange={(dates, currentDateString) => {
+              onChange={(_, currentDateString) => {
                 // Handle your logic
                 setWaktuMulai(currentDateString);
               }}
@@ -107,7 +107,7 @@ export function CreatePortal() {
             <DatePicker
               id="waktu_selesai"
               placeholder="Pilih Tanggal Selesai"
-              onChange={(dates, currentDateString) => {
+              onChange={(_, currentDateString) => {
                 // Handle your logic
                 setWaktuSelesai(currentDateString);
               }}

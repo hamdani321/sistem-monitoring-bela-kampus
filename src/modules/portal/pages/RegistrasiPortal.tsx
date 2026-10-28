@@ -4,9 +4,8 @@ import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
 import Button from "@/components/ui/button/Button";
 import { Sekolah } from "@/modules/models/sekolah";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  getPortalById,
   getPortalByIdForRegistration,
   registrasiPortal,
 } from "../services/portal.service";
@@ -89,7 +88,7 @@ export default function RegistrasiPortal() {
     setTipe(value);
   };
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit() {
     setLoading(true);
     const dataRegistrasi: DataRegistrasiPortal = {
       portal_id: portalId,
@@ -247,7 +246,9 @@ export default function RegistrasiPortal() {
               }
               onChange={handleChangeSekolah}
               placeholder="Pilih Sekolah"
-              className={`border ${errors.errors?.sekolah_id ? "border-red-600" : ""}`}
+              className={`border ${
+                errors.errors?.sekolah_id ? "border-red-600" : ""
+              }`}
             />
             {errors.errors.sekolah_id?.map((message, index) => (
               <span className="text-red-600" key={`error-sekolah${index}`}>
@@ -281,7 +282,11 @@ export default function RegistrasiPortal() {
               <div className="mt-3">
                 <div className="mb-3">
                   <div
-                    className={`border ${errors.errors.anggota_registrasi != null ? "border-red-400" : ""} overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900`}
+                    className={`border ${
+                      errors.errors.anggota_registrasi != null
+                        ? "border-red-400"
+                        : ""
+                    } overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900`}
                   >
                     {/* Header */}
                     <div className="border-b border-gray-200 px-5 py-4 dark:border-gray-800">
@@ -386,7 +391,7 @@ export default function RegistrasiPortal() {
                                     type="button"
                                     onClick={() => {
                                       const newData = anggotaRegistrasi.filter(
-                                        (item) => item.id != mahasiswa.id,
+                                        (item) => item.id != mahasiswa.id
                                       );
                                       setAnggotaRegistrasi(newData);
                                     }}
@@ -534,7 +539,7 @@ export default function RegistrasiPortal() {
                           justifyContent: "center",
                         },
                         cellRenderer: (
-                          params: ICellRendererParams<Mahasiswa>,
+                          params: ICellRendererParams<Mahasiswa>
                         ) => {
                           const mahasiswa = params.data;
                           return (
@@ -563,10 +568,14 @@ export default function RegistrasiPortal() {
                                   });
                                   return;
                                 }
+
+                                if (!mahasiswa) return;
+
                                 setAnggotaRegistrasi((prev) => {
+                                  // Hindari mahasiswa yang sama ditambahkan dua kali
                                   if (
                                     prev.some(
-                                      (item) => item.id === mahasiswa.id,
+                                      (item) => item.id === mahasiswa.id
                                     )
                                   ) {
                                     return prev;
@@ -574,6 +583,18 @@ export default function RegistrasiPortal() {
 
                                   return [...prev, mahasiswa];
                                 });
+
+                                // setAnggotaRegistrasi((prev) => {
+                                //   if (
+                                //     prev.some(
+                                //       (item) => item.id === mahasiswa?.id
+                                //     )
+                                //   ) {
+                                //     return prev;
+                                //   }
+
+                                //   return [...prev, mahasiswa];
+                                // });
                               }}
                             >
                               Tambah

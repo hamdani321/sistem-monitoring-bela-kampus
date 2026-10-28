@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { login } from "../services/auth.service";
 import { useNavigate } from "react-router";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
+import Alert from "@/components/ui/alert/Alert";
 
 export default function Login() {
   // const [identifier, setIdentifier] = useState("");
@@ -182,6 +183,10 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {errorMessage ? (
+              <Alert message={errorMessage} title="Error" variant="error" />
+            ) : null}
+
             <div>
               <label
                 htmlFor="identifier"

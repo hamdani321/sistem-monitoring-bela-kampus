@@ -121,7 +121,7 @@ export default class CreateTahunAjaran extends Component<
   };
 
   render(): ReactNode {
-    const { nama, tahun, tipe, loading, errors, generalError } = this.state;
+    const { nama, tahun, loading, errors, generalError } = this.state;
 
     return (
       <div className="space-y-6">
@@ -363,7 +363,6 @@ export default class CreateTahunAjaran extends Component<
               <div className="flex flex-col-reverse justify-end gap-3 border-t border-gray-200 pt-5 dark:border-gray-800 sm:flex-row">
                 <Link to="/tahun-ajaran">
                   <Button
-                    type="button"
                     variant="outline"
                     disabled={loading}
                     className="w-full sm:w-auto"
@@ -372,11 +371,7 @@ export default class CreateTahunAjaran extends Component<
                   </Button>
                 </Link>
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full sm:w-auto"
-                >
+                <Button disabled={loading} className="w-full sm:w-auto">
                   {loading ? (
                     <ButtonSpinner text="Menyimpan..." />
                   ) : (

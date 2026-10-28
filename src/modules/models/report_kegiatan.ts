@@ -3,6 +3,7 @@ import { Mahasiswa } from "./mahasiswa";
 export type ReportKegiatan = {
   id: number;
   registrasi_id: number;
+  nim_mahasiswa: number;
   nama_pic: string;
   nomor_hp_pic: string;
   foto: string;

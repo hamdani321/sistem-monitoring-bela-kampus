@@ -21,7 +21,7 @@ export default async function getTahunAjaran(): Promise<TahunAjaran[]> {
 export async function createTahunAjaran(
   nama: string,
   tahun: string,
-  tipe: "Ganjil" | "Genap"
+  tipe: "Ganjil" | "Genap" | ""
 ) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}tahun-ajaran`, {
     method: "POST",

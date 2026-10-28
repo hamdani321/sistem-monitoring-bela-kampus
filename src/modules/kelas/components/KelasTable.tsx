@@ -11,7 +11,7 @@ export default function KelasTable({
   quickFilter,
   loading,
 }: {
-  kelas: DataKelas[];
+  kelas: DataKelas[] | undefined;
   colDefs: ColDef<DataKelas>[];
   quickFilter: string;
   loading: boolean;
@@ -29,7 +29,7 @@ export default function KelasTable({
   return (
     <AgGridProvider modules={modules}>
       <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-        <div className="h-[650px] w-full">
+        <div className="h-[900px] w-full">
           <AgGridReact<DataKelas>
             rowData={kelas}
             columnDefs={colDefs}

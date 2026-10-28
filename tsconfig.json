@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "noUnusedLocals": false, //abaikan error variabel yang tidak digunakan
     "paths": {
       "@/*": ["./src/*"]
     }
