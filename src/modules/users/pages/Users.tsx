@@ -1,5 +1,5 @@
 import ComponentCard from "@/components/common/ComponentCard";
-import { User as DataUser } from "@/modules/models/user";
+import { User as DataUser, User } from "@/modules/models/user";
 import { Component } from "react";
 import getUsers from "../services/users.service";
 import {
@@ -9,9 +9,10 @@ import {
 } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 // import { Link } from "react-router";
-import Button from "@/components/ui/button/Button";
+// import Button from "@/components/ui/button/Button";
 // import Badge from "@/components/ui/badge/Badge";
 import CardStatistic from "../components/CardStatistic";
+import { KeyRound, Mail } from "lucide-react";
 
 const modules = [AllCommunityModule];
 
@@ -48,8 +49,34 @@ export default class Users extends Component<{}, State> {
       lng <= 180
     );
   }
+  AVATAR_COLORS = [
+    "bg-blue-100 text-blue-700",
+    "bg-emerald-100 text-emerald-700",
+    "bg-violet-100 text-violet-700",
+    "bg-amber-100 text-amber-700",
+    "bg-rose-100 text-rose-700",
+    "bg-cyan-100 text-cyan-700",
+    "bg-indigo-100 text-indigo-700",
+    "bg-teal-100 text-teal-700",
+  ];
+  getAvatarColor = (name: string) => {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return this.AVATAR_COLORS[Math.abs(hash) % this.AVATAR_COLORS.length];
+  };
 
-  colDefs: ColDef[] = [
+  getInitials = (name: string) =>
+    name
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase();
+
+  colDefs: ColDef<User>[] = [
     {
       headerName: "No",
       width: 70,
@@ -59,77 +86,97 @@ export default class Users extends Component<{}, State> {
       sortable: false,
       filter: false,
       resizable: false,
-
+      headerClass: "text-center",
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
+      cellRenderer: (params: ICellRendererParams<DataUser>) => (
+        <div className="flex h-full items-center justify-center">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600">
+            {params.value}
+          </span>
+        </div>
+      ),
     },
 
     {
       field: "name",
       headerName: "Sekolah",
       flex: 1.4,
-      minWidth: 220,
-
+      minWidth: 260,
+      autoHeight: true,
       cellRenderer: (params: ICellRendererParams<DataUser>) => {
+        const name = params.data?.name ?? "-";
+        const id = params.data?.id ?? "-";
+
         return (
-          <div className="py-2">
-            <div className="font-semibold text-gray-800">
-              {params.data?.name ?? "-"}
+          <div className="flex items-center gap-3 py-2.5">
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${this.getAvatarColor(
+                name
+              )}`}
+            >
+              {this.getInitials(name)}
             </div>
 
-            <div className="mt-1 text-xs text-gray-400">
-              ID: {params.data?.id ?? "-"}
+            <div className="min-w-0 leading-tight">
+              <div className="truncate font-semibold text-gray-800">{name}</div>
+              <span className="mt-1 inline-flex items-center rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-[11px] text-gray-500">
+                ID: {id}
+              </span>
             </div>
           </div>
         );
       },
-
-      autoHeight: true,
     },
-
     {
       field: "email",
       headerName: "Email",
       flex: 1.2,
-      minWidth: 220,
+      minWidth: 240,
       cellRenderer: (params: ICellRendererParams<DataUser>) => {
         const email = params.data?.email;
 
         if (!email) {
-          return <span className="text-gray-400">Tidak tersedia</span>;
+          return (
+            <div className="flex h-full items-center">
+              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-400">
+                Tidak tersedia
+              </span>
+            </div>
+          );
         }
 
         return (
-          <a
-            href={`mailto:${email}`}
-            className="text-sm text-blue-600 hover:underline"
-          >
-            {email}
-          </a>
+          <div className="flex h-full items-center">
+            <a
+              href={`mailto:${email}`}
+              className="group inline-flex max-w-full items-center gap-2 rounded-lg px-2 py-1 text-sm text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700"
+            >
+              <Mail className="h-4 w-4 shrink-0 text-blue-400 group-hover:text-blue-600" />
+              <span className="truncate">{email}</span>
+            </a>
+          </div>
         );
       },
     },
+
     {
       headerName: "Aksi",
-      flex: 0.9,
+      flex: 0.8,
       minWidth: 150,
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      cellRenderer: () => {
-        return (
-          <Button variant="primary" size="sm">
+      sortable: false,
+      filter: false,
+      headerClass: "text-center",
+      cellRenderer: () => (
+        <div className="flex h-full items-center justify-center">
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow active:scale-95"
+          >
+            <KeyRound className="h-3.5 w-3.5" />
             Reset
-          </Button>
-        );
-      },
+          </button>
+        </div>
+      ),
     },
   ];
 
@@ -247,122 +294,6 @@ export default class Users extends Component<{}, State> {
               value={users.length}
               title="Total Users"
             />
-            {/* <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Total Users
-                  </p>
-
-                  <h4 className="mt-1 text-2xl font-bold text-gray-800 dark:text-white">
-                    {users.length}
-                  </h4>
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m4-4a4 4 0 100-8 4 4 0 000 8zm6 0a3 3 0 100-6 3 3 0 000 6z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div> */}
-
-            {/* Active */}
-            {/* <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Active Users
-                  </p>
-
-                  <h4 className="mt-1 text-2xl font-bold text-gray-800 dark:text-white">
-                    0
-                  </h4>
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400">
-                  <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
-                </div>
-              </div>
-            </div> */}
-
-            {/* Inactive */}
-            {/* <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Inactive Users
-                  </p>
-
-                  <h4 className="mt-1 text-2xl font-bold text-gray-800 dark:text-white">
-                    0
-                  </h4>
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M18 12H6"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div> */}
-
-            {/* Roles */}
-            {/* <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Roles
-                  </p>
-
-                  <h4 className="mt-1 text-2xl font-bold text-gray-800 dark:text-white">
-                    0
-                  </h4>
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400">
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15a3 3 0 100-6 3 3 0 000 6z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19.4 15a1.7 1.7 0 00.34 1.88l.06.06-1.4 1.4-.06-.06a1.7 1.7 0 00-1.88-.34 1.7 1.7 0 00-1.03 1.56V20h-2v-.09a1.7 1.7 0 00-1.03-1.56 1.7 1.7 0 00-1.88.34l-.06.06-1.4-1.4.06-.06A1.7 1.7 0 009.46 15a1.7 1.7 0 00-1.56-1.03H7v-2h.9A1.7 1.7 0 009.46 11a1.7 1.7 0 00-.34-1.88l-.06-.06 1.4-1.4.06.06a1.7 1.7 0 001.88.34A1.7 1.7 0 0013.43 6V5h2v1a1.7 1.7 0 001.03 1.56 1.7 1.7 0 001.88-.34l.06-.06 1.4 1.4-.06.06A1.7 1.7 0 0019.4 11a1.7 1.7 0 001.56 1.03H22v2h-1.04A1.7 1.7 0 0019.4 15z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div> */}
           </div>
 
           {/* Search & Filter Toolbar */}
@@ -395,36 +326,6 @@ export default class Users extends Component<{}, State> {
                 className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-700 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
               />
             </div>
-
-            {/* Toolbar actions */}
-            {/* <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-700"
-              >
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 4h18M6 10h12M10 16h4"
-                  />
-                </svg>
-                Filter
-              </button>
-
-              <button
-                type="button"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-700"
-              >
-                Export
-              </button>
-            </div> */}
           </div>
 
           {/* Table */}

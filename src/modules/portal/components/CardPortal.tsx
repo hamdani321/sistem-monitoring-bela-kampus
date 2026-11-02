@@ -162,18 +162,30 @@ export default function CardPortal({
               {canRegister ? (
                 <>
                   <ComponentPermission allowedRoles={["mahasiswa"]}>
-                    <Link to={`/portal/registrasi/${portal?.id}`}>
-                      <Button size="sm" variant="primary" disabled={isClosed}>
-                        Registrasi
-                      </Button>
-                    </Link>
+                    {status == "aktif" ? (
+                      <>
+                        <Link to={`/portal/registrasi/${portal?.id}`}>
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            disabled={isClosed}
+                          >
+                            Registrasi
+                          </Button>
+                        </Link>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </ComponentPermission>
                 </>
               ) : (
                 <>
                   <ComponentPermission allowedRoles={["mahasiswa"]}>
                     <Link
-                      to={`/portal/registrasi/${registrasi?.id ?? anggotaRegistrasi?.registrasi_id}/report`}
+                      to={`/portal/registrasi/${
+                        registrasi?.id ?? anggotaRegistrasi?.registrasi_id
+                      }/report`}
                     >
                       <Button size="sm" variant="primary">
                         Report

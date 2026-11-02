@@ -23,7 +23,7 @@ import Mahasiswa from "./modules/mahasiswa/pages/Mahasiswa";
 import Portal from "./modules/portal/pages/Portal";
 import Login from "./modules/auth/pages/Login";
 import { ProtectionRoutes } from "./context/ProtectionRoutes";
-import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
+// import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
 import Registrasi from "./modules/registrasi/pages/Registrasi";
 import PermissionRoute from "./context/PermissionRoute";
 import TahunAjaran from "./modules/tahun_ajaran/pages/TahunAjaran";
@@ -39,6 +39,7 @@ import CreateSekolah from "./modules/sekolah/pages/CreateSekolah";
 import CreateMahasiswa from "./modules/mahasiswa/pages/CreateMahasiswa";
 import Prodi from "./modules/prodi/pages/Prodi";
 import { Kelas } from "./modules/kelas/pages/Kelas";
+import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
 export default function App() {
   return (
     <>

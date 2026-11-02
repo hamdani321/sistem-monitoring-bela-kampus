@@ -19,6 +19,7 @@ import MahasiswaTable from "@/modules/mahasiswa/components/MahasiswaTable";
 import { ICellRendererParams } from "ag-grid-community";
 import { FormatDate } from "@/modules/utils/date-formatter";
 import CardInfo from "../components/CardInfo";
+import Alert from "@/components/ui/alert/Alert";
 
 interface RegistrasiErrors {
   message: string;
@@ -234,6 +235,19 @@ export default function RegistrasiPortal() {
 
       <ComponentCard className="mt-3" title="Form Registrasi">
         <Form onSubmit={handleSubmit}>
+          {errors.errors.portal_id ? (
+            <>
+              {errors.errors.portal_id.map((message) => (
+                <Alert
+                  variant="error"
+                  message={message}
+                  title="Oops!"
+                  key={0}
+                />
+              ))}
+            </>
+          ) : null}
+
           <div className="mt-3">
             <Label>
               Sekolah Tujuan <span className="text-red-600">*</span>
@@ -386,16 +400,33 @@ export default function RegistrasiPortal() {
                                 </td>
 
                                 {/* Aksi */}
-                                <td className="whitespace-nowrap px-6 py-4">
+                                <td className="whitespace-nowrap px-6 py-4 text-center">
                                   <button
                                     type="button"
                                     onClick={() => {
-                                      const newData = anggotaRegistrasi.filter(
-                                        (item) => item.id != mahasiswa.id
+                                      setAnggotaRegistrasi((prev) =>
+                                        prev.filter(
+                                          (item) => item.id !== mahasiswa.id
+                                        )
                                       );
-                                      setAnggotaRegistrasi(newData);
                                     }}
+                                    title="Hapus anggota"
+                                    className={`inline-flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold text-red-600 transition-all duration-200 hover:border-red-300 hover:bg-red-600 hover:text-white hover:shadow-md hover:shadow-red-600/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2`}
                                   >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-4 w-4"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      strokeWidth={2}
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"
+                                      />
+                                    </svg>
                                     Hapus
                                   </button>
                                 </td>
@@ -533,6 +564,10 @@ export default function RegistrasiPortal() {
                       {
                         field: "id",
                         headerName: "Aksi",
+                        width: 140,
+                        sortable: false,
+                        filter: false,
+                        resizable: false,
                         cellStyle: {
                           display: "flex",
                           alignItems: "center",
@@ -542,61 +577,67 @@ export default function RegistrasiPortal() {
                           params: ICellRendererParams<Mahasiswa>
                         ) => {
                           const mahasiswa = params.data;
+
+                          const handleTambahAnggota = () => {
+                            if (!mahasiswa) return;
+
+                            if (anggotaRegistrasi.length >= 5) {
+                              Swal.fire({
+                                title: "Kapasitas Penuh!",
+                                text: "Maksimal anggota dalam satu kelompok adalah 5 mahasiswa.",
+                                icon: "warning",
+                                confirmButtonColor: "#2563eb",
+                              });
+                              return;
+                            }
+
+                            if (
+                              anggotaRegistrasi.some(
+                                (item) => item.nim === mahasiswa.nim
+                              )
+                            ) {
+                              Swal.fire({
+                                title: "Mahasiswa Sudah Terdaftar",
+                                text: "Mahasiswa ini sudah masuk ke daftar anggota kelompok.",
+                                icon: "info",
+                                confirmButtonColor: "#2563eb",
+                              });
+                              return;
+                            }
+
+                            setAnggotaRegistrasi((prev) => {
+                              if (prev.length >= 5) return prev;
+
+                              if (
+                                prev.some((item) => item.id === mahasiswa.id)
+                              ) {
+                                return prev;
+                              }
+
+                              return [...prev, mahasiswa];
+                            });
+                          };
+
                           return (
                             <button
                               type="button"
-                              onClick={() => {
-                                // console.log(mahasiswa);
-                                if (anggotaRegistrasi.length >= 5) {
-                                  Swal.fire({
-                                    title: "Oopss!",
-                                    text: "Melebihi kapasitas",
-                                    icon: "error",
-                                  });
-                                  return;
-                                }
-
-                                if (
-                                  anggotaRegistrasi.some((item) => {
-                                    return mahasiswa?.nim == item.nim;
-                                  })
-                                ) {
-                                  Swal.fire({
-                                    title: "Oopss!",
-                                    text: "Mahasiswa sudah masuk ke daftar anggota",
-                                    icon: "info",
-                                  });
-                                  return;
-                                }
-
-                                if (!mahasiswa) return;
-
-                                setAnggotaRegistrasi((prev) => {
-                                  // Hindari mahasiswa yang sama ditambahkan dua kali
-                                  if (
-                                    prev.some(
-                                      (item) => item.id === mahasiswa.id
-                                    )
-                                  ) {
-                                    return prev;
-                                  }
-
-                                  return [...prev, mahasiswa];
-                                });
-
-                                // setAnggotaRegistrasi((prev) => {
-                                //   if (
-                                //     prev.some(
-                                //       (item) => item.id === mahasiswa?.id
-                                //     )
-                                //   ) {
-                                //     return prev;
-                                //   }
-
-                                //   return [...prev, mahasiswa];
-                                // });
-                              }}
+                              onClick={handleTambahAnggota}
+                              className={` inline-flex items-center justify-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-blue-600/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-md hover:shadow-blue-600/25 active:translate-y-0 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
                             >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M12 5v14m7-7H5"
+                                />
+                              </svg>
                               Tambah
                             </button>
                           );

@@ -14,19 +14,22 @@ export default function Portal() {
   const [registrasi, setRegistrasi] = useState<Registrasi | null>(null);
   const [anggotaRegistrasi, setAnggotaRegistrasi] =
     useState<RegistrasiAnggota | null>(null);
-
   const [loading, setLoading] = useState(true);
+  const [waktuMulai, setWaktuMulai] = useState<Date>();
+  const [waktuSelesai, setWaktuSelesai] = useState<Date>();
+  const [waktuSekarang] = useState<Date>(new Date(Date.now()));
 
   useEffect(() => {
     const getDataPortal = async () => {
       const response = await getPortal();
       if (response.ok) {
         const responseBody = await response.json();
-        console.log(responseBody);
+        // console.log(responseBody);
+        setWaktuMulai(new Date(responseBody.data.portal.waktu_mulai));
+        setWaktuSelesai(new Date(responseBody.data.portal.waktu_selesai));
         setPortal(responseBody.data.portal);
         setRegistrasi(responseBody.data.registrasi);
         setAnggotaRegistrasi(responseBody.data.registrasi_anggota);
-
         setLoading(false);
       }
     };
@@ -36,14 +39,6 @@ export default function Portal() {
   return (
     <>
       <ComponentCard title="Data Portal">
-        {/* <ComponentPermission allowedRoles={["admin"]}>
-          <Link to={"/portal/create"}>
-            <Button variant="primary" size="sm" className="m-3">
-              Tambah Portal
-            </Button>
-          </Link>
-        </ComponentPermission> */}
-
         {loading ? (
           <>
             <Spinner textColor="text-black" />
@@ -135,7 +130,7 @@ export default function Portal() {
                 </div>
 
                 {/* Tombol aksi */}
-                <button
+                {/* <button
                   type="button"
                   onClick={() => {}}
                   disabled={loading}
@@ -161,7 +156,7 @@ export default function Portal() {
                   </svg>
 
                   {loading ? "Memuat ulang..." : "Periksa Kembali"}
-                </button>
+                </button> */}
               </div>
             </section>
           </>
@@ -173,7 +168,14 @@ export default function Portal() {
               portal={portal}
               anggotaRegistrasi={anggotaRegistrasi}
               registrasi={registrasi}
-              status="aktif"
+              status={
+                waktuSekarang < waktuMulai!
+                  ? "akan-datang"
+                  : waktuSekarang >= waktuMulai! &&
+                    waktuSekarang < waktuSelesai!
+                  ? "aktif"
+                  : "selesai"
+              }
             />
           </>
         )}

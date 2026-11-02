@@ -50,6 +50,8 @@ class ReportKegiatan extends Component<
     const data = await getAnggotaRegistrasi(this.props.registrasiId);
     console.log(data);
 
+    console.log(data);
+
     this.setState({
       registrasi_anggota: data.registrasi_anggota,
       registrasi: data.registrasi,
@@ -229,9 +231,11 @@ class ReportKegiatan extends Component<
                   className="size-6"
                 >
                   <path
-                    fill-rule="evenodd"
+                    // fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M7.28 7.72a.75.75 0 0 1 0 1.06l-2.47 2.47H21a.75.75 0 0 1 0 1.5H4.81l2.47 2.47a.75.75 0 1 1-1.06 1.06l-3.75-3.75a.75.75 0 0 1 0-1.06l3.75-3.75a.75.75 0 0 1 1.06 0Z"
-                    clip-rule="evenodd"
+                    // clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               }
@@ -442,39 +446,47 @@ class ReportKegiatan extends Component<
         {/* Map */}
 
         <ComponentCard title="Peta Sekolah" className="mt-4">
-          <MapView
-            latitude={Number(registrasi?.sekolah?.latitude)}
-            longitude={Number(registrasi?.sekolah?.longitude)}
-            sekolah={registrasi?.sekolah}
-            title="Lokasi Bela Kampus"
-          />
+          {loading ? null : (
+            <>
+              <MapView
+                latitude={Number(registrasi?.sekolah?.latitude)}
+                longitude={Number(registrasi?.sekolah?.longitude)}
+                sekolah={registrasi?.sekolah}
+                title="Lokasi Bela Kampus"
+              />
+            </>
+          )}
         </ComponentCard>
 
         {/* Map End */}
 
-        <ComponentCard
-          className="mt-6"
-          title="Anggota Kegiatan"
-          desc="Anggota kegiatan bela kampus"
-        >
-          <AgGridProvider modules={modules}>
-            <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-              <div className="h-[320px] w-full">
-                <AgGridReact<RegistrasiAnggota>
-                  rowData={registrasi_anggota}
-                  columnDefs={this.colDefs}
-                  defaultColDef={this.defaultColDef}
-                  loading={loading}
-                  pagination
-                  paginationAutoPageSize
-                  // quickFilterText={quickFilter}
-                  animateRows
-                  suppressCellFocus
-                />
-              </div>
-            </div>
-          </AgGridProvider>
-        </ComponentCard>
+        {registrasi_anggota.length > 0 ? (
+          <>
+            <ComponentCard
+              className="mt-6"
+              title="Anggota Kegiatan"
+              desc="Anggota kegiatan bela kampus"
+            >
+              <AgGridProvider modules={modules}>
+                <div className="w-full overflow-hidden rounded-lg border border-gray-200">
+                  <div className="h-[320px] w-full">
+                    <AgGridReact<RegistrasiAnggota>
+                      rowData={registrasi_anggota}
+                      columnDefs={this.colDefs}
+                      defaultColDef={this.defaultColDef}
+                      loading={loading}
+                      pagination
+                      paginationAutoPageSize
+                      // quickFilterText={quickFilter}
+                      animateRows
+                      suppressCellFocus
+                    />
+                  </div>
+                </div>
+              </AgGridProvider>
+            </ComponentCard>
+          </>
+        ) : null}
 
         <ComponentCard title="Report" className="mt-5">
           <button
