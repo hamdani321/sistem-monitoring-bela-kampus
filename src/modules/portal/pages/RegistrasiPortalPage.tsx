@@ -36,7 +36,7 @@ interface RegistrasiErrors {
   };
 }
 
-export default function RegistrasiPortal() {
+export default function RegistrasiPortalPage() {
   const [portal, setPortal] = useState<Portal>();
   const [sekolah, setSekolah] = useState<Sekolah[]>();
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);

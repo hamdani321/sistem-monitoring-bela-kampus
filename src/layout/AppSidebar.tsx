@@ -58,11 +58,7 @@ const navItems: NavItem[] = [
     name: "Data Portal",
     path: "/data-portal",
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Undangan",
-    path: "/undangan",
-  },
+
   {
     icon: <DoorClosed />,
     name: "Kelas",

@@ -198,6 +198,9 @@ export default function ModalLaporanKegiatan({
                   <label htmlFor="nama_pic" className={labelClass}>
                     Nama PIC <span className="text-rose-500">*</span>
                   </label>
+                  <small className="text-gray-500">
+                    (Nama penanggung jawab di sekolah yang dikunjungi)
+                  </small>
                   <input
                     id="nama_pic"
                     name="nama_pic"

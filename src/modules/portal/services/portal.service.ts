@@ -1,8 +1,6 @@
 import { Mahasiswa } from "@/modules/models/mahasiswa";
 import { Portal } from "@/modules/models/portal";
 import { Registrasi } from "@/modules/models/registrasi";
-import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
-import { ReportKegiatan } from "@/modules/models/report_kegiatan";
 import { Sekolah } from "@/modules/models/sekolah";
 import { RegistrasiPortal } from "@/modules/types/registrasi-portal";
 import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
@@ -111,7 +109,14 @@ export async function registrasiPortal(dataRegistrasi: RegistrasiPortal) {
   return response;
 }
 
-export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
+class ReportKegiatanResponse {
+  message: string = "";
+  data: Registrasi | null = null;
+}
+
+export async function getRegistrasi(
+  registrasiId: string | undefined
+): Promise<ReportKegiatanResponse | null> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}registrasi-anggota/${registrasiId}`,
     {
@@ -123,18 +128,8 @@ export async function getAnggotaRegistrasi(registrasiId: string | undefined) {
     }
   );
 
-  if (response.ok) {
-    const responseBody = await response.json();
-
-    return {
-      registrasi_anggota: responseBody.data
-        .registrasi_anggota as RegistrasiAnggota[],
-      registrasi: responseBody.data.registrasi as Registrasi,
-      report_kegiatan: responseBody.data.report_kegiatan as ReportKegiatan[],
-    };
-  }
-
-  throw new Error("Ada kesalahan!");
+  const responseBody: ReportKegiatanResponse = await response.json();
+  return responseBody;
 }
 
 export async function createReportKegiatan(

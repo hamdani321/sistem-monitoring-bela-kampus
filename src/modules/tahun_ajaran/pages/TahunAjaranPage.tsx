@@ -29,7 +29,7 @@ const aksiCellStyle: CellStyle = {
   justifyContent: "center",
 };
 
-export default function TahunAjaran() {
+export default function TahunAjaranPage() {
   const [data, setData] = useState<DataTahunAjaran[]>([]);
   const [quickFilter, setQuickFilter] = useState("");
   const [loading, setLoading] = useState(true);

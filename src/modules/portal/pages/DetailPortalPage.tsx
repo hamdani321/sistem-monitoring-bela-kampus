@@ -22,7 +22,7 @@ import "leaflet/dist/leaflet.css";
 import { Registrasi } from "@/modules/models/registrasi";
 const modules = [AllCommunityModule];
 
-export default function DetailPortal() {
+export default function DetailPortalPage() {
   const { id } = useParams();
   const redIcon = L.icon({
     iconUrl: "/images/icons/red-icon.png",
@@ -164,7 +164,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 140,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => (
           <span className="font-medium text-gray-700 dark:text-gray-300">
             {params.data?.nim_mahasiswa ?? "-"}
@@ -181,7 +181,7 @@ export default function DetailPortal() {
         flex: 0.9,
         minWidth: 150,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const jenisKelamin = params.data?.mahasiswa?.jenis_kelamin;
 
@@ -206,7 +206,7 @@ export default function DetailPortal() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const tipe = params.data?.tipe;
 
@@ -240,7 +240,7 @@ export default function DetailPortal() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>,
+          params: ICellRendererParams<(typeof registrasi)[number]>
         ) => {
           const sekolah = params.data?.sekolah;
 
@@ -257,7 +257,7 @@ export default function DetailPortal() {
       //   headerName: "Sekolah",
       // },
     ],
-    [],
+    []
   );
 
   // =========================================================
@@ -273,7 +273,7 @@ export default function DetailPortal() {
       autoHeaderHeight: true,
       floatingFilter: false,
     }),
-    [],
+    []
   );
 
   // =========================================================
@@ -534,7 +534,7 @@ export default function DetailPortal() {
 
             {sekolah.map((item) => {
               const sudahDipakai = portal?.registrasi?.some(
-                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id,
+                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id
               );
 
               const latitude = Number(item.latitude);

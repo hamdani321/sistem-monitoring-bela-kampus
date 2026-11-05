@@ -253,7 +253,7 @@ function createColumnDefs(): ColDef<DataSekolah>[] {
             </p>
 
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              ID: {params.data?.id ?? "-"}
+              NPSN: {params.data?.npsn ?? "-"}
             </p>
           </div>
         </div>
@@ -375,7 +375,7 @@ function createColumnDefs(): ColDef<DataSekolah>[] {
             to={`/sekolah/${id}`}
             className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
           >
-            Detail
+            Edit
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -408,7 +408,7 @@ const DEFAULT_COL_DEF: ColDef<DataSekolah> = {
    MAIN PAGE
 ========================================================= */
 
-export default function Sekolah() {
+export default function SekolahPage() {
   const [sekolah, setSekolah] = useState<DataSekolah[]>([]);
   const [quickFilter, setQuickFilter] = useState("");
   const [loading, setLoading] = useState(true);
@@ -478,7 +478,7 @@ export default function Sekolah() {
         <div className="pointer-events-none absolute -right-12 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 right-1/3 h-48 w-48 rounded-full bg-indigo-300/20 blur-2xl" />
 
-        <div className="relative z-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+        <div className="relative flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-blue-50 ring-1 ring-white/20">
               <span className="h-2 w-2 rounded-full bg-emerald-300" />

@@ -16,10 +16,10 @@ import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import TabelAnggotaRegistrasi from "../components/TabelAnggotaRegistrasi";
 const modules = [AllCommunityModule];
 
-export default function Report() {
+export default function ReportPage() {
   const { id } = useParams();
 
-  return <ReportPage id={id} />;
+  return <Report id={id} />;
 }
 
 interface ReportPageProps {
@@ -35,7 +35,7 @@ interface ReportPageState {
   error: string | null;
 }
 
-class ReportPage extends Component<ReportPageProps, ReportPageState> {
+class Report extends Component<ReportPageProps, ReportPageState> {
   state: ReportPageState = {
     registrasi: null,
     registasiAnggota: null,

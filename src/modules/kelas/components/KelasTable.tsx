@@ -8,12 +8,12 @@ const modules = [AllCommunityModule];
 export default function KelasTable({
   kelas,
   colDefs,
-  quickFilter,
+  // quickFilter,
   loading,
 }: {
   kelas: DataKelas[] | undefined;
   colDefs: ColDef<DataKelas>[];
-  quickFilter: string;
+  // quickFilter: string;
   loading: boolean;
 }) {
   const defaultColDef = useMemo<ColDef<DataKelas>>(
@@ -29,7 +29,7 @@ export default function KelasTable({
   return (
     <AgGridProvider modules={modules}>
       <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-        <div className="h-[900px] w-full">
+        <div className="h-[1200px] w-full">
           <AgGridReact<DataKelas>
             rowData={kelas}
             columnDefs={colDefs}
@@ -37,7 +37,7 @@ export default function KelasTable({
             loading={loading}
             pagination
             paginationAutoPageSize
-            quickFilterText={quickFilter}
+            // quickFilterText={quickFilter}
             animateRows
             suppressCellFocus
           />

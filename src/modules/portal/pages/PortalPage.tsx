@@ -9,7 +9,7 @@ import CardPortal from "@/modules/portal/components/CardPortal";
 import { Registrasi } from "@/modules/models/registrasi";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 
-export default function Portal() {
+export default function PortalPage() {
   const [portal, setPortal] = useState<DataPortal | null>();
   const [registrasi, setRegistrasi] = useState<Registrasi | null>(null);
   const [anggotaRegistrasi, setAnggotaRegistrasi] =

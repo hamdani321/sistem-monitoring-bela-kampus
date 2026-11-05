@@ -21,7 +21,7 @@ interface State {
   loading: boolean;
   quickFilter: string;
 }
-export default class Users extends Component<{}, State> {
+export default class UsersPage extends Component<{}, State> {
   state: State = {
     users: [],
     loading: true,

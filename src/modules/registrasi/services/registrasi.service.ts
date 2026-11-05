@@ -53,5 +53,7 @@ export async function getReportKegiatan(
     }
   );
   const responseBody = await response.json();
+  console.log(responseBody);
+
   return responseBody.data;
 }

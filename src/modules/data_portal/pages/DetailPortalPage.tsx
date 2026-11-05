@@ -24,7 +24,7 @@ import { Mahasiswa } from "@/modules/models/mahasiswa";
 import MahasiswaTable from "../components/MahasiswaTable";
 const modules = [AllCommunityModule];
 
-export default function DetailPortal() {
+export default function DetailPortalPage() {
   const { id } = useParams();
   const redIcon = L.icon({
     iconUrl: "/images/icons/red-icon.png",

@@ -4,102 +4,48 @@ import Switch from "../components/Switch";
 import { Portal } from "@/modules/models/portal";
 import { getDataDashboard } from "../services/dashboard.service";
 import ComponentPermission from "@/context/ComponentPermission";
-
-// type PortalStatus = "Aktif" | "Akan Datang" | "Selesai";
+import { Registrasi } from "@/modules/models/registrasi";
 type PortalStatus = "AKTIF" | "NONAKTIF";
-
-// interface Portal {
-//   id: number;
-//   nama: string;
-//   tahun_ajaran: string;
-//   waktu_mulai: string;
-//   waktu_selesai: string;
-//   semester: string;
-//   status: PortalStatus;
-//   total_registrasi: number;
-// }
 
 interface DashboardState {
   search: string;
   statusFilter: string;
   currentPage: number;
   portals: Portal[];
+  registrasi: Registrasi[];
   loading: boolean;
 }
 
-// const portals: Portal[] = [
+// const statistics = [
 //   {
-//     id: 1,
-//     nama: "Bela Kampus 2026/2027",
-//     tahun_ajaran: "2026/2027",
-//     waktu_mulai: "2026-10-01",
-//     waktu_selesai: "2026-11-30",
-//     semester: "Ganjil",
-//     status: "Aktif",
-//     total_registrasi: 386,
+//     title: "Mahasiswa Terdaftar",
+//     value: "1.248",
+//     description: "Total mahasiswa terdaftar",
+//     icon: "graduation",
+//     color: "indigo",
 //   },
 //   {
-//     id: 2,
-//     nama: "Bela Kampus 2025/2026",
-//     tahun_ajaran: "2025/2026",
-//     waktu_mulai: "2026-03-01",
-//     waktu_selesai: "2026-06-30",
-//     semester: "Genap",
-//     status: "Selesai",
-//     total_registrasi: 542,
+//     title: "Registrasi Individu",
+//     value: "386",
+//     description: "Registrasi perorangan",
+//     icon: "user",
+//     color: "blue",
 //   },
 //   {
-//     id: 3,
-//     nama: "Bela Kampus 2027/2028",
-//     tahun_ajaran: "2027/2028",
-//     waktu_mulai: "2027-01-01",
-//     waktu_selesai: "2027-02-28",
-//     semester: "Ganjil",
-//     status: "Akan Datang",
-//     total_registrasi: 0,
+//     title: "Registrasi Kelompok",
+//     value: "862",
+//     description: "Registrasi dalam kelompok",
+//     icon: "users",
+//     color: "violet",
 //   },
 //   {
-//     id: 4,
-//     nama: "Bela Kampus Semester Genap",
-//     tahun_ajaran: "2026/2027",
-//     waktu_mulai: "2027-03-01",
-//     waktu_selesai: "2027-06-30",
-//     semester: "Genap",
-//     status: "Akan Datang",
-//     total_registrasi: 0,
+//     title: "Total Portal",
+//     value: "8",
+//     description: "Seluruh portal",
+//     icon: "portal",
+//     color: "amber",
 //   },
 // ];
-
-const statistics = [
-  {
-    title: "Mahasiswa Terdaftar",
-    value: "1.248",
-    description: "Total mahasiswa terdaftar",
-    icon: "graduation",
-    color: "indigo",
-  },
-  {
-    title: "Registrasi Individu",
-    value: "386",
-    description: "Registrasi perorangan",
-    icon: "user",
-    color: "blue",
-  },
-  {
-    title: "Registrasi Kelompok",
-    value: "862",
-    description: "Registrasi dalam kelompok",
-    icon: "users",
-    color: "violet",
-  },
-  {
-    title: "Total Portal",
-    value: "8",
-    description: "Seluruh portal",
-    icon: "portal",
-    color: "amber",
-  },
-];
 
 const colorStyles: Record<string, string> = {
   indigo: "bg-indigo-50 text-indigo-600",
@@ -108,16 +54,7 @@ const colorStyles: Record<string, string> = {
   amber: "bg-amber-50 text-amber-600",
 };
 
-export default function Dashboard() {
-  const navigate = useNavigate();
-  return (
-    <>
-      <DashboardPage navigate={navigate} />
-    </>
-  );
-}
-
-class DashboardPage extends Component<
+export default class DashboardAdmin extends Component<
   { navigate: NavigateFunction },
   DashboardState
 > {
@@ -126,11 +63,11 @@ class DashboardPage extends Component<
     statusFilter: "Semua",
     currentPage: 1,
     portals: [],
+    registrasi: [],
     loading: true,
   };
 
   pageSize = 5;
-
   formatDate(date: string) {
     return new Intl.DateTimeFormat("id-ID", {
       day: "2-digit",
@@ -205,10 +142,76 @@ class DashboardPage extends Component<
     );
   }
 
+  cardAdminDashboard({
+    item,
+  }: {
+    item: {
+      title: string;
+      value: string;
+      color: string;
+      icon: string;
+      description: string;
+    };
+  }) {
+    return (
+      <>
+        <div
+          key={item.title}
+          className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/60"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium text-slate-500">{item.title}</p>
+              <p className="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+                {item.value}
+              </p>
+            </div>
+
+            <div
+              className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+                colorStyles[item.color]
+              }`}
+            >
+              {this.renderIcon(item.icon)}
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center gap-2 border-t border-slate-100 pt-3">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <p className="text-xs text-slate-500">{item.description}</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  findPersentation(
+    tipe: "Individu" | "Kelompok",
+    registrasi: Registrasi[]
+  ): number {
+    switch (tipe) {
+      case "Individu":
+        const totalIndividu = registrasi.filter(
+          (item) => item.tipe === "Individu"
+        ).length;
+        return (totalIndividu / registrasi.length) * 100;
+        break;
+      case "Kelompok":
+        const totalKelompok = registrasi.filter(
+          (item) => item.tipe === "Kelompok"
+        ).length;
+        return (totalKelompok / registrasi.length) * 100;
+        break;
+    }
+
+    return 0;
+  }
+
   async fetchDataDashboard() {
     const result = await getDataDashboard();
     this.setState({
       portals: result.data.portal,
+      registrasi: result.data.registrasi,
       loading: false,
     });
   }
@@ -218,7 +221,7 @@ class DashboardPage extends Component<
   }
 
   render(): ReactNode {
-    const { search, statusFilter, portals } = this.state;
+    const { search, statusFilter, portals, registrasi } = this.state;
 
     return (
       <div className="min-h-screen bg-slate-50">
@@ -278,40 +281,52 @@ class DashboardPage extends Component<
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {statistics.map((item) => {
-                return (
-                  <div
-                    key={item.title}
-                    className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/60"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-medium text-slate-500">
-                          {item.title}
-                        </p>
-                        <p className="mt-3 text-3xl font-bold tracking-tight text-slate-900">
-                          {item.value}
-                        </p>
-                      </div>
-
-                      <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl ${
-                          colorStyles[item.color]
-                        }`}
-                      >
-                        {this.renderIcon(item.icon)}
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-2 border-t border-slate-100 pt-3">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                      <p className="text-xs text-slate-500">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                );
+              {this.cardAdminDashboard({
+                item: {
+                  color: "indigo",
+                  description: "Jumlah Registrasi",
+                  icon: "graduation",
+                  value: String(registrasi.length),
+                  title: "Total Registrasi",
+                },
               })}
+              {this.cardAdminDashboard({
+                item: {
+                  color: "indigo",
+                  description: "Jumlah Registrasi Individu",
+                  icon: "graduation",
+                  value: String(
+                    registrasi.filter((item) => item.tipe === "Individu").length
+                  ),
+                  title: "Total Registrasi Individu",
+                },
+              })}
+              {this.cardAdminDashboard({
+                item: {
+                  color: "indigo",
+                  description: "Jumlah Registrasi Kelompok",
+                  icon: "graduation",
+                  value: String(
+                    registrasi.filter((item) => item.tipe === "Kelompok").length
+                  ),
+                  title: "Total Registrasi Kelompok",
+                },
+              })}
+
+              {this.cardAdminDashboard({
+                item: {
+                  color: "indigo",
+                  description: "Jumlah Portal",
+                  icon: "graduation",
+                  value: String(portals.length),
+                  title: "Total Portal Registrasi",
+                },
+              })}
+              {/* {statistics.map((item) => {
+                return (
+                  
+                );
+              })} */}
             </div>
           </section>
 
@@ -359,7 +374,7 @@ class DashboardPage extends Component<
 
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                       <span className="text-3xl font-bold text-slate-900">
-                        1.248
+                        {registrasi.length}
                       </span>
                       <span className="mt-1 text-xs text-slate-500">
                         Registrasi
@@ -382,8 +397,15 @@ class DashboardPage extends Component<
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-900">386</p>
-                      <p className="text-xs text-slate-500">31%</p>
+                      <p className="font-bold text-slate-900">
+                        {
+                          registrasi.filter((item) => item.tipe === "Individu")
+                            .length
+                        }
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {this.findPersentation("Individu", registrasi)} %
+                      </p>
                     </div>
                   </div>
 
@@ -398,8 +420,15 @@ class DashboardPage extends Component<
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-slate-900">862</p>
-                      <p className="text-xs text-slate-500">69%</p>
+                      <p className="font-bold text-slate-900">
+                        {
+                          registrasi.filter((item) => item.tipe === "Kelompok")
+                            .length
+                        }
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {this.findPersentation("Kelompok", registrasi)} %
+                      </p>
                     </div>
                   </div>
 

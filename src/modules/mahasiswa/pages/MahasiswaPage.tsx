@@ -21,7 +21,7 @@ const nimCellStyle: CellStyle = {
   fontWeight: 500,
 };
 
-export default function Mahasiswa() {
+export default function MahasiswaPage() {
   const [mahasiswa, setMahasiswa] = useState<DataMahasiswa[]>([]);
   const [quickFilter, setQuickFilter] = useState("");
   const [loading, setLoading] = useState(true);

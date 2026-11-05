@@ -17,29 +17,30 @@ import NotFound from "./pages/OtherPage/NotFound";
 // import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Sekolah from "./modules/sekolah/pages/Sekolah";
-import Dashboard from "./modules/dashboard/pages/Dashboard";
-import Mahasiswa from "./modules/mahasiswa/pages/Mahasiswa";
-import Portal from "./modules/portal/pages/Portal";
+import SekolahPage from "./modules/sekolah/pages/SekolahPage";
+import Dashboard from "./modules/dashboard/pages/DashboardPage";
+import Mahasiswa from "./modules/mahasiswa/pages/MahasiswaPage";
+import Portal from "./modules/portal/pages/PortalPage";
 import Login from "./modules/auth/pages/Login";
 import { ProtectionRoutes } from "./context/ProtectionRoutes";
 // import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
-import Registrasi from "./modules/registrasi/pages/Registrasi";
+import Registrasi from "./modules/registrasi/pages/RegistrasiPage";
 import PermissionRoute from "./context/PermissionRoute";
-import TahunAjaran from "./modules/tahun_ajaran/pages/TahunAjaran";
-import CreateTahunAjaran from "./modules/tahun_ajaran/pages/CreateTahunAjaran";
-import Users from "./modules/users/pages/Users";
-import Report from "./modules/registrasi/pages/Report";
+import TahunAjaran from "./modules/tahun_ajaran/pages/TahunAjaranPage";
+import CreateTahunAjaran from "./modules/tahun_ajaran/pages/CreateTahunAjaranPage";
+import UsersPage from "./modules/users/pages/UsersPage";
+import ReportPage from "./modules/registrasi/pages/ReportPage";
 import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
-import DetailReport from "./modules/registrasi/pages/DetailReport";
-import DataPortal from "./modules/data_portal/pages/DataPortal";
-import { CreatePortal } from "./modules/data_portal/pages/CreatePortal";
-import DetailPortal from "./modules/data_portal/pages/DetailPortal";
-import CreateSekolah from "./modules/sekolah/pages/CreateSekolah";
-import CreateMahasiswa from "./modules/mahasiswa/pages/CreateMahasiswa";
-import Prodi from "./modules/prodi/pages/Prodi";
-import { Kelas } from "./modules/kelas/pages/Kelas";
-import RegistrasiPortal from "./modules/portal/pages/RegistrasiPortal";
+import DetailReportPage from "./modules/registrasi/pages/DetailReportPage";
+import DataPortalPage from "./modules/data_portal/pages/DataPortalPage";
+import DetailPortalPage from "./modules/data_portal/pages/DetailPortalPage";
+import CreateSekolahPage from "./modules/sekolah/pages/CreateSekolahPage";
+import CreateMahasiswaPage from "./modules/mahasiswa/pages/CreateMahasiswaPage";
+import ProdiPage from "./modules/prodi/pages/ProdiPage";
+import RegistrasiPortalPage from "./modules/portal/pages/RegistrasiPortalPage";
+import { KelasPage } from "./modules/kelas/pages/KelasPage";
+import { CreatePortalPage } from "./modules/data_portal/pages/CreatePortalPage";
+import { EditSekolahPage } from "./modules/sekolah/pages/EditSekolahPage";
 export default function App() {
   return (
     <>
@@ -56,30 +57,37 @@ export default function App() {
               {/* Route yang hanya bisa diakses admin */}
               <Route element={<PermissionRoute allowedRoles={["admin"]} />}>
                 <Route path="/registrasi" element={<Registrasi />} />
-                <Route path="/registrasi/:id" element={<Report />} />
+                <Route path="/registrasi/:id" element={<ReportPage />} />
                 <Route
                   path="/registrasi/report-kegiatan/:reportKegiatanId"
-                  element={<DetailReport />}
+                  element={<DetailReportPage />}
                 />
 
-                <Route path="/sekolah" element={<Sekolah />} />
-                <Route path="/sekolah/create" element={<CreateSekolah />} />
+                <Route path="/sekolah" element={<SekolahPage />} />
+                <Route path="/sekolah/create" element={<CreateSekolahPage />} />
+                <Route path="/sekolah/:id" element={<EditSekolahPage />} />
 
                 <Route path="/mahasiswa" element={<Mahasiswa />} />
-                <Route path="/mahasiswa/create" element={<CreateMahasiswa />} />
+                <Route
+                  path="/mahasiswa/create"
+                  element={<CreateMahasiswaPage />}
+                />
 
-                <Route path="/kelas" element={<Kelas />} />
+                <Route path="/kelas" element={<KelasPage />} />
 
-                <Route path="/prodi" element={<Prodi />} />
+                <Route path="/prodi" element={<ProdiPage />} />
 
                 {/* Portal */}
                 {/* <Route path="/portal/:id" element={<DetailPortal />} /> */}
 
                 {/* Data Portal */}
 
-                <Route path="/data-portal" element={<DataPortal />} />
-                <Route path="/data-portal/create" element={<CreatePortal />} />
-                <Route path="/data-portal/:id" element={<DetailPortal />} />
+                <Route path="/data-portal" element={<DataPortalPage />} />
+                <Route
+                  path="/data-portal/create"
+                  element={<CreatePortalPage />}
+                />
+                <Route path="/data-portal/:id" element={<DetailPortalPage />} />
 
                 <Route path="/tahun-ajaran" element={<TahunAjaran />} />
                 <Route
@@ -87,7 +95,7 @@ export default function App() {
                   element={<CreateTahunAjaran />}
                 />
 
-                <Route path="/users" element={<Users />} />
+                <Route path="/users" element={<UsersPage />} />
               </Route>
 
               {/* Route yang hanya bisa diakses mahasiswa */}
@@ -95,7 +103,7 @@ export default function App() {
                 <Route path="/portal" element={<Portal />} />
                 <Route
                   path="/portal/registrasi/:portalId"
-                  element={<RegistrasiPortal />}
+                  element={<RegistrasiPortalPage />}
                 />
 
                 <Route

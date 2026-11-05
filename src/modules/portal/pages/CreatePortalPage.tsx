@@ -10,7 +10,7 @@ import Form from "@/components/form/Form";
 import getTahunAjaran from "@/modules/tahun_ajaran/services/tahun-ajaran.service";
 import { TahunAjaran } from "@/modules/models/tahun_ajaran";
 
-export function CreatePortal() {
+export default function CreatePortalPage() {
   const [tahunAjar, setTahunAjar] = useState("");
   const [waktuMulai, setWaktuMulai] = useState("");
   const [waktuSelesai, setWaktuSelesai] = useState("");

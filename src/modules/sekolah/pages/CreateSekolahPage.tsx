@@ -6,18 +6,19 @@ import Swal from "sweetalert2";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 
 const initialForm: Sekolah = {
+  id: 0,
+  npsn: "",
   nama: "",
   email: "",
   alamat: "",
   telepon: "",
   latitude: "",
   longitude: "",
-  id: 0,
   created_at: "",
   updated_at: "",
 };
 
-export default function CreateSekolah() {
+export default function CreateSekolahPage() {
   const [form, setForm] = useState<Sekolah>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof Sekolah, string>>>(
     {}
@@ -57,7 +58,7 @@ export default function CreateSekolah() {
       newErrors.alamat = "Alamat sekolah wajib diisi.";
     }
 
-    if (!form.telepon.trim()) {
+    if (!form.telepon?.trim()) {
       newErrors.telepon = "Nomor telepon wajib diisi.";
     }
 
@@ -117,7 +118,7 @@ export default function CreateSekolah() {
         {/* Informasi Sekolah */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {/* Nama Sekolah */}
-          <div className="md:col-span-2">
+          <div>
             <label
               htmlFor="nama"
               className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
@@ -131,6 +132,30 @@ export default function CreateSekolah() {
               id="nama"
               name="nama"
               value={form.nama}
+              onChange={handleChange}
+              placeholder="Masukkan nama sekolah"
+              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            />
+
+            {errors.nama && (
+              <p className="mt-1.5 text-sm text-red-500">{errors.nama}</p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="npsn"
+              className="mb-2 block text-sm font-semibold text-gray-700 dark:text-gray-300"
+            >
+              NPSN Sekolah
+              <span className="ml-1 text-red-500">*</span>
+            </label>
+
+            <input
+              type="number"
+              id="npsn"
+              name="npsn"
+              value={form.npsn}
               onChange={handleChange}
               placeholder="Masukkan nama sekolah"
               className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"

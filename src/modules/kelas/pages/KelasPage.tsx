@@ -11,61 +11,8 @@ import { getKelas } from "../services/kelas.service";
 import KelasTable from "../components/KelasTable";
 import { CellStyle, ColDef, ICellRendererParams } from "ag-grid-community";
 import { FormatDate } from "@/modules/utils/date-formatter";
-// import KelasTable from "../components/KelasTable";
 
-// const dummyKelas: DataKelas[] = [
-//   {
-//     id: 1,
-//     nama: "TI-1A",
-//     prodi_id: "1",
-//     dosen_id: "12",
-//     created_at: "2026-01-10T08:00:00",
-//     updated_at: "2026-01-10T08:00:00",
-//   },
-//   {
-//     id: 2,
-//     nama: "TI-1B",
-//     prodi_id: "1",
-//     dosen_id: "15",
-//     created_at: "2026-01-12T08:00:00",
-//     updated_at: "2026-01-12T08:00:00",
-//   },
-//   {
-//     id: 3,
-//     nama: "SI-2A",
-//     prodi_id: "2",
-//     dosen_id: "18",
-//     created_at: "2026-01-15T08:00:00",
-//     updated_at: "2026-01-15T08:00:00",
-//   },
-// ];
-
-// export default function Kelas() {
-//   const [kelas, setKelas] = useState<DataKelas[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   async function fetchDataKelas() {
-//     const result = await getKelas();
-//     setLoading(false);
-//     setKelas(result.kelas);
-//   }
-
-//   useEffect(() => {
-//     fetchDataKelas();
-//   }, []);
-
-//   return (
-//     <>
-//       <KelasPage data={kelas} loading={loading} />
-//     </>
-//   );
-// }
-
-// type KelasPageProps = {
-//   data: DataKelas[];
-//   loading: boolean;
-// };
-
-export const Kelas = () => {
+export const KelasPage = () => {
   const [kelas, setKelas] = useState<DataKelas[]>();
   const [loading, setLoading] = useState(true);
 
@@ -203,34 +150,6 @@ export const Kelas = () => {
           );
         },
       },
-      {
-        headerName: "Tanggal Dibuat",
-        field: "created_at",
-        flex: 1.1,
-        minWidth: 200,
-        cellStyle: {
-          paddingLeft: "16px",
-          paddingRight: "16px",
-        },
-        cellRenderer: (params: ICellRendererParams<DataKelas>) => {
-          const tanggal = params.value;
-
-          return (
-            <div className="flex h-full items-center gap-3 py-2">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-                <CalendarDays size={18} strokeWidth={1.8} />
-              </div>
-
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-slate-700">
-                  {tanggal ? FormatDate(tanggal) : "-"}
-                </p>
-                <p className="mt-1 text-xs text-slate-400">Tanggal pembuatan</p>
-              </div>
-            </div>
-          );
-        },
-      },
     ],
     []
   );
@@ -309,12 +228,7 @@ export const Kelas = () => {
         </section>
 
         {/* Table Container */}
-        <KelasTable
-          kelas={kelas}
-          colDefs={colDefs}
-          loading={loading}
-          quickFilter=""
-        />
+        <KelasTable kelas={kelas} colDefs={colDefs} loading={loading} />
       </div>
     </main>
   );

@@ -97,7 +97,7 @@ const formatDate = (value: string) =>
 // const inputClass =
 //   "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50";
 
-export default function DataPortal() {
+export default function DataPortalPage() {
   // const [portals, setPortals] = useState<Portal[]>(dummyPortals);
   const [portals, setPortals] = useState<Portal[]>([]);
   // const [showModal, setShowModal] = useState(false);

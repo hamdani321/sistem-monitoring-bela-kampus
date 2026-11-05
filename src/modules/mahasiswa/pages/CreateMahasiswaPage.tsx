@@ -14,7 +14,7 @@ type MahasiswaPayload = {
   password_confirmation: string;
 };
 
-export default function CreateMahasiswa() {
+export default function CreateMahasiswaPage() {
   const [form, setForm] = useState<MahasiswaPayload>({
     nama: "",
     email: "",

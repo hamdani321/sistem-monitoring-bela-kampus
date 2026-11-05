@@ -30,7 +30,7 @@ interface CreateTahunAjaranState {
   generalError: string;
 }
 
-export default class CreateTahunAjaran extends Component<
+export default class CreateTahunAjaranPage extends Component<
   Record<string, never>,
   CreateTahunAjaranState
 > {

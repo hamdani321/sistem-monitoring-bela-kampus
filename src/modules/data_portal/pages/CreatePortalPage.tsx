@@ -11,7 +11,7 @@ import getTahunAjaran from "@/modules/tahun_ajaran/services/tahun-ajaran.service
 import type { TahunAjaran } from "@/modules/models/tahun_ajaran";
 import { createPortal } from "@/modules/portal/services/portal.service";
 
-export function CreatePortal() {
+export function CreatePortalPage() {
   const [tahunAjar, setTahunAjar] = useState("");
   const [waktuMulai, setWaktuMulai] = useState("");
   const [waktuSelesai, setWaktuSelesai] = useState("");

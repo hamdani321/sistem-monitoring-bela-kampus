@@ -45,10 +45,10 @@ const dummyProdi: DataProdi[] = [
   },
 ];
 
-export default function Prodi() {
+export default function ProdiPage() {
   return (
     <>
-      <ProdiPage data={dummyProdi} />
+      <Prodi data={dummyProdi} />
     </>
   );
 }
@@ -97,7 +97,7 @@ const formatDate = (date: string) => {
   }).format(parsedDate);
 };
 
-const ProdiPage = ({ data }: ProdiPageProps) => {
+const Prodi = ({ data }: ProdiPageProps) => {
   const totalProdi = data.length;
 
   const totalJenjang = useMemo(
