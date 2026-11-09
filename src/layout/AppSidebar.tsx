@@ -20,6 +20,7 @@ import {
   DoorOpen,
   GraduationCap,
   PieChartIcon,
+  ReceiptPoundSterlingIcon,
   School,
   SquareUser,
   Users,
@@ -84,6 +85,11 @@ const navItems: NavItem[] = [
     name: "Users",
     path: "/users",
   },
+  // {
+  //   icon: <ReceiptPoundSterlingIcon />,
+  //   name: "Report",
+  //   path: "/report",
+  // },
 ];
 
 const othersItems: NavItem[] = [

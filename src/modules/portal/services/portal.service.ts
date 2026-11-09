@@ -25,7 +25,7 @@ interface DetailPortalAPIResponse {
     sekolah: Sekolah[];
   };
 }
-export async function getPortalById(id: string | undefined) {
+export async function getPortalById(id: string) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}portal/${id}`, {
     method: "GET",
     headers: {

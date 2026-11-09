@@ -1,18 +1,15 @@
 import Form from "@/components/form/Form";
+import { getKelas } from "@/modules/kelas/services/kelas.service";
+import { Kelas } from "@/modules/models/kelas";
+import { Prodi } from "@/modules/models/prodi";
+import { getProdi } from "@/modules/prodi/services/prodi.service";
 import { useEffect, useState } from "react";
-
-type MahasiswaPayload = {
-  nama: string;
-  email: string;
-  nim: string;
-  kode_prodi: string;
-  kelas_id: string;
-  jenis_kelamin: "Pilih" | "Laki-laki" | "Perempuan";
-  //users
-  username: string;
-  password: string;
-  password_confirmation: string;
-};
+import { createMahasiswa } from "../service/mahasiswa.service";
+import { MahasiswaErrors } from "@/modules/errors/mahasiswa.error";
+import { MahasiswaPayload } from "@/modules/interfaces/mahasiswa.interface";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
+import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 
 export default function CreateMahasiswaPage() {
   const [form, setForm] = useState<MahasiswaPayload>({
@@ -26,26 +23,45 @@ export default function CreateMahasiswaPage() {
     password: "",
     password_confirmation: "",
   });
+  const [kelas, setKelas] = useState<Kelas[]>([]);
+  const [prodi, setProdi] = useState<Prodi[]>([]);
+  const [errors, setErrors] = useState<MahasiswaErrors | null>();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // const [loading, setLoading] = useState<boolean>(false);
+  const handleSubmit = async () => {
+    setLoading(true);
+    const result = await createMahasiswa(form);
+    if (result instanceof MahasiswaErrors) {
+      setErrors(result);
+      console.log("Error");
 
-  const handleSubmit = () => {
-    // const formData = new FormData(e.currentTarget);
-    // const data = Object.fromEntries(formData.entries());
+      return;
+    }
 
-    console.log(form);
-    // Kirim data ke API Laravel di sini
+    Swal.fire({
+      icon: "success",
+      title: "Sukses!",
+      text: "Berhasil tambah data mahasiswa!",
+    }).then(() => {
+      navigate("/mahasiswa");
+    });
+    setLoading(false);
   };
 
   const inputClass =
     "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
   const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
 
-  // async function fetchDataForm() {
-  //   const [response] = await Promise.all([]);
-  // }
+  async function fetchDataForm() {
+    const [dataKelas, dataProdi] = await Promise.all([getKelas(), getProdi()]);
+    setKelas(dataKelas.kelas);
+    setProdi(dataProdi.data);
+  }
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    fetchDataForm();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50/80 p-4 sm:p-6 lg:p-2">
@@ -144,6 +160,43 @@ export default function CreateMahasiswaPage() {
                   />
                 </div>
 
+                <div>
+                  <label htmlFor="email" className={labelClass}>
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    value={form.email}
+                    onChange={(e) => {
+                      setForm({ ...form, email: e.target.value });
+                    }}
+                    type="text"
+                    placeholder="Masukkan Email mahasiswa"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className={labelClass}>
+                    Jenis Kelamin <span className="text-red-500">*</span>
+                  </label>
+
+                  <select
+                    id="prodi_id"
+                    value={form.jenis_kelamin}
+                    onChange={(e) => {
+                      setForm({ ...form, jenis_kelamin: e.target.value });
+                    }}
+                    className={inputClass}
+                    required
+                  >
+                    <option selected>Pilih</option>
+                    <option value="Laki-Laki">Laki-Laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                </div>
+
                 <div className="sm:col-span-2">
                   <label htmlFor="email" className={labelClass}>
                     Email <span className="text-red-500">*</span>
@@ -175,9 +228,12 @@ export default function CreateMahasiswaPage() {
                     className={inputClass}
                     required
                   >
-                    <option value="" disabled>
-                      Pilih program studi
-                    </option>
+                    <option selected>Pilih program studi</option>
+                    {prodi.map((item) => (
+                      <option value={item.kode_prodi} key={item.kode_prodi}>
+                        {item.nama}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -196,9 +252,12 @@ export default function CreateMahasiswaPage() {
                     className={inputClass}
                     required
                   >
-                    <option value="" disabled>
-                      Pilih kelas
-                    </option>
+                    <option selected>Pilih kelas</option>
+                    {kelas.map((item) => (
+                      <option value={item.id} key={item.id}>
+                        {item.nama}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -324,22 +383,31 @@ export default function CreateMahasiswaPage() {
 
               <button
                 type="submit"
+                disabled={loading}
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-blue-600/20 transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20 active:scale-[0.98]"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Simpan Mahasiswa
+                {loading ? (
+                  <>
+                    <ButtonSpinner text="Mohon tunggu..." />
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    Simpan Mahasiswa
+                  </>
+                )}
               </button>
             </div>
           </div>
