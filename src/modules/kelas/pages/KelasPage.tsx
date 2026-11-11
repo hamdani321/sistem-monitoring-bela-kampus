@@ -1,17 +1,9 @@
 import { Kelas as DataKelas } from "@/modules/models/kelas";
-import {
-  GraduationCap,
-  Users,
-  BookOpen,
-  CalendarDays,
-  School,
-} from "lucide-react";
+import { GraduationCap, Users, BookOpen, School } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getKelas } from "../services/kelas.service";
 import KelasTable from "../components/KelasTable";
 import { CellStyle, ColDef, ICellRendererParams } from "ag-grid-community";
-import { FormatDate } from "@/modules/utils/date-formatter";
-
 export const KelasPage = () => {
   const [kelas, setKelas] = useState<DataKelas[]>();
   const [loading, setLoading] = useState(true);
@@ -34,7 +26,7 @@ export const KelasPage = () => {
       color: "#64748b",
       fontWeight: "500",
     }),
-    []
+    [],
   );
 
   const colDefs = useMemo<ColDef<DataKelas>[]>(
@@ -151,7 +143,7 @@ export const KelasPage = () => {
         },
       },
     ],
-    []
+    [],
   );
 
   return (

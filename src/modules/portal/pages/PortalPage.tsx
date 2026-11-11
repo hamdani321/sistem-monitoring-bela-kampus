@@ -1,5 +1,3 @@
-//komponen lama
-
 import { useEffect, useState } from "react";
 import ComponentCard from "@/components/common/ComponentCard";
 import { Portal as DataPortal } from "@/modules/models/portal";
@@ -15,8 +13,8 @@ export default function PortalPage() {
   const [anggotaRegistrasi, setAnggotaRegistrasi] =
     useState<RegistrasiAnggota | null>(null);
   const [loading, setLoading] = useState(true);
-  const [waktuMulai, setWaktuMulai] = useState<Date>();
-  const [waktuSelesai, setWaktuSelesai] = useState<Date>();
+  const [waktuMulai, setWaktuMulai] = useState<Date>(new Date());
+  const [waktuSelesai, setWaktuSelesai] = useState<Date>(new Date());
   const [waktuSekarang] = useState<Date>(new Date(Date.now()));
 
   useEffect(() => {
@@ -24,12 +22,14 @@ export default function PortalPage() {
       const response = await getPortal();
       if (response.ok) {
         const responseBody = await response.json();
-        // console.log(responseBody);
+
         setWaktuMulai(new Date(responseBody.data.portal.waktu_mulai));
         setWaktuSelesai(new Date(responseBody.data.portal.waktu_selesai));
         setPortal(responseBody.data.portal);
         setRegistrasi(responseBody.data.registrasi);
         setAnggotaRegistrasi(responseBody.data.registrasi_anggota);
+        setLoading(false);
+      } else {
         setLoading(false);
       }
     };
@@ -130,33 +130,6 @@ export default function PortalPage() {
                 </div>
 
                 {/* Tombol aksi */}
-                {/* <button
-                  type="button"
-                  onClick={() => {}}
-                  disabled={loading}
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      d="M20 7v5h-5M4 17v-5h5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M5.6 9a7 7 0 0 1 11.5-2L20 12M4 12l2.9 5a7 7 0 0 0 11.5-2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-
-                  {loading ? "Memuat ulang..." : "Periksa Kembali"}
-                </button> */}
               </div>
             </section>
           </>
@@ -172,9 +145,9 @@ export default function PortalPage() {
                 waktuSekarang < waktuMulai!
                   ? "akan-datang"
                   : waktuSekarang >= waktuMulai! &&
-                    waktuSekarang < waktuSelesai!
-                  ? "aktif"
-                  : "selesai"
+                      waktuSekarang < waktuSelesai!
+                    ? "aktif"
+                    : "selesai"
               }
             />
           </>

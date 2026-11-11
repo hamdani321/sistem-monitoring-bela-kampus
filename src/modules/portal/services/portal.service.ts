@@ -47,7 +47,7 @@ export async function getPortalByIdForRegistration(id: string | undefined) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
 
   const responseBody = await response.json();
@@ -68,7 +68,6 @@ export async function createPortal({
     tahun_ajaran_id: Number(tahunAjar),
     waktu_mulai: waktuMulai,
     waktu_selesai: waktuSelesai,
-    kelompok: null,
     tahun_ajaran: null,
     status: "AKTIF",
   };
@@ -115,7 +114,7 @@ class ReportKegiatanResponse {
 }
 
 export async function getRegistrasi(
-  registrasiId: string | undefined
+  registrasiId: string | undefined,
 ): Promise<ReportKegiatanResponse | null> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}registrasi-anggota/${registrasiId}`,
@@ -125,7 +124,7 @@ export async function getRegistrasi(
         Accept: "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
 
   const responseBody: ReportKegiatanResponse = await response.json();
@@ -133,7 +132,7 @@ export async function getRegistrasi(
 }
 
 export async function createReportKegiatan(
-  payloadReportKegiatan: ReportKegiatanPayload
+  payloadReportKegiatan: ReportKegiatanPayload,
 ) {
   const formData: FormData = new FormData();
   formData.append("nama_pic", payloadReportKegiatan.nama_pic);
@@ -153,7 +152,7 @@ export async function createReportKegiatan(
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: formData,
-    }
+    },
   );
 
   if (response.ok) {

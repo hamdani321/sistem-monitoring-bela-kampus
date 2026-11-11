@@ -2,61 +2,6 @@ import { Portal } from "@/modules/models/portal";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router";
 import getDataPortal from "../services/data-portal.service";
-// import type { Portal, TahunAjaran } from "../types";
-
-// const dummyTahunAjaran: TahunAjaran[] = [
-//   {
-//     id: 1,
-//     nama: "Tahun Ajaran 2026/2027",
-//     tahun: "2026/2027",
-//     jenis: "Ganjil",
-//     created_at: "2026-01-01T00:00:00",
-//     updated_at: "2026-01-01T00:00:00",
-//   },
-//   {
-//     id: 2,
-//     nama: "Tahun Ajaran 2025/2026",
-//     tahun: "2025/2026",
-//     jenis: "Genap",
-//     created_at: "2025-01-01T00:00:00",
-//     updated_at: "2025-01-01T00:00:00",
-//   },
-//   {
-//     id: 3,
-//     nama: "Tahun Ajaran 2027/2028",
-//     tahun: "2027/2028",
-//     jenis: "Ganjil",
-//     created_at: "2026-01-01T00:00:00",
-//     updated_at: "2026-01-01T00:00:00",
-//   },
-// ];
-
-// const dummyPortals: Portal[] = [
-//   {
-//     id: 1,
-//     tahun_ajaran_id: 1,
-//     waktu_mulai: "2026-09-01T00:00:00",
-//     waktu_selesai: "2026-12-31T23:59:59",
-//     status: "AKTIF",
-//     tahun_ajaran: dummyTahunAjaran[0],
-//   },
-//   {
-//     id: 2,
-//     tahun_ajaran_id: 2,
-//     waktu_mulai: "2026-02-01T00:00:00",
-//     waktu_selesai: "2026-06-30T23:59:59",
-//     status: "NONAKTIF",
-//     tahun_ajaran: dummyTahunAjaran[1],
-//   },
-//   {
-//     id: 3,
-//     tahun_ajaran_id: 3,
-//     waktu_mulai: "2027-02-01T00:00:00",
-//     waktu_selesai: "2027-06-30T23:59:59",
-//     status: "NONAKTIF",
-//     tahun_ajaran: dummyTahunAjaran[2],
-//   },
-// ];
 
 type StatusTampilan = "AKTIF" | "NONAKTIF" | "AKAN_DATANG" | "SELESAI";
 
@@ -94,13 +39,8 @@ const formatDate = (value: string) =>
     year: "numeric",
   });
 
-// const inputClass =
-//   "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-700 outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50";
-
 export default function DataPortalPage() {
-  // const [portals, setPortals] = useState<Portal[]>(dummyPortals);
   const [portals, setPortals] = useState<Portal[]>([]);
-  // const [showModal, setShowModal] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -114,20 +54,14 @@ export default function DataPortalPage() {
     fetchDataPortal();
   }, []);
 
-  // const [form, setForm] = useState({
-  //   tahun_ajaran_id: "",
-  //   waktu_mulai: "",
-  //   waktu_selesai: "",
-  // });
-
   // Portal yang statusnya AKTIF dan sedang dalam periode pelaksanaan.
   const activePortals = portals.filter(
-    (portal) => getStatusTampilan(portal) === "AKTIF"
+    (portal) => getStatusTampilan(portal) === "AKTIF",
   );
 
   const sortedPortals = [...portals].sort(
     (a, b) =>
-      new Date(b.waktu_mulai).getTime() - new Date(a.waktu_mulai).getTime()
+      new Date(b.waktu_mulai).getTime() - new Date(a.waktu_mulai).getTime(),
   );
 
   // Switch untuk mengubah status portal.
@@ -139,8 +73,8 @@ export default function DataPortalPage() {
               ...portal,
               status: portal.status === "AKTIF" ? "NONAKTIF" : "AKTIF",
             }
-          : portal
-      )
+          : portal,
+      ),
     );
   };
 
@@ -207,17 +141,8 @@ export default function DataPortalPage() {
             </p>
           </div>
 
-          {/* <Link
-            to={"/data-portal/create"}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100"
-          >
-            Tambah Portal
-          </Link> */}
-
           <Link
             to={"/data-portal/create"}
-            // type="button"
-            // onClick={() => setShowModal(true)}
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100"
           >
             <svg
@@ -484,14 +409,6 @@ export default function DataPortalPage() {
                     >
                       Lihat Detail <span>→</span>
                     </Link>
-
-                    {/* <button
-                      type="button"
-                      onClick={() => console.log("Detail portal:", portal.id)}
-                      className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700"
-                    >
-                      Lihat Detail <span>→</span>
-                    </button> */}
                   </article>
                 );
               })}
@@ -508,146 +425,6 @@ export default function DataPortalPage() {
           )}
         </section>
       </div>
-
-      {/* Modal Tambah Portal */}
-      {/* {showModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-4 backdrop-blur-sm"
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-            className="my-auto w-full max-w-lg rounded-2xl bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start justify-between border-b border-slate-100 px-6 py-5">
-              <div>
-                <h2
-                  id="modal-title"
-                  className="text-xl font-bold text-slate-900"
-                >
-                  Tambah Portal
-                </h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  Lengkapi informasi portal Bela Kampus.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                aria-label="Tutup modal"
-                onClick={() => setShowModal(false)}
-                className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleAddPortal} className="space-y-5 p-6">
-              <div>
-                <label
-                  htmlFor="tahun_ajaran_id"
-                  className="text-sm font-semibold text-slate-700"
-                >
-                  Tahun Ajaran
-                </label>
-
-                <select
-                  id="tahun_ajaran_id"
-                  required
-                  value={form.tahun_ajaran_id}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      tahun_ajaran_id: e.target.value,
-                    })
-                  }
-                  className={inputClass}
-                >
-                  <option value="">Pilih tahun ajaran</option>
-
-                  {dummyTahunAjaran.map((tahun) => (
-                    <option key={tahun.id} value={tahun.id}>
-                      {tahun.nama} ({tahun.jenis})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="waktu_mulai"
-                  className="text-sm font-semibold text-slate-700"
-                >
-                  Waktu Mulai
-                </label>
-                <input
-                  id="waktu_mulai"
-                  type="date"
-                  required
-                  value={form.waktu_mulai}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      waktu_mulai: e.target.value,
-                    })
-                  }
-                  className={inputClass}
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="waktu_selesai"
-                  className="text-sm font-semibold text-slate-700"
-                >
-                  Waktu Selesai
-                </label>
-                <input
-                  id="waktu_selesai"
-                  type="date"
-                  required
-                  min={form.waktu_mulai || undefined}
-                  value={form.waktu_selesai}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      waktu_selesai: e.target.value,
-                    })
-                  }
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="rounded-xl bg-blue-50 p-3.5">
-                <p className="text-xs leading-5 text-blue-700">
-                  Portal baru disimpan dengan status NONAKTIF. Kamu bisa
-                  mengaktifkannya melalui switch pada daftar portal.
-                </p>
-              </div>
-
-              <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
-                >
-                  Batal
-                </button>
-
-                <button
-                  type="submit"
-                  className="rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100"
-                >
-                  Simpan Portal
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )} */}
     </main>
   );
 }

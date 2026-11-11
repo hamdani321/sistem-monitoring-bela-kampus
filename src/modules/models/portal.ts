@@ -1,4 +1,3 @@
-import { Kelompok } from "./kelompok";
 import { Registrasi } from "./registrasi";
 import { TahunAjaran } from "./tahun_ajaran";
 
@@ -13,6 +12,5 @@ export type Portal = {
 
   //relasi
   tahun_ajaran: TahunAjaran | null;
-  kelompok?: Kelompok[] | null;
   registrasi?: Registrasi[];
 };

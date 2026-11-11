@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GraduationCap,
   BookOpen,
@@ -101,10 +101,6 @@ const formatDate = (date: string) => {
 const Prodi = ({ data }: ProdiPageProps) => {
   const totalProdi = data.length;
 
-  const totalJenjang = useMemo(
-    () => new Set(data.map((prodi) => prodi.jenjang)).size,
-    [data]
-  );
   const [prodi, setProdi] = useState<DataProdi[]>([]);
 
   async function fetchProdi() {
@@ -321,7 +317,7 @@ const Prodi = ({ data }: ProdiPageProps) => {
                         <td className="px-6 py-5">
                           <span
                             className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ring-1 ring-inset ${getJenjangStyle(
-                              item.jenjang
+                              item.jenjang,
                             )}`}
                           >
                             <span className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -379,7 +375,7 @@ const Prodi = ({ data }: ProdiPageProps) => {
                           </span>
                           <span
                             className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${getJenjangStyle(
-                              prodi.jenjang
+                              prodi.jenjang,
                             )}`}
                           >
                             {prodi.jenjang}

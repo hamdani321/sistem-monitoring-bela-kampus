@@ -184,14 +184,8 @@ class ReportKegiatan extends Component<
   };
 
   render(): ReactNode {
-    const {
-      // registrasi_anggota,
-      registrasi,
-      // report_kegiatan,
-      loading,
-      loadingSubmit,
-      openModalLaporanKegiatan,
-    } = this.state;
+    const { registrasi, loading, loadingSubmit, openModalLaporanKegiatan } =
+      this.state;
     return (
       <>
         {/* data portal dan registrasi */}
@@ -274,8 +268,6 @@ class ReportKegiatan extends Component<
                   Tahun Ajaran
                 </p>
                 <h4 className="mt-1 text-2xl font-bold tracking-tight text-gray-900">
-                  {/* {portal.tahun_ajaran} */}
-                  {/* fdsf */}
                   {registrasi?.portal.tahun_ajaran?.nama ?? "kosong"}
                 </h4>
               </div>
@@ -289,13 +281,10 @@ class ReportKegiatan extends Component<
                   </div>
 
                   <p className="mt-3 font-semibold text-gray-900">
-                    {/* {formatTanggal(portal.waktu_mulai)} */}
                     {FormatDate(registrasi?.portal.waktu_mulai)}
                   </p>
 
-                  <p className="mt-1 text-sm text-gray-500">
-                    {/* Pukul {formatWaktu(portal.waktu_mulai)} WIB */}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-500"></p>
                 </div>
 
                 <div className="rounded-xl border border-gray-200 p-4">
@@ -306,12 +295,9 @@ class ReportKegiatan extends Component<
 
                   <p className="mt-3 font-semibold text-gray-900">
                     {FormatDate(registrasi?.portal.waktu_selesai)}
-                    {/* {formatTanggal(portal.waktu_selesai)} */}
                   </p>
 
-                  <p className="mt-1 text-sm text-gray-500">
-                    {/* Pukul {formatWaktu(portal.waktu_selesai)} WIB */}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-500"></p>
                 </div>
               </div>
 
@@ -320,17 +306,9 @@ class ReportKegiatan extends Component<
                 <div>
                   <p className="text-sm text-gray-500">Semester</p>
                   <p className="mt-1 font-semibold text-gray-800">
-                    {/* {portal.semester} */}
                     {registrasi?.portal.tahun_ajaran?.jenis}
                   </p>
                 </div>
-
-                {/* <div>
-                  <p className="text-sm text-gray-500">Tipe Semester</p>
-                  <span className="mt-1 inline-flex rounded-lg bg-indigo-50 px-2.5 py-1 text-sm font-medium text-indigo-700">
-                    dfs
-                  </span>
-                </div> */}
               </div>
             </div>
           </section>
@@ -411,22 +389,25 @@ class ReportKegiatan extends Component<
                 <div className="grid grid-cols-1 gap-1 py-4 sm:grid-cols-[180px_1fr] sm:gap-4">
                   <p className="text-sm text-gray-500">Program Studi</p>
                   <p className="break-words text-sm font-medium text-gray-900">
-                    {/* {registrasi.prodi} */}
                     {registrasi?.mahasiswa.prodi.nama}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-1 py-4 sm:grid-cols-[180px_1fr] sm:gap-4">
+                  <p className="text-sm text-gray-500">Tipe Registrasi</p>
+                  <p className="break-words text-sm font-medium text-gray-900">
+                    {registrasi?.tipe}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-1 py-4 sm:grid-cols-[180px_1fr] sm:gap-4">
                   <p className="text-sm text-gray-500">Sekolah</p>
                   <p className="break-words text-sm font-medium text-gray-900">
-                    {/* {registrasi.prodi} */}
                     {registrasi?.sekolah?.nama}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 gap-1 py-4 sm:grid-cols-[180px_1fr] sm:gap-4">
                   <p className="text-sm text-gray-500">Alamat Sekolah</p>
                   <p className="break-words text-sm font-medium text-gray-900">
-                    {/* {registrasi.prodi} */}
                     {registrasi?.sekolah?.alamat}
                   </p>
                 </div>
@@ -539,22 +520,9 @@ class ReportKegiatan extends Component<
           )}
         </ComponentCard>
 
-        {/* <ComponentCard title="Peta Sekolah" className="mt-4">
-          {loading ? null : (
-            <>
-              <MapView
-                latitude={Number(registrasi?.sekolah.latitude ?? 0)}
-                longitude={Number(registrasi?.sekolah.longitude ?? 0)}
-                sekolah={registrasi?.sekolah}
-                title="Lokasi Bela Kampus"
-              />
-            </>
-          )}
-        </ComponentCard> */}
-
         {/* Map End */}
 
-        {registrasi?.registrasi_anggota?.length > 0 ? (
+        {registrasi?.registrasi_anggota?.length! > 0 ? (
           <>
             <ComponentCard
               className="mt-6"
@@ -668,30 +636,6 @@ class ReportKegiatan extends Component<
                 </div>
               </div>
             </ComponentCard>
-
-            {/* <ComponentCard
-              className="mt-6"
-              title="Anggota Kegiatan"
-              desc="Anggota kegiatan bela kampus"
-            >
-              <AgGridProvider modules={modules}>
-                <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-                  <div className="h-[320px] w-full">
-                    <AgGridReact<RegistrasiAnggota>
-                      rowData={registrasi?.registrasi_anggota}
-                      columnDefs={this.colDefs}
-                      defaultColDef={this.defaultColDef}
-                      loading={loading}
-                      pagination
-                      paginationAutoPageSize
-                      // quickFilterText={quickFilter}
-                      animateRows
-                      suppressCellFocus
-                    />
-                  </div>
-                </div>
-              </AgGridProvider>
-            </ComponentCard> */}
           </>
         ) : null}
 
@@ -885,50 +829,6 @@ class ReportKegiatan extends Component<
             }}
           />
         </ComponentCard>
-
-        {/* <ComponentCard title="Report" className="mt-5">
-          <button
-            type="button"
-            onClick={() => {
-              this.setState({ openModalLaporanKegiatan: true });
-            }}
-            className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-          >
-            Buat Laporan Kegiatan
-          </button>
-
-          <ModalLaporanKegiatan
-            loadingSubmit={loadingSubmit}
-            open={openModalLaporanKegiatan}
-            onClose={() => {
-              this.setState({ openModalLaporanKegiatan: false });
-            }}
-            onSubmit={async (data) => {
-              data.registrasi_id = registrasi?.id;
-              this.setState({ loadingSubmit: true });
-              await createReportKegiatan(data);
-              this.setState({ loadingSubmit: false });
-            }}
-          />
-
-          <AgGridProvider modules={modules}>
-            <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-              <div className="h-[320px] w-full">
-                <AgGridReact<DataReportKegiatan>
-                  rowData={registrasi?.report_kegiatan}
-                  columnDefs={this.colDefsReportKegiatan}
-                  defaultColDef={this.defaultColDef}
-                  loading={loading}
-                  pagination
-                  paginationAutoPageSize
-                  // quickFilterText={quickFilter}
-                  animateRows
-                  suppressCellFocus
-                />
-              </div>
-            </div>
-          </AgGridProvider>
-        </ComponentCard> */}
 
         {/* End Report */}
       </>

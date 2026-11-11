@@ -168,7 +168,7 @@ export default function DetailPortalPage() {
         flex: 0.9,
         minWidth: 140,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => (
           <span className="font-medium text-gray-700 dark:text-gray-300">
             {params.data?.nim_mahasiswa ?? "-"}
@@ -185,7 +185,7 @@ export default function DetailPortalPage() {
         flex: 0.9,
         minWidth: 150,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const jenisKelamin = params.data?.mahasiswa?.jenis_kelamin;
 
@@ -210,7 +210,7 @@ export default function DetailPortalPage() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const tipe = params.data?.tipe;
 
@@ -244,7 +244,7 @@ export default function DetailPortalPage() {
         flex: 0.8,
         minWidth: 130,
         cellRenderer: (
-          params: ICellRendererParams<(typeof registrasi)[number]>
+          params: ICellRendererParams<(typeof registrasi)[number]>,
         ) => {
           const sekolah = params.data?.sekolah;
 
@@ -261,7 +261,7 @@ export default function DetailPortalPage() {
       //   headerName: "Sekolah",
       // },
     ],
-    []
+    [],
   );
 
   // =========================================================
@@ -277,7 +277,7 @@ export default function DetailPortalPage() {
       autoHeaderHeight: true,
       floatingFilter: false,
     }),
-    []
+    [],
   );
 
   // =========================================================
@@ -458,15 +458,7 @@ export default function DetailPortalPage() {
         <div className="space-y-4">
           {/* Toolbar */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              {/* <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Daftar Registrasi
-              </h3>
-
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Gunakan pencarian untuk menemukan data dengan cepat.
-              </p> */}
-            </div>
+            <div></div>
 
             <div className="w-full sm:w-72">
               <Input
@@ -545,7 +537,7 @@ export default function DetailPortalPage() {
 
             {sekolah.map((item) => {
               const sudahDipakai = portal?.registrasi?.some(
-                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id
+                (itemRegistrasi) => itemRegistrasi.sekolah_id == item.id,
               );
 
               const latitude = Number(item.latitude);

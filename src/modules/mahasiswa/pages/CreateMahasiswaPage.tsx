@@ -25,7 +25,6 @@ export default function CreateMahasiswaPage() {
   });
   const [kelas, setKelas] = useState<Kelas[]>([]);
   const [prodi, setProdi] = useState<Prodi[]>([]);
-  const [errors, setErrors] = useState<MahasiswaErrors | null>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -33,7 +32,6 @@ export default function CreateMahasiswaPage() {
     setLoading(true);
     const result = await createMahasiswa(form);
     if (result instanceof MahasiswaErrors) {
-      setErrors(result);
       console.log("Error");
 
       return;
