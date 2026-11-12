@@ -15,10 +15,13 @@ import {
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { Link } from "react-router";
 
-import getRegistrasi from "../services/registrasi.service";
+import getRegistrasi, {
+  acceptRegistrasi,
+} from "../services/registrasi.service";
 import ComponentCard from "@/components/common/ComponentCard";
 import CardDataRegistrasi from "../components/CardDataRegistrasi";
 import HeaderRegistrasi from "../components/HeaderRegistrasi";
+import Swal from "sweetalert2";
 
 const modules = [AllCommunityModule];
 
@@ -77,6 +80,21 @@ export default class RegistrasiPage extends Component<
   private handleQuickFilter = (event: ChangeEvent<HTMLInputElement>) => {
     this.setState({ quickFilter: event.target.value });
   };
+
+  async OnAcceptRegistrasi(id: string) {
+    try {
+      const result = await acceptRegistrasi(id);
+      Swal.fire({
+        title: "Sukses!",
+        text: result.message,
+        icon: "success",
+      }).then(() => {
+        window.location.reload();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   /**
    * Warna badge berdasarkan tipe registrasi.
@@ -241,9 +259,7 @@ export default class RegistrasiPage extends Component<
     },
     {
       headerName: "Aksi",
-      width: 100,
-      minWidth: 100,
-      maxWidth: 100,
+      width: 120,
       pinned: "right",
       sortable: false,
       filter: false,
@@ -274,6 +290,17 @@ export default class RegistrasiPage extends Component<
               </Link>
 
               <Button
+                onClick={() => {
+                  Swal.fire({
+                    title: `Accept Registrasi ${params.data?.mahasiswa.nama}?`,
+                    showCancelButton: true,
+                    confirmButtonText: "Accept",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      this.OnAcceptRegistrasi(String(params.data?.id));
+                    }
+                  });
+                }}
                 size="sm"
                 variant="primary"
                 className="!h-7 !min-h-0 !bg-green-500 !px-2 !py-1 !text-xs hover:!bg-green-600"
@@ -299,15 +326,15 @@ export default class RegistrasiPage extends Component<
     const { registrasi, quickFilter, loading, error } = this.state;
 
     const totalIndividu = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "individu"
+      (item) => item.tipe?.toLowerCase() === "individu",
     ).length;
 
     const totalKelompok = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "kelompok"
+      (item) => item.tipe?.toLowerCase() === "kelompok",
     ).length;
 
     const totalPending = registrasi.filter(
-      (item) => item.status?.toLowerCase() === "pending"
+      (item) => item.status?.toLowerCase() === "pending",
     ).length;
 
     return (

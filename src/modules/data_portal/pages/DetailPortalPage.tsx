@@ -215,12 +215,14 @@ export default function DetailPortalPage() {
           const tipe = params.data?.tipe;
 
           return (
-            <Badge
-              variant="light"
-              color={tipe === "Kelompok" ? "warning" : "primary"}
-            >
-              {tipe ?? "-"}
-            </Badge>
+            <>
+              <Badge
+                variant="light"
+                color={tipe === "Kelompok" ? "warning" : "primary"}
+              >
+                {tipe ?? "-"}
+              </Badge>
+            </>
           );
         },
       },
@@ -255,11 +257,23 @@ export default function DetailPortalPage() {
           );
         },
       },
-
-      // {
-      //   field: "",
-      //   headerName: "Sekolah",
-      // },
+      {
+        headerName: "Aksi",
+        flex: 0.8,
+        minWidth: 130,
+        cellRenderer: (params: ICellRendererParams<Registrasi>) => {
+          return (
+            <>
+              <Link
+                to={`/registrasi/${params.data?.id}`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-800"
+              >
+                Detail
+              </Link>
+            </>
+          );
+        },
+      },
     ],
     [],
   );

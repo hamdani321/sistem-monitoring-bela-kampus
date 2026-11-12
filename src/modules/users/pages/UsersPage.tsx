@@ -1,18 +1,16 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import { User as DataUser, User } from "@/modules/models/user";
 import { Component } from "react";
-import getUsers from "../services/users.service";
+import getUsers, { resetPassword } from "../services/users.service";
 import {
   AllCommunityModule,
   ColDef,
   ICellRendererParams,
 } from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
-// import { Link } from "react-router";
-// import Button from "@/components/ui/button/Button";
-// import Badge from "@/components/ui/badge/Badge";
 import CardStatistic from "../components/CardStatistic";
 import { KeyRound, Mail } from "lucide-react";
+import Swal from "sweetalert2";
 
 const modules = [AllCommunityModule];
 
@@ -66,6 +64,16 @@ export default class UsersPage extends Component<{}, State> {
     }
     return this.AVATAR_COLORS[Math.abs(hash) % this.AVATAR_COLORS.length];
   };
+  async handleResetPassword(id: string) {
+    try {
+      const result = await resetPassword(id);
+      Swal.fire({
+        title: "Sukses!",
+        text: "Berhasil reset password",
+        icon: "success",
+      });
+    } catch (error) {}
+  }
 
   getInitials = (name: string) =>
     name
@@ -111,7 +119,7 @@ export default class UsersPage extends Component<{}, State> {
           <div className="flex items-center gap-3 py-2.5">
             <div
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-sm font-bold ${this.getAvatarColor(
-                name
+                name,
               )}`}
             >
               {this.getInitials(name)}
@@ -166,10 +174,23 @@ export default class UsersPage extends Component<{}, State> {
       sortable: false,
       filter: false,
       headerClass: "text-center",
-      cellRenderer: () => (
+      cellRenderer: (params: ICellRendererParams<User>) => (
         <div className="flex h-full items-center justify-center">
           <button
             type="button"
+            onClick={() => {
+              Swal.fire({
+                title: `Reset Password ${params.data?.email}?`,
+
+                showCancelButton: true,
+                confirmButtonText: "Save",
+              }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                  this.handleResetPassword(String(params.data?.id));
+                }
+              });
+            }}
             className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow active:scale-95"
           >
             <KeyRound className="h-3.5 w-3.5" />

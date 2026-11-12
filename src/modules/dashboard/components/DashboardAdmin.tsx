@@ -424,7 +424,7 @@ export default class DashboardAdmin extends Component<
                 <p className="mt-6 text-sm font-medium text-indigo-100">
                   Portal Bela Kampus
                 </p>
-                <h2 className="mt-2 text-4xl font-bold">8</h2>
+                <h2 className="mt-2 text-4xl font-bold">{portals.length}</h2>
                 <p className="mt-2 text-sm leading-6 text-indigo-100">
                   Total portal yang sudah dibuat untuk berbagai periode
                   pelaksanaan Bela Kampus.
@@ -433,7 +433,10 @@ export default class DashboardAdmin extends Component<
                 <div className="mt-6 border-t border-white/20 pt-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-indigo-100">Portal aktif</span>
-                    <span className="font-bold">1 portal</span>
+                    <span className="font-bold">
+                      {portals.filter((item) => item.status == "AKTIF").length}{" "}
+                      portal
+                    </span>
                   </div>
                   <div className="mt-3 h-2 rounded-full bg-white/20">
                     <div

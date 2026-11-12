@@ -1,4 +1,5 @@
 import { Mahasiswa } from "./mahasiswa";
+import { Prodi } from "./prodi";
 
 export type Kelas = {
   id: number;
@@ -10,4 +11,5 @@ export type Kelas = {
 
   //relasi
   mahasiswa: Mahasiswa[];
+  prodi: Prodi;
 };

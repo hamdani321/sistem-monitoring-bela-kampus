@@ -23,7 +23,7 @@ export default async function getRegistrasi(): Promise<Registrasi[]> {
 }
 
 export async function getRegistrasiById(
-  id: string | undefined
+  id: string | undefined,
 ): Promise<Registrasi> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}registrasi/${id}`,
@@ -34,14 +34,14 @@ export async function getRegistrasiById(
         Accept: "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
   const responseBody = await response.json();
   return responseBody.data as Registrasi;
 }
 
 export async function getReportKegiatan(
-  reportKegiatanId: string | undefined
+  reportKegiatanId: string | undefined,
 ): Promise<ReportKegiatan> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}report-kegiatan/${reportKegiatanId}`,
@@ -50,10 +50,28 @@ export async function getReportKegiatan(
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
   const responseBody = await response.json();
   console.log(responseBody);
 
   return responseBody.data;
+}
+
+export async function acceptRegistrasi(id: string) {
+  const repsonse = await fetch(
+    `${import.meta.env.VITE_API_URL}registrasi/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    },
+  );
+
+  const repsonseBody = await repsonse.json();
+  if (!repsonse.ok) {
+    throw repsonseBody;
+  }
+  return repsonseBody;
 }

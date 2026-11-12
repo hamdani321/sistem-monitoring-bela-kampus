@@ -23,13 +23,17 @@ export default function KelasTable({
       resizable: true,
       floatingFilter: false,
     }),
-    []
+    [],
   );
 
   return (
-    <AgGridProvider modules={modules}>
-      <div className="w-full overflow-hidden rounded-lg border border-gray-200">
-        <div className="h-[1200px] w-full">
+    <>
+      <div
+        style={{
+          height: "1200px",
+        }}
+      >
+        <AgGridProvider modules={modules}>
           <AgGridReact<DataKelas>
             rowData={kelas}
             columnDefs={colDefs}
@@ -41,8 +45,8 @@ export default function KelasTable({
             animateRows
             suppressCellFocus
           />
-        </div>
+        </AgGridProvider>
       </div>
-    </AgGridProvider>
+    </>
   );
 }

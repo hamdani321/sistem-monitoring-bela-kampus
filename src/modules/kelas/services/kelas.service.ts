@@ -14,5 +14,7 @@ export async function getKelas() {
     },
   });
   const responseBody = await response.json();
+  console.log(responseBody);
+
   return new KelasAPIResponse(responseBody.data);
 }

@@ -3,7 +3,7 @@ import { GraduationCap, Users, BookOpen, School } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getKelas } from "../services/kelas.service";
 import KelasTable from "../components/KelasTable";
-import { CellStyle, ColDef, ICellRendererParams } from "ag-grid-community";
+import { ColDef, ICellRendererParams } from "ag-grid-community";
 export const KelasPage = () => {
   const [kelas, setKelas] = useState<DataKelas[]>();
   const [loading, setLoading] = useState(true);
@@ -18,43 +18,21 @@ export const KelasPage = () => {
     fetchDataKelas();
   }, []);
 
-  const nomorCellStyle: CellStyle = useMemo(
-    () => ({
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#64748b",
-      fontWeight: "500",
-    }),
-    [],
-  );
-
   const colDefs = useMemo<ColDef<DataKelas>[]>(
     () => [
       {
         headerName: "No.",
-        width: 76,
-        minWidth: 76,
-        maxWidth: 76,
         sortable: false,
         filter: false,
         resizable: false,
+        autoHeight: true,
         valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
-        cellStyle: {
-          ...nomorCellStyle,
-          paddingLeft: "12px",
-          paddingRight: "12px",
-        },
       },
       {
         headerName: "Nama Kelas",
         field: "nama",
         flex: 1.4,
-        minWidth: 230,
-        cellStyle: {
-          paddingLeft: "16px",
-          paddingRight: "16px",
-        },
+        autoHeight: true,
         cellRenderer: (params: ICellRendererParams<DataKelas>) => {
           const kelas = params.data;
 
@@ -84,14 +62,9 @@ export const KelasPage = () => {
         headerName: "Program Studi",
         field: "prodi_id",
         flex: 1.1,
-        minWidth: 190,
-        cellStyle: {
-          paddingLeft: "16px",
-          paddingRight: "16px",
-        },
+        autoHeight: true,
         cellRenderer: (params: ICellRendererParams<DataKelas>) => {
-          const prodiId = params.value;
-
+          const prodi = params.data?.prodi;
           return (
             <div className="flex h-full items-center gap-3 py-2">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
@@ -100,9 +73,9 @@ export const KelasPage = () => {
 
               <div className="min-w-0">
                 <p className="text-xs text-slate-400">Program Studi</p>
-                {prodiId != null ? (
+                {prodi != null ? (
                   <span className="mt-1 inline-flex items-center rounded-md bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-700">
-                    ID {prodiId}
+                    {prodi.nama}
                   </span>
                 ) : (
                   <p className="mt-1 text-sm text-slate-400">
@@ -118,11 +91,7 @@ export const KelasPage = () => {
         headerName: "Dosen Pengampu",
         field: "dosen_id",
         flex: 1.1,
-        minWidth: 190,
-        cellStyle: {
-          paddingLeft: "16px",
-          paddingRight: "16px",
-        },
+        autoHeight: true,
         cellRenderer: (params: ICellRendererParams<DataKelas>) => {
           const dosenId = params.value;
 

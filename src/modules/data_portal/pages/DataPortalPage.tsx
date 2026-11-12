@@ -1,7 +1,7 @@
 import { Portal } from "@/modules/models/portal";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router";
 import getDataPortal from "../services/data-portal.service";
+import { Link } from "react-router";
 
 type StatusTampilan = "AKTIF" | "NONAKTIF" | "AKAN_DATANG" | "SELESAI";
 
@@ -249,13 +249,12 @@ export default function DataPortalPage() {
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => console.log("Detail portal:", portal.id)}
+                    <Link
+                      to={`/data-portal/${portal.id}`}
                       className="flex w-full items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
                     >
                       Lihat Detail Portal <span>→</span>
-                    </button>
+                    </Link>
                   </div>
                 </article>
               ))}

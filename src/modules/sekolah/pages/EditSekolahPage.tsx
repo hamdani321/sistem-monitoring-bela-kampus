@@ -37,9 +37,11 @@ export function EditSekolahPage() {
       }).then(() => {
         navigate("/sekolah");
       });
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
