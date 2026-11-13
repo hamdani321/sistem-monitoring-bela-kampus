@@ -141,6 +141,7 @@ export default class RegistrasiPage extends Component<
       sortable: false,
       filter: false,
       resizable: false,
+      pinned: "left",
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
       cellStyle: {
         display: "flex",
@@ -202,32 +203,38 @@ export default class RegistrasiPage extends Component<
     {
       headerName: "Tipe Registrasi",
       field: "tipe",
-      flex: 0.85,
-      minWidth: 145,
+      flex: 1,
+      minWidth: 170,
       cellRenderer: (params: ICellRendererParams<DataRegistrasi>) => {
         const tipe = params.data?.tipe;
+        const jumlahAnggota = params.data?.registrasi_anggota.length;
+
+        const isKelompok = tipe?.toUpperCase() === "KELOMPOK";
 
         return (
-          <div className="flex h-full items-center">
-            <Badge variant="light" color={this.getTipeColor(tipe)}>
-              {tipe ?? "-"}
+          <div className="flex h-full flex-col justify-center items-start gap-1">
+            <Badge variant="light" color={isKelompok ? "success" : "primary"}>
+              <span className="flex items-center gap-1.5">
+                <i
+                  className={`bi ${
+                    isKelompok ? "bi-people-fill" : "bi-person-fill"
+                  }`}
+                />
+                {tipe ?? "-"}
+              </span>
             </Badge>
+
+            {isKelompok && (
+              <span className="flex items-center gap-1 text-xs text-gray-500">
+                <i className="bi bi-person-check-fill" />
+                {jumlahAnggota ?? 0} Anggota
+              </span>
+            )}
           </div>
         );
       },
     },
-    {
-      headerName: "Jumlah Anggota",
-      cellStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      },
-      cellRenderer: (params: ICellRendererParams<DataRegistrasi>) => {
-        const registrasi_anggota = params.data?.registrasi_anggota;
-        return <span>{registrasi_anggota?.length}</span>;
-      },
-    },
+
     {
       headerName: "Status",
       field: "status",
@@ -326,15 +333,15 @@ export default class RegistrasiPage extends Component<
     const { registrasi, quickFilter, loading, error } = this.state;
 
     const totalIndividu = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "individu",
+      (item) => item.tipe?.toLowerCase() === "individu"
     ).length;
 
     const totalKelompok = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "kelompok",
+      (item) => item.tipe?.toLowerCase() === "kelompok"
     ).length;
 
     const totalPending = registrasi.filter(
-      (item) => item.status?.toLowerCase() === "pending",
+      (item) => item.status?.toLowerCase() === "pending"
     ).length;
 
     return (

@@ -175,15 +175,7 @@ export default function TahunAjaranPage() {
         pinned: "right",
         cellStyle: aksiCellStyle,
         cellRenderer: (params: ICellRendererParams<DataTahunAjaran>) => (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              if (params.data) {
-                console.log("Detail tahun ajaran:", params.data);
-              }
-            }}
-          >
+          <Link to={`/tahun-ajaran/${params.data?.id}`}>
             <span className="inline-flex items-center gap-1.5">
               Detail
               <svg
@@ -200,7 +192,7 @@ export default function TahunAjaranPage() {
                 />
               </svg>
             </span>
-          </Button>
+          </Link>
         ),
       },
     ],

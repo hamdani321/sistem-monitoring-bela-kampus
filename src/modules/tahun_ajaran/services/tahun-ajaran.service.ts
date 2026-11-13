@@ -48,9 +48,52 @@ export async function createTahunAjaran(
 
   if (response.status == 422) {
     return responseBody;
-    // throw new TahunAjaranValidationError(
-    //   responseBody.message,
-    //   responseBody.errors
-    // );
   }
+}
+
+export async function findTahunAjaran(id: string | undefined | null) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}tahun-ajaran/${id}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  const responseBody = await response.json();
+  console.log(responseBody);
+
+  if (!response.ok) {
+    throw responseBody;
+  }
+  return responseBody;
+}
+
+export async function editTahunAjaran(
+  id: string | null | undefined,
+  nama: string,
+  tahun: string,
+  tipe: "Ganjil" | "Genap" | ""
+) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}tahun-ajaran/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        nama: nama,
+        tahun: tahun,
+        tipe: tipe,
+      }),
+    }
+  );
+
+  const responseBody = await response.json();
+  if (!response.ok) {
+    throw responseBody;
+  }
+  return responseBody;
 }

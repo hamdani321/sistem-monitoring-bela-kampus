@@ -8,14 +8,6 @@ import {
 } from "lucide-react";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 
-// type Mahasiswa = {
-//   id: number;
-//   nama: string;
-//   nim: string;
-//   email: string;
-//   jenis_kelamin: "Laki-laki" | "Perempuan";
-// };
-
 export default function TabelAnggotaRegistrasi({
   registrasi_anggota,
 }: {
@@ -92,15 +84,13 @@ export default function TabelAnggotaRegistrasi({
 
             <tbody className="divide-y divide-gray-100">
               {registrasi_anggota?.map((m) => {
-                console.log(m);
-
                 const initials = m.mahasiswa.nama
                   .split(" ")
                   .slice(0, 2)
                   .map((word) => word[0])
                   .join("");
 
-                const isMale = m.mahasiswa.jenis_kelamin === "Laki-laki";
+                const isMale = m.mahasiswa.jenis_kelamin === "Laki-Laki";
 
                 return (
                   <tr key={m.id} className="transition hover:bg-blue-50/40">

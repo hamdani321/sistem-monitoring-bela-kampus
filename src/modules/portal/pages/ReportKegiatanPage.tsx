@@ -6,7 +6,11 @@ import {
   createReportKegiatan,
   getRegistrasi,
 } from "../services/portal.service";
-import { AllCommunityModule, ColDef } from "ag-grid-community";
+import {
+  AllCommunityModule,
+  ColDef,
+  ICellRendererParams,
+} from "ag-grid-community";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { Registrasi } from "@/modules/models/registrasi";
 import { ReportKegiatan as DataReportKegiatan } from "@/modules/models/report_kegiatan";
@@ -14,6 +18,7 @@ import { FormatDate } from "@/modules/utils/date-formatter";
 import ModalLaporanKegiatan from "../components/ModalLaporanKegiatan";
 import MapView from "../components/MapView";
 import Button from "@/components/ui/button/Button";
+
 const modules = [AllCommunityModule];
 export default function ReportKegiatanPage() {
   const { registrasiId } = useParams();
@@ -27,9 +32,7 @@ export default function ReportKegiatanPage() {
 interface ReportKegiatanState {
   loading: boolean;
   loadingSubmit: boolean;
-  // registrasi_anggota: RegistrasiAnggota[];
   registrasi: Registrasi | null | undefined;
-  // report_kegiatan: DataReportKegiatan[];
   openModalLaporanKegiatan: boolean;
 }
 
@@ -40,8 +43,6 @@ class ReportKegiatan extends Component<
   state: ReportKegiatanState = {
     loading: true,
     loadingSubmit: false,
-    // registrasi_anggota: [],
-    // report_kegiatan: [],
     registrasi: null,
     openModalLaporanKegiatan: false,
   };
@@ -134,46 +135,50 @@ class ReportKegiatan extends Component<
         justifyContent: "center",
       },
     },
-
     {
       field: "nama_pic",
       headerName: "Nama PIC",
       flex: 1.3,
       minWidth: 200,
     },
-
     {
       field: "nomor_hp_pic",
       headerName: "Nomor PIC",
       flex: 0.8,
       minWidth: 140,
     },
-
     {
       field: "mahasiswa.email",
       headerName: "Email",
       flex: 1.3,
       minWidth: 220,
     },
+    // {
+    //   headerName: "Jenis Kelamin",
+    //   field: "mahasiswa.jenis_kelamin",
+    //   flex: 0.85,
+    //   minWidth: 145,
+    //   cellRenderer: (params: ICellRendererParams<DataReportKegiatan>) => {
+    //     const jenisKelamin = params.data?.mahasiswa.jenis_kelamin;
 
-    {
-      field: "mahasiswa.jenis_kelamin",
-      headerName: "Jenis Kelamin",
-      flex: 0.8,
-      minWidth: 140,
-      valueFormatter: (params) => {
-        switch (params.value) {
-          case "L":
-            return "Laki-laki";
+    //     const isLakiLaki = jenisKelamin?.toUpperCase() === "LAKI-LAKI";
 
-          case "P":
-            return "Perempuan";
-
-          default:
-            return params.value ?? "-";
-        }
-      },
-    },
+    //     return (
+    //       <div className="flex h-full items-center">
+    //         <Badge variant="light" color={isLakiLaki ? "primary" : "error"}>
+    //           <span className="flex items-center gap-1.5">
+    //             <i
+    //               className={`bi ${
+    //                 isLakiLaki ? "bi-gender-male" : "bi-gender-female"
+    //               }`}
+    //             />
+    //             {jenisKelamin ?? "-"}
+    //           </span>
+    //         </Badge>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   defaultColDef = {

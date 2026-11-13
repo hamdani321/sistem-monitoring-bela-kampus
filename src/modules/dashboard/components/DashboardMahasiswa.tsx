@@ -1,6 +1,21 @@
 import { useAuth } from "@/context/UseAuth";
+import { useEffect, useState } from "react";
+import { getDataDashboardMahasiswa } from "../services/dashboard.service";
+import { Portal } from "@/modules/models/portal";
+import { Link } from "react-router";
 
 export default function DashboardMahasiswa() {
+  const [portalActive, setPortalActive] = useState<Portal | null>(null);
+  async function fetchData() {
+    try {
+      const result = await getDataDashboardMahasiswa();
+      console.log(result);
+      setPortalActive(result.data.portalActive);
+    } catch (error) {}
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
   const { user } = useAuth();
   return (
     <>
@@ -107,7 +122,7 @@ export default function DashboardMahasiswa() {
             {/* Left Content */}
             <div className="space-y-6 lg:col-span-2">
               {/* Progress */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              {/* <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <h2 className="text-lg font-bold text-slate-800">
@@ -194,85 +209,136 @@ export default function DashboardMahasiswa() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               {/* Registered Portal */}
               <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <h2 className="text-lg font-bold text-slate-800">
-                      Portal Saya
+                      Portal Registrasi
                     </h2>
                     <p className="mt-1 text-sm text-slate-500">
                       Daftar portal Bela Kampus yang kamu ikuti.
                     </p>
                   </div>
-                  <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                  {/* <button className="text-sm font-semibold text-blue-600 hover:text-blue-700">
                     Lihat Semua →
-                  </button>
+                  </button> */}
                 </div>
 
                 <div className="mt-5 rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 sm:p-5">
-                  <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
-                    <div className="flex gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
-                        🎯
+                  {portalActive != null ? (
+                    <>
+                      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                        <div className="flex gap-3">
+                          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
+                            🎯
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-slate-800">
+                              Bela Kampus Semester Ganjil
+                            </h3>
+                            <p className="mt-1 text-xs text-slate-500">
+                              {/* Tahun Ajaran 2026/2027 */}
+                              {portalActive.tahun_ajaran?.nama}
+                            </p>
+                            {/* <div className="mt-2 flex flex-wrap gap-2">
+                              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-blue-700">
+                                Individu
+                              </span>
+                              <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+                                Aktif
+                              </span>
+                            </div> */}
+                          </div>
+                        </div>
+                        <span className="text-xs font-medium text-slate-500">
+                          Terdaftar
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-slate-800">
-                          Bela Kampus Semester Ganjil
-                        </h3>
-                        <p className="mt-1 text-xs text-slate-500">
-                          Tahun Ajaran 2026/2027
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <span className="rounded-full bg-white px-2.5 py-1 text-xs font-medium text-blue-700">
-                            Individu
-                          </span>
-                          <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
-                            Aktif
-                          </span>
+
+                      <div className="mt-5 grid grid-cols-2 gap-3 border-t border-blue-100 pt-4">
+                        <div>
+                          <p className="text-xs text-slate-500">
+                            Tanggal mulai
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-slate-700">
+                            {/* 01 Agustus 2026 */}
+                            {new Intl.DateTimeFormat("id-ID", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            }).format(new Date(portalActive.waktu_mulai))}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-slate-500">
+                            Tanggal berakhir
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-slate-700">
+                            {new Intl.DateTimeFormat("id-ID", {
+                              day: "2-digit",
+                              month: "long",
+                              year: "numeric",
+                            }).format(new Date(portalActive.waktu_selesai))}
+                          </p>
                         </div>
                       </div>
-                    </div>
-                    <span className="text-xs font-medium text-slate-500">
-                      Terdaftar
-                    </span>
-                  </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-start gap-4">
+                        {/* Icon */}
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm">
+                          <i className="bi bi-calendar-x text-2xl"></i>
+                        </div>
 
-                  <div className="mt-5 grid grid-cols-2 gap-3 border-t border-blue-100 pt-4">
-                    <div>
-                      <p className="text-xs text-slate-500">Tanggal mulai</p>
-                      <p className="mt-1 text-sm font-semibold text-slate-700">
-                        01 Agustus 2026
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-slate-500">Tanggal berakhir</p>
-                      <p className="mt-1 text-sm font-semibold text-slate-700">
-                        31 Desember 2026
-                      </p>
-                    </div>
-                  </div>
+                        {/* Content */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="text-sm font-bold text-gray-800 sm:text-base">
+                              Belum Ada Portal yang Dibuka
+                            </h3>
+
+                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700">
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                              Tidak Tersedia
+                            </span>
+                          </div>
+
+                          <p className="mt-1.5 text-sm leading-relaxed text-gray-600">
+                            Saat ini belum ada portal Bela Kampus yang sedang
+                            dibuka. Silakan periksa kembali secara berkala untuk
+                            mengetahui informasi pembukaan portal berikutnya.
+                          </p>
+
+                          <div className="mt-3 flex items-center gap-2 text-xs font-medium text-blue-700">
+                            <i className="bi bi-info-circle"></i>
+                            <span>Pantau informasi portal secara berkala.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="mt-4 flex flex-col items-center justify-between gap-3 rounded-xl border border-dashed border-slate-300 p-4 sm:flex-row">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-700">
-                      Ingin mengikuti kegiatan lainnya?
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      Temukan portal Bela Kampus yang masih terbuka.
-                    </p>
-                  </div>
-                  <button className="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto">
-                    + Daftar Portal
-                  </button>
+                  {portalActive != null ? (
+                    <>
+                      <Link
+                        to={`/portal/registrasi/${portalActive.id}`}
+                        className="w-full rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 sm:w-auto"
+                      >
+                        + Daftar Portal
+                      </Link>
+                    </>
+                  ) : null}
                 </div>
               </div>
 
               {/* Recent Activities */}
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+              {/* <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-bold text-slate-800">
@@ -335,7 +401,7 @@ export default function DashboardMahasiswa() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Right Sidebar */}
@@ -380,7 +446,7 @@ export default function DashboardMahasiswa() {
                     <span className="text-slate-400">→</span>
                   </button>
 
-                  <button className="flex w-full items-center gap-3 rounded-xl border border-slate-100 p-3 text-left transition hover:border-blue-200 hover:bg-blue-50">
+                  {/* <button className="flex w-full items-center gap-3 rounded-xl border border-slate-100 p-3 text-left transition hover:border-blue-200 hover:bg-blue-50">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-100 text-lg">
                       👥
                     </div>
@@ -393,7 +459,7 @@ export default function DashboardMahasiswa() {
                       </p>
                     </div>
                     <span className="text-slate-400">→</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
 
@@ -448,7 +514,7 @@ export default function DashboardMahasiswa() {
               </div>
 
               {/* Information Card */}
-              <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-5 text-white shadow-sm">
+              {/* <div className="overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 p-5 text-white shadow-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-2xl">💡</span>
                   <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-medium">
@@ -463,7 +529,7 @@ export default function DashboardMahasiswa() {
                 <button className="mt-5 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50">
                   Pelajari Lebih Lanjut →
                 </button>
-              </div>
+              </div> */}
             </div>
           </section>
 

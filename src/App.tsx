@@ -25,6 +25,7 @@ import RegistrasiPortalPage from "./modules/portal/pages/RegistrasiPortalPage";
 import { KelasPage } from "./modules/kelas/pages/KelasPage";
 import { CreatePortalPage } from "./modules/data_portal/pages/CreatePortalPage";
 import { EditSekolahPage } from "./modules/sekolah/pages/EditSekolahPage";
+import EditTahunAjaranPage from "./modules/tahun_ajaran/pages/EditTahunAjaranPage";
 export default function App() {
   return (
     <>
@@ -72,6 +73,10 @@ export default function App() {
                 <Route
                   path="/tahun-ajaran/create"
                   element={<CreateTahunAjaran />}
+                />
+                <Route
+                  path="/tahun-ajaran/:tahunAjaranId"
+                  element={<EditTahunAjaranPage />}
                 />
 
                 <Route path="/users" element={<UsersPage />} />

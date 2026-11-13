@@ -2,7 +2,7 @@ import { Component, ReactNode } from "react";
 import { NavigateFunction } from "react-router";
 import Switch from "../components/Switch";
 import { Portal } from "@/modules/models/portal";
-import { getDataDashboard } from "../services/dashboard.service";
+import { getDataDashboardAdmin } from "../services/dashboard.service";
 import ComponentPermission from "@/context/ComponentPermission";
 import { Registrasi } from "@/modules/models/registrasi";
 type PortalStatus = "AKTIF" | "NONAKTIF";
@@ -156,18 +156,18 @@ export default class DashboardAdmin extends Component<
 
   findPersentation(
     tipe: "Individu" | "Kelompok",
-    registrasi: Registrasi[],
+    registrasi: Registrasi[]
   ): number {
     switch (tipe) {
       case "Individu":
         const totalIndividu = registrasi.filter(
-          (item) => item.tipe === "Individu",
+          (item) => item.tipe === "Individu"
         ).length;
         return (totalIndividu / registrasi.length) * 100;
         break;
       case "Kelompok":
         const totalKelompok = registrasi.filter(
-          (item) => item.tipe === "Kelompok",
+          (item) => item.tipe === "Kelompok"
         ).length;
         return (totalKelompok / registrasi.length) * 100;
         break;
@@ -177,7 +177,7 @@ export default class DashboardAdmin extends Component<
   }
 
   async fetchDataDashboard() {
-    const result = await getDataDashboard();
+    const result = await getDataDashboardAdmin();
     this.setState({
       portals: result.data.portal,
       registrasi: result.data.registrasi,
@@ -265,8 +265,7 @@ export default class DashboardAdmin extends Component<
                   description: "Jumlah Registrasi Individu",
                   icon: "graduation",
                   value: String(
-                    registrasi.filter((item) => item.tipe === "Individu")
-                      .length,
+                    registrasi.filter((item) => item.tipe === "Individu").length
                   ),
                   title: "Total Registrasi Individu",
                 },
@@ -277,8 +276,7 @@ export default class DashboardAdmin extends Component<
                   description: "Jumlah Registrasi Kelompok",
                   icon: "graduation",
                   value: String(
-                    registrasi.filter((item) => item.tipe === "Kelompok")
-                      .length,
+                    registrasi.filter((item) => item.tipe === "Kelompok").length
                   ),
                   title: "Total Registrasi Kelompok",
                 },
@@ -614,7 +612,7 @@ export default class DashboardAdmin extends Component<
                                           ? "NONAKTIF"
                                           : "AKTIF",
                                     }
-                                  : item,
+                                  : item
                               ),
                             }));
                           }}
