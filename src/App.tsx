@@ -16,6 +16,7 @@ import UsersPage from "./modules/users/pages/UsersPage";
 import ReportPage from "./modules/registrasi/pages/ReportPage";
 import ReportKegiatanPage from "./modules/portal/pages/ReportKegiatanPage";
 import DetailReportPage from "./modules/registrasi/pages/DetailReportPage";
+import { DetailReportPage as DetailReportPageMahasiswa } from "./modules/portal/pages/DetailReportPage";
 import DataPortalPage from "./modules/data_portal/pages/DataPortalPage";
 import DetailPortalPage from "./modules/data_portal/pages/DetailPortalPage";
 import CreateSekolahPage from "./modules/sekolah/pages/CreateSekolahPage";
@@ -26,6 +27,7 @@ import { KelasPage } from "./modules/kelas/pages/KelasPage";
 import { CreatePortalPage } from "./modules/data_portal/pages/CreatePortalPage";
 import { EditSekolahPage } from "./modules/sekolah/pages/EditSekolahPage";
 import EditTahunAjaranPage from "./modules/tahun_ajaran/pages/EditTahunAjaranPage";
+import KegiatanLaporanPage from "./modules/kegiatan_laporan/pages/KegiatanLaporanPage";
 export default function App() {
   return (
     <>
@@ -92,6 +94,19 @@ export default function App() {
 
                 <Route
                   path="/portal/registrasi/:registrasiId/report"
+                  element={<ReportKegiatanPage />}
+                />
+                <Route
+                  path="/portal/registrasi/report/:reportKegiatanId/detail"
+                  element={<DetailReportPageMahasiswa />}
+                />
+
+                <Route
+                  path="/kegiatan-laporan"
+                  element={<KegiatanLaporanPage />}
+                />
+                <Route
+                  path="/kegiatan-laporan/:registrasiId"
                   element={<ReportKegiatanPage />}
                 />
 

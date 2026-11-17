@@ -1,4 +1,5 @@
 import { Mahasiswa } from "./mahasiswa";
+import { Registrasi } from "./registrasi";
 
 export type RegistrasiAnggota = {
   id: number;
@@ -9,4 +10,5 @@ export type RegistrasiAnggota = {
 
   //relasi
   mahasiswa: Mahasiswa;
+  registrasi: Registrasi;
 };

@@ -18,6 +18,8 @@ import { FormatDate } from "@/modules/utils/date-formatter";
 import ModalLaporanKegiatan from "../components/ModalLaporanKegiatan";
 import MapView from "../components/MapView";
 import Button from "@/components/ui/button/Button";
+import Buttons from "@/pages/UiElements/Buttons";
+import { ArrowUpRight, Eye } from "lucide-react";
 
 const modules = [AllCommunityModule];
 export default function ReportKegiatanPage() {
@@ -83,21 +85,18 @@ class ReportKegiatan extends Component<
       flex: 1.3,
       minWidth: 200,
     },
-
     {
       field: "mahasiswa.nim",
       headerName: "NIM",
       flex: 0.8,
       minWidth: 140,
     },
-
     {
       field: "mahasiswa.email",
       headerName: "Email",
       flex: 1.3,
       minWidth: 220,
     },
-
     {
       field: "mahasiswa.jenis_kelamin",
       headerName: "Jenis Kelamin",
@@ -126,6 +125,7 @@ class ReportKegiatan extends Component<
       maxWidth: 70,
       pinned: "left",
       sortable: false,
+      autoHeight: true,
       filter: false,
       resizable: false,
       valueGetter: (params) => (params.node?.rowIndex ?? 0) + 1,
@@ -135,50 +135,116 @@ class ReportKegiatan extends Component<
         justifyContent: "center",
       },
     },
+
     {
-      field: "nama_pic",
-      headerName: "Nama PIC",
-      flex: 1.3,
-      minWidth: 200,
+      field: "mahasiswa.nama",
+      headerName: "Pelapor",
+      minWidth: 280,
+      flex: 1,
+
+      autoHeight: true,
+      cellRenderer: (params: any) => {
+        const mahasiswa = params.data?.mahasiswa;
+
+        if (!mahasiswa) {
+          return (
+            <span className="text-sm italic text-gray-400">
+              Data mahasiswa tidak tersedia
+            </span>
+          );
+        }
+
+        return (
+          <div className="flex items-center gap-3 py-2">
+            {/* Avatar */}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold uppercase text-blue-700">
+              {mahasiswa.nama?.charAt(0) ?? "?"}
+            </div>
+
+            {/* Informasi Mahasiswa */}
+            <div className="flex min-w-0 flex-col gap-1">
+              <span className="truncate text-sm font-semibold text-gray-800">
+                {mahasiswa.nama}
+              </span>
+
+              <span className="truncate text-xs text-gray-500">
+                {mahasiswa.email}
+              </span>
+
+              <span className="w-fit rounded-md bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+                NIM: {mahasiswa.nim}
+              </span>
+            </div>
+          </div>
+        );
+      },
     },
     {
-      field: "nomor_hp_pic",
-      headerName: "Nomor PIC",
-      flex: 0.8,
-      minWidth: 140,
+      field: "nama_pic",
+      headerName: "Penanggung Jawab (PIC)",
+      autoHeight: true,
+      flex: 1.3,
+      cellRenderer: (params: any) => {
+        const nama = params.data?.nama_pic;
+        const nomorHp = params.data?.nomor_hp_pic;
+
+        return (
+          <div className="flex flex-col justify-center gap-1 py-2">
+            <div className="flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
+                {nama?.charAt(0)?.toUpperCase() ?? "?"}
+              </span>
+              <span className="break-words">{nama || "Tidak tersedia"}</span>
+            </div>
+
+            <div className="flex items-center gap-2 pl-9 text-xs text-gray-500">
+              <i className="fa-solid fa-phone text-gray-400" />
+              <span>{nomorHp || "Nomor HP tidak tersedia"}</span>
+            </div>
+          </div>
+        );
+      },
     },
     {
       field: "mahasiswa.email",
       headerName: "Email",
       flex: 1.3,
-      minWidth: 220,
+      autoHeight: true,
+      wrapText: true,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        whiteSpace: "normal",
+        overflowWrap: "anywhere",
+        lineHeight: "1.5",
+      },
     },
-    // {
-    //   headerName: "Jenis Kelamin",
-    //   field: "mahasiswa.jenis_kelamin",
-    //   flex: 0.85,
-    //   minWidth: 145,
-    //   cellRenderer: (params: ICellRendererParams<DataReportKegiatan>) => {
-    //     const jenisKelamin = params.data?.mahasiswa.jenis_kelamin;
-
-    //     const isLakiLaki = jenisKelamin?.toUpperCase() === "LAKI-LAKI";
-
-    //     return (
-    //       <div className="flex h-full items-center">
-    //         <Badge variant="light" color={isLakiLaki ? "primary" : "error"}>
-    //           <span className="flex items-center gap-1.5">
-    //             <i
-    //               className={`bi ${
-    //                 isLakiLaki ? "bi-gender-male" : "bi-gender-female"
-    //               }`}
-    //             />
-    //             {jenisKelamin ?? "-"}
-    //           </span>
-    //         </Badge>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      field: "id",
+      headerName: "Aksi",
+      flex: 1.3,
+      autoHeight: true,
+      cellStyle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      cellRenderer: (params: ICellRendererParams<DataReportKegiatan>) => {
+        return (
+          <>
+            <Link
+              to={`/portal/registrasi/report/${params.data?.id}/detail`}
+              className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-600 transition-all duration-200hover:border-blue-600 hover:bg-blue-600 hover:text-white hover:shadow-md active:scale-95"
+            >
+              <Eye size={16} />
+              Detail
+              <ArrowUpRight size={14} />
+            </Link>
+          </>
+        );
+      },
+    },
   ];
 
   defaultColDef = {

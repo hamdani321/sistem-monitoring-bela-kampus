@@ -17,23 +17,23 @@ export default function PortalPage() {
   const [waktuSelesai, setWaktuSelesai] = useState<Date>(new Date());
   const [waktuSekarang] = useState<Date>(new Date(Date.now()));
 
-  useEffect(() => {
-    const getDataPortal = async () => {
-      const response = await getPortal();
-      if (response.ok) {
-        const responseBody = await response.json();
+  async function fetchDataPortal() {
+    const response = await getPortal();
+    if (response.ok) {
+      const responseBody = await response.json();
+      setWaktuMulai(new Date(responseBody.data.portal.waktu_mulai));
+      setWaktuSelesai(new Date(responseBody.data.portal.waktu_selesai));
+      setPortal(responseBody.data.portal);
+      setRegistrasi(responseBody.data.registrasi);
+      setAnggotaRegistrasi(responseBody.data.registrasi_anggota);
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }
 
-        setWaktuMulai(new Date(responseBody.data.portal.waktu_mulai));
-        setWaktuSelesai(new Date(responseBody.data.portal.waktu_selesai));
-        setPortal(responseBody.data.portal);
-        setRegistrasi(responseBody.data.registrasi);
-        setAnggotaRegistrasi(responseBody.data.registrasi_anggota);
-        setLoading(false);
-      } else {
-        setLoading(false);
-      }
-    };
-    getDataPortal();
+  useEffect(() => {
+    fetchDataPortal();
   }, []);
 
   return (
@@ -145,9 +145,9 @@ export default function PortalPage() {
                 waktuSekarang < waktuMulai!
                   ? "akan-datang"
                   : waktuSekarang >= waktuMulai! &&
-                      waktuSekarang < waktuSelesai!
-                    ? "aktif"
-                    : "selesai"
+                    waktuSekarang < waktuSelesai!
+                  ? "aktif"
+                  : "selesai"
               }
             />
           </>
