@@ -36,7 +36,7 @@ interface RegistrasiErrors {
   };
 }
 
-export default function RegistrasiPortalPage() {
+export default function FormRegistrasiPortalPage() {
   const [portal, setPortal] = useState<Portal>();
   const [sekolah, setSekolah] = useState<Sekolah[]>();
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
@@ -64,7 +64,6 @@ export default function RegistrasiPortalPage() {
   useEffect(() => {
     const getPortal = async () => {
       const response = await getPortalByIdForRegistration(portalId);
-      console.log("Data portal ", response);
       setPortal(response.data.portal);
       setSekolah(response.data.sekolah);
       setMahasiswa(response.data.mahasiswa);
@@ -273,6 +272,71 @@ export default function RegistrasiPortalPage() {
 
           <div className="mt-3">
             <Label>
+              Tipe Kegiatan <span className="text-red-600">*</span>
+            </Label>
+
+            <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                {
+                  value: "Individu",
+                  title: "Individu",
+                  description: "Pendaftaran dilakukan secara perorangan.",
+                  icon: "👤",
+                },
+                {
+                  value: "Kelompok",
+                  title: "Kelompok",
+                  description:
+                    "Pendaftaran dilakukan bersama anggota kelompok.",
+                  icon: "👥",
+                },
+              ].map((item) => (
+                <label key={item.value} className="cursor-pointer">
+                  <input
+                    type="radio"
+                    name="tipe"
+                    value={item.value}
+                    onChange={() => handleChangeTipe(item.value)}
+                    className="peer sr-only"
+                  />
+
+                  <div className="flex h-full items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:bg-blue-50/50 peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-100">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-xl transition-colors peer-checked:bg-blue-100">
+                      {item.icon}
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold text-gray-800">
+                          {item.title}
+                        </span>
+
+                        <span className="flex size-5 shrink-0 items-center justify-center rounded-full border border-gray-300 peer-checked:border-blue-600 peer-checked:bg-blue-600">
+                          <span className="size-2 rounded-full bg-white opacity-0 peer-checked:opacity-100" />
+                        </span>
+                      </div>
+
+                      <p className="mt-1 text-sm leading-relaxed text-gray-500">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
+
+            {errors.errors.tipe?.map((message, index) => (
+              <span
+                className="mt-1 block text-sm text-red-600"
+                key={`error-tipe${index}`}
+              >
+                {message}
+              </span>
+            ))}
+          </div>
+
+          {/* <div className="mt-3">
+            <Label>
               Tipe <span className="text-red-600">*</span>
             </Label>
             <Select
@@ -289,7 +353,7 @@ export default function RegistrasiPortalPage() {
                 {message}
               </span>
             ))}
-          </div>
+          </div> */}
 
           {tipe === "Kelompok" ? (
             <>
@@ -581,15 +645,15 @@ export default function RegistrasiPortalPage() {
                           const handleTambahAnggota = () => {
                             if (!mahasiswa) return;
 
-                            if (anggotaRegistrasi.length >= 5) {
-                              Swal.fire({
-                                title: "Kapasitas Penuh!",
-                                text: "Maksimal anggota dalam satu kelompok adalah 5 mahasiswa.",
-                                icon: "warning",
-                                confirmButtonColor: "#2563eb",
-                              });
-                              return;
-                            }
+                            // if (anggotaRegistrasi.length >= 5) {
+                            //   Swal.fire({
+                            //     title: "Kapasitas Penuh!",
+                            //     text: "Maksimal anggota dalam satu kelompok adalah 5 mahasiswa.",
+                            //     icon: "warning",
+                            //     confirmButtonColor: "#2563eb",
+                            //   });
+                            //   return;
+                            // }
 
                             if (
                               anggotaRegistrasi.some(
@@ -606,7 +670,7 @@ export default function RegistrasiPortalPage() {
                             }
 
                             setAnggotaRegistrasi((prev) => {
-                              if (prev.length >= 5) return prev;
+                              // if (prev.length >= 5) return prev;
 
                               if (
                                 prev.some((item) => item.id === mahasiswa.id)

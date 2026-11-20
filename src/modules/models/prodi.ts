@@ -1,5 +1,5 @@
 export type Prodi = {
-  id: number;
+  id: string;
   kode_prodi: number;
   nama: string;
   singkatan: string;

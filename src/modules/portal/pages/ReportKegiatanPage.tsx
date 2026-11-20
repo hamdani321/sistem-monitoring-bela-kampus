@@ -51,6 +51,8 @@ class ReportKegiatan extends Component<
 
   fetchData = async () => {
     const data = await getRegistrasi(this.props.registrasiId);
+    console.log(data);
+
     this.setState({
       registrasi: data?.data,
       loading: false,
@@ -745,11 +747,8 @@ class ReportKegiatan extends Component<
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  this.setState({ openModalLaporanKegiatan: true });
-                }}
+              <Link
+                to={`/portal/registrasi/${registrasi?.id}/report/create`}
                 className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-indigo-600/20 transition hover:bg-indigo-700 active:scale-[0.98]"
               >
                 <svg
@@ -762,7 +761,7 @@ class ReportKegiatan extends Component<
                   <path d="M12 5v14M5 12h14" />
                 </svg>
                 Buat Laporan
-              </button>
+              </Link>
             </div>
 
             {/* Summary */}
@@ -881,7 +880,7 @@ class ReportKegiatan extends Component<
           </div>
 
           {/* Modal */}
-          <ModalLaporanKegiatan
+          {/* <ModalLaporanKegiatan
             loadingSubmit={loadingSubmit}
             open={openModalLaporanKegiatan}
             onClose={() => {
@@ -898,7 +897,7 @@ class ReportKegiatan extends Component<
                 this.setState({ loadingSubmit: false });
               }
             }}
-          />
+          /> */}
         </ComponentCard>
 
         {/* End Report */}

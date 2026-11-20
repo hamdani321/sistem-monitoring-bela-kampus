@@ -2,7 +2,7 @@ import { Mahasiswa } from "./mahasiswa";
 import { Prodi } from "./prodi";
 
 export type Kelas = {
-  id: number;
+  id: string;
   nama: string;
   prodi_id: string;
   dosen_id: string;

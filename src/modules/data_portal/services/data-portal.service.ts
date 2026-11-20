@@ -5,7 +5,7 @@ interface DataPortalAPIResponse {
   data: Portal[];
 }
 
-export default async function getDataPortal() {
+export async function getDataPortal() {
   const response = await fetch(`${import.meta.env.VITE_API_URL}data-portal`, {
     method: "GET",
     headers: {
@@ -14,4 +14,24 @@ export default async function getDataPortal() {
   });
   const responseBody = await response.json();
   return responseBody as DataPortalAPIResponse;
+}
+
+export async function activatePortal(id: string) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}portal/activate/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+
+  const responseBody = await response.json();
+  console.log(responseBody);
+
+  if (!response.ok) {
+    throw responseBody;
+  }
+  return responseBody;
 }

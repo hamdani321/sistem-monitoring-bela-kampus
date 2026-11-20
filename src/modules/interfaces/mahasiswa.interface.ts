@@ -12,7 +12,7 @@ export interface MahasiswaPayload {
   kelas_id: string;
   jenis_kelamin: string; //"Pilih" | "Laki-Laki" | "Perempuan";
   //users
-  username: string;
+  // username: string;
   password: string;
   password_confirmation: string;
 }

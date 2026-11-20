@@ -1,8 +1,4 @@
-import { MahasiswaErrors } from "@/modules/errors/mahasiswa.error";
-import {
-  MahasiswaPayload,
-  MahasiswaResponse,
-} from "@/modules/interfaces/mahasiswa.interface";
+import { MahasiswaPayload } from "@/modules/interfaces/mahasiswa.interface";
 
 export async function getMahasiswa() {
   return await fetch(`${import.meta.env.VITE_API_URL}mahasiswa`, {
@@ -13,9 +9,7 @@ export async function getMahasiswa() {
   });
 }
 
-export async function createMahasiswa(
-  mahasiswa: MahasiswaPayload
-): Promise<MahasiswaResponse | MahasiswaErrors> {
+export async function createMahasiswa(mahasiswa: MahasiswaPayload) {
   const response = await fetch(`${import.meta.env.VITE_API_URL}mahasiswa`, {
     method: "POST",
     headers: {
@@ -26,10 +20,10 @@ export async function createMahasiswa(
     body: JSON.stringify(mahasiswa),
   });
 
-  if (response.status == 422) {
-    const responseBody: MahasiswaErrors = await response.json();
-    return responseBody;
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw responseBody;
   }
-  const responseBody: MahasiswaResponse = await response.json();
   return responseBody;
 }

@@ -7,5 +7,8 @@ export class MahasiswaErrors {
     kode_prodi: string[] | null;
     kelas_id: string[] | null;
     jenis_kelamin: string[] | null;
+    username: string[] | null;
+    password: string[] | null;
+    password_confirmation: string[] | null;
   } | null = null;
 }

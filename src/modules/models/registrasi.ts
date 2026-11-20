@@ -5,9 +5,9 @@ import { ReportKegiatan } from "./report_kegiatan";
 import { Sekolah } from "./sekolah";
 
 export type Registrasi = {
-  id: number;
-  portal_id: number;
-  sekolah_id: number;
+  id: string;
+  portal_id: string;
+  sekolah_id: string;
   nim_mahasiswa: string;
   tipe: "Individu" | "Kelompok";
   status: string;

@@ -8,7 +8,7 @@ import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 
 export function EditSekolahPage() {
   const [sekolah, setSekolah] = useState<Sekolah>({
-    id: 0,
+    id: "",
     npsn: "",
     nama: "",
     email: "",
@@ -21,7 +21,7 @@ export function EditSekolahPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   async function fetchDataSekolah() {
-    const result = await getSekolahById(Number(id));
+    const result = await getSekolahById(id!);
     setSekolah(result.data);
     setLoading(false);
   }

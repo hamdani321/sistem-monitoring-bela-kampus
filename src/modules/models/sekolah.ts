@@ -1,5 +1,5 @@
 export class Sekolah {
-  id: number = 0;
+  id: string = "";
   npsn: string = "";
   nama: string = "";
   email: string = "";

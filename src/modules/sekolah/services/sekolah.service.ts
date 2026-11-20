@@ -16,7 +16,7 @@ interface FindSekolahResponse {
   data: Sekolah;
 }
 
-export async function getSekolahById(id: number): Promise<FindSekolahResponse> {
+export async function getSekolahById(id: string): Promise<FindSekolahResponse> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}sekolah/${id}`, {
     method: "GET",
     headers: {
@@ -30,7 +30,7 @@ export async function getSekolahById(id: number): Promise<FindSekolahResponse> {
 }
 
 export async function updateSekolah(
-  sekolah: Sekolah,
+  sekolah: Sekolah
 ): Promise<SekolahAPIResponse> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}sekolah/${sekolah.id}`,
@@ -41,7 +41,7 @@ export async function updateSekolah(
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(sekolah),
-    },
+    }
   );
   const responseBody: SekolahAPIResponse = await response.json();
   if (!response.ok) {

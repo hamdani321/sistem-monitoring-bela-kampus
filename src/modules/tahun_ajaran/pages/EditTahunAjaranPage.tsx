@@ -12,25 +12,14 @@ import {
   editTahunAjaran,
   findTahunAjaran,
 } from "../services/tahun-ajaran.service";
-
-interface ValidationErrors {
-  nama?: string[];
-  tahun?: string[];
-  tipe?: string[];
-}
-
-interface ValidationError {
-  message?: string;
-  errors?: ValidationErrors;
-}
+import { ChevronDown } from "lucide-react";
+import Swal from "sweetalert2";
 
 interface EditTahunAjaranState {
   nama: string;
   tahun: string;
   tipe: "Ganjil" | "Genap" | "";
   loading: boolean;
-  errors: ValidationErrors;
-  generalError: string;
 }
 export default function EditTahunAjaranPage() {
   const { tahunAjaranId } = useParams();
@@ -50,21 +39,20 @@ class EditTahunAjaran extends Component<
     nama: "",
     tahun: "",
     tipe: "",
-    loading: false,
-    errors: {},
-    generalError: "",
+    loading: true,
+    // errors: {},
+    // generalError: "",
   };
   async componentDidMount() {
     try {
-      console.log("Ambil");
-
       const result = await findTahunAjaran(this.props.id);
+      console.log(result);
+
       this.setState({
         nama: result.data.nama,
         tahun: result.data.tahun,
-        tipe: result.data.tipe,
+        tipe: result.data.jenis,
       });
-      console.log(result);
     } catch (error) {
     } finally {
       this.setState({ loading: false });
@@ -72,66 +60,32 @@ class EditTahunAjaran extends Component<
   }
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
     const { nama, tahun, tipe } = this.state;
-
-    // Validasi dasar di sisi client
-    const errors: ValidationErrors = {};
-
-    if (!nama.trim()) {
-      errors.nama = ["Nama tahun ajaran wajib diisi."];
-    }
-
-    if (!tahun.trim()) {
-      errors.tahun = ["Tahun wajib diisi."];
-    } else if (!/^\d{4}$/.test(tahun)) {
-      errors.tahun = ["Tahun harus terdiri dari 4 digit."];
-    }
-
-    if (!tipe) {
-      errors.tipe = ["Silakan pilih tipe semester."];
-    }
-
-    if (Object.keys(errors).length > 0) {
-      this.setState({ errors, generalError: "" });
-      return;
-    }
 
     this.setState({
       loading: true,
-      errors: {},
-      generalError: "",
     });
 
     try {
-      const result = await editTahunAjaran(
-        this.props.id,
-        nama.trim(),
-        tahun.trim(),
-        tipe
-      );
-      console.log(result);
-    } catch (error) {
+      const result = await editTahunAjaran(this.props.id, nama, tahun, tipe);
+      Swal.fire({
+        title: "Sukses!",
+        text: result.message,
+        icon: "success",
+      });
+    } catch (error: any) {
+      Swal.fire({
+        title: "Sukses!",
+        text: error,
+        icon: "error",
+      });
     } finally {
       this.setState({ loading: false });
     }
   };
 
-  clearFieldError = (field: keyof ValidationErrors) => {
-    this.setState((prevState) => {
-      const errors = { ...prevState.errors };
-      delete errors[field];
-
-      return {
-        errors,
-        generalError: "",
-      };
-    });
-  };
-
   render(): ReactNode {
-    const { nama, tahun, loading, errors, generalError } = this.state;
+    const { nama, tahun, tipe, loading } = this.state;
 
     return (
       <div className="space-y-6">
@@ -204,30 +158,6 @@ class EditTahunAjaran extends Component<
                 </div>
               </div>
 
-              {/* Error umum */}
-              {generalError && (
-                <div
-                  role="alert"
-                  className="flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
-                >
-                  <svg
-                    className="h-5 w-5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="12" cy="12" r="9" />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 8v5M12 16h.01"
-                    />
-                  </svg>
-                  <p>{generalError}</p>
-                </div>
-              )}
-
               {/* Nama */}
               <div>
                 <Label htmlFor="nama">
@@ -241,23 +171,11 @@ class EditTahunAjaran extends Component<
                     value={nama}
                     placeholder="Contoh: Tahun Ajaran 2026/2027"
                     disabled={loading}
-                    error={Boolean(errors.nama?.length)}
                     onChange={(event) => {
                       this.setState({ nama: event.target.value });
-                      this.clearFieldError("nama");
                     }}
                   />
                 </div>
-
-                {errors.nama?.map((message, index) => (
-                  <p
-                    key={`nama-${index}`}
-                    className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
-                  >
-                    <span>!</span>
-                    {message}
-                  </p>
-                ))}
 
                 <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   Gunakan nama yang mudah dikenali oleh admin.
@@ -277,23 +195,11 @@ class EditTahunAjaran extends Component<
                     value={tahun}
                     placeholder="Contoh: 2026"
                     disabled={loading}
-                    error={Boolean(errors.tahun?.length)}
                     onChange={(event) => {
                       this.setState({ tahun: event.target.value });
-                      this.clearFieldError("tahun");
                     }}
                   />
                 </div>
-
-                {errors.tahun?.map((message, index) => (
-                  <p
-                    key={`tahun-${index}`}
-                    className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
-                  >
-                    <span>!</span>
-                    {message}
-                  </p>
-                ))}
 
                 <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   Masukkan tahun awal periode akademik dalam format 4 digit.
@@ -307,33 +213,27 @@ class EditTahunAjaran extends Component<
                 </Label>
 
                 <div className="mt-2">
-                  <Select
-                    options={[
-                      { value: "Ganjil", label: "Ganjil" },
-                      { value: "Genap", label: "Genap" },
-                    ]}
-                    placeholder="Pilih tipe semester"
-                    className={
-                      errors.tipe?.length ? "border border-red-500" : ""
-                    }
-                    onChange={(value) => {
+                  <select
+                    value={tipe}
+                    onChange={(e) => {
                       this.setState({
-                        tipe: value as "Ganjil" | "Genap",
+                        tipe: e.target.value as "Ganjil" | "Genap",
                       });
-                      this.clearFieldError("tipe");
                     }}
-                  />
-                </div>
-
-                {errors.tipe?.map((message, index) => (
-                  <p
-                    key={`tipe-${index}`}
-                    className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
+                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-11 text-sm font-medium text-gray-700 shadow-sm outline-none transition-all duration-200 hover:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   >
-                    <span>!</span>
-                    {message}
-                  </p>
-                ))}
+                    <option value="" disabled>
+                      Pilih tipe semester
+                    </option>
+                    <option value="Ganjil">Ganjil</option>
+                    <option value="Genap">Genap</option>
+                  </select>
+
+                  {/* Dropdown Icon */}
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4">
+                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                  </div>
+                </div>
 
                 <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                   Pilih semester Ganjil atau Genap sesuai periode akademik.
@@ -385,7 +285,7 @@ class EditTahunAjaran extends Component<
                   {loading ? (
                     <ButtonSpinner text="Menyimpan..." />
                   ) : (
-                    "Simpan Tahun Ajaran"
+                    "Simpan Perubahan"
                   )}
                 </Button>
               </div>

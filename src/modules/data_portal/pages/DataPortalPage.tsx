@@ -1,7 +1,8 @@
 import { Portal } from "@/modules/models/portal";
 import { useCallback, useEffect, useState } from "react";
-import getDataPortal from "../services/data-portal.service";
+import { activatePortal, getDataPortal } from "../services/data-portal.service";
 import { Link } from "react-router";
+import Swal from "sweetalert2";
 
 type StatusTampilan = "AKTIF" | "NONAKTIF" | "AKAN_DATANG" | "SELESAI";
 
@@ -46,6 +47,8 @@ export default function DataPortalPage() {
 
   const fetchDataPortal = useCallback(async () => {
     const dataPortal = await getDataPortal();
+    console.log(dataPortal);
+
     setPortals(dataPortal.data);
     setIsLoading(false);
   }, []);
@@ -56,26 +59,40 @@ export default function DataPortalPage() {
 
   // Portal yang statusnya AKTIF dan sedang dalam periode pelaksanaan.
   const activePortals = portals.filter(
-    (portal) => getStatusTampilan(portal) === "AKTIF",
+    (portal) => getStatusTampilan(portal) === "AKTIF"
   );
 
   const sortedPortals = [...portals].sort(
     (a, b) =>
-      new Date(b.waktu_mulai).getTime() - new Date(a.waktu_mulai).getTime(),
+      new Date(b.waktu_mulai).getTime() - new Date(a.waktu_mulai).getTime()
   );
 
   // Switch untuk mengubah status portal.
-  const togglePortal = (id: number) => {
-    setPortals((previous) =>
-      previous.map((portal) =>
-        portal.id === id
-          ? {
-              ...portal,
-              status: portal.status === "AKTIF" ? "NONAKTIF" : "AKTIF",
-            }
-          : portal,
-      ),
-    );
+  const togglePortal = async (id: string) => {
+    try {
+      const result = await activatePortal(id);
+      Swal.fire({
+        title: "Sukses!",
+        text: result.message,
+        icon: "success",
+      });
+      setPortals((previous) =>
+        previous.map((portal) =>
+          portal.id === id
+            ? {
+                ...portal,
+                status: portal.status === "AKTIF" ? "NONAKTIF" : "AKTIF",
+              }
+            : portal
+        )
+      );
+    } catch (error: any) {
+      Swal.fire({
+        title: "Oopss!",
+        text: error.message,
+        icon: "error",
+      });
+    }
   };
 
   if (isLoading) {

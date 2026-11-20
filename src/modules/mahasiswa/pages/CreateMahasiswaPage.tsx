@@ -19,10 +19,10 @@ export default function CreateMahasiswaPage() {
     kode_prodi: "",
     kelas_id: "",
     jenis_kelamin: "Pilih",
-    username: "",
     password: "",
     password_confirmation: "",
   });
+  const [errors, setErrors] = useState<MahasiswaErrors>();
   const [kelas, setKelas] = useState<Kelas[]>([]);
   const [prodi, setProdi] = useState<Prodi[]>([]);
   const navigate = useNavigate();
@@ -30,25 +30,31 @@ export default function CreateMahasiswaPage() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const result = await createMahasiswa(form);
-    if (result instanceof MahasiswaErrors) {
-      console.log("Error");
+    try {
+      await createMahasiswa(form);
 
-      return;
+      Swal.fire({
+        icon: "success",
+        title: "Sukses!",
+        text: "Berhasil tambah data mahasiswa!",
+      }).then(() => {
+        navigate("/mahasiswa");
+      });
+      setLoading(false);
+    } catch (error: any) {
+      setErrors(error);
+      setLoading(false);
     }
-
-    Swal.fire({
-      icon: "success",
-      title: "Sukses!",
-      text: "Berhasil tambah data mahasiswa!",
-    }).then(() => {
-      navigate("/mahasiswa");
-    });
-    setLoading(false);
   };
 
-  const inputClass =
-    "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
+  const inputClass = (isError: boolean) => {
+    return `w-full rounded-xl border ${
+      isError ? "border-red-500" : "border-gray-200"
+    } bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`;
+  };
+
+  // const inputClass =
+  //   "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
   const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
 
   async function fetchDataForm() {
@@ -135,9 +141,8 @@ export default function CreateMahasiswaPage() {
                     }}
                     type="text"
                     placeholder="Masukkan nama lengkap"
-                    className={inputClass}
+                    className={inputClass(errors?.errors?.nama != null)}
                     autoComplete="name"
-                    required
                   />
                 </div>
 
@@ -153,8 +158,7 @@ export default function CreateMahasiswaPage() {
                     }}
                     type="text"
                     placeholder="Masukkan NIM mahasiswa"
-                    className={inputClass}
-                    required
+                    className={inputClass(errors?.errors?.nim != null)}
                   />
                 </div>
 
@@ -170,8 +174,7 @@ export default function CreateMahasiswaPage() {
                     }}
                     type="text"
                     placeholder="Masukkan Email mahasiswa"
-                    className={inputClass}
-                    required
+                    className={inputClass(errors?.errors?.email != null)}
                   />
                 </div>
 
@@ -181,13 +184,13 @@ export default function CreateMahasiswaPage() {
                   </label>
 
                   <select
-                    id="prodi_id"
                     value={form.jenis_kelamin}
                     onChange={(e) => {
                       setForm({ ...form, jenis_kelamin: e.target.value });
                     }}
-                    className={inputClass}
-                    required
+                    className={inputClass(
+                      errors?.errors?.jenis_kelamin != null
+                    )}
                   >
                     <option selected>Pilih</option>
                     <option value="Laki-Laki">Laki-Laki</option>
@@ -207,9 +210,8 @@ export default function CreateMahasiswaPage() {
                     }}
                     type="email"
                     placeholder="mahasiswa@students.poltek-kampar.ac.id"
-                    className={inputClass}
+                    className={inputClass(errors?.errors?.email != null)}
                     autoComplete="email"
-                    required
                   />
                 </div>
 
@@ -218,13 +220,11 @@ export default function CreateMahasiswaPage() {
                     Program Studi <span className="text-red-500">*</span>
                   </label>
                   <select
-                    id="prodi_id"
                     value={form.kode_prodi}
                     onChange={(e) => {
                       setForm({ ...form, kode_prodi: e.target.value });
                     }}
-                    className={inputClass}
-                    required
+                    className={inputClass(errors?.errors?.kode_prodi != null)}
                   >
                     <option selected>Pilih program studi</option>
                     {prodi.map((item) => (
@@ -240,15 +240,13 @@ export default function CreateMahasiswaPage() {
                     Kelas <span className="text-red-500">*</span>
                   </label>
                   <select
-                    id="kelas_id"
                     name="kelas_id"
                     value={form.kelas_id}
                     onChange={(e) => {
                       setForm({ ...form, kelas_id: e.target.value });
                     }}
                     defaultValue=""
-                    className={inputClass}
-                    required
+                    className={inputClass(errors?.errors?.kelas_id != null)}
                   >
                     <option selected>Pilih kelas</option>
                     {kelas.map((item) => (
@@ -294,15 +292,15 @@ export default function CreateMahasiswaPage() {
                   </label>
                   <input
                     id="username"
-                    value={form.username}
+                    value={form.nama}
+                    readOnly
                     onChange={(e) => {
-                      setForm({ ...form, username: e.target.value });
+                      // setForm({ ...form, username: e.target.value });
                     }}
                     type="text"
                     placeholder="Buat username mahasiswa"
-                    className={inputClass}
+                    className={inputClass(errors?.errors?.nama != null)}
                     autoComplete="username"
-                    required
                   />
                 </div>
 
@@ -319,9 +317,8 @@ export default function CreateMahasiswaPage() {
                     type="password"
                     placeholder="Minimal 8 karakter"
                     minLength={8}
-                    className={inputClass}
+                    className={inputClass(errors?.errors?.password != null)}
                     autoComplete="new-password"
-                    required
                   />
                 </div>
 
@@ -341,9 +338,10 @@ export default function CreateMahasiswaPage() {
                     type="password"
                     placeholder="Ulangi password"
                     minLength={8}
-                    className={inputClass}
+                    className={inputClass(
+                      errors?.errors?.password_confirmation != null
+                    )}
                     autoComplete="new-password"
-                    required
                   />
                 </div>
               </div>

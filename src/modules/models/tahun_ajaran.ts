@@ -1,5 +1,5 @@
 export type TahunAjaran = {
-  id: number;
+  id: string;
   nama: string;
   tahun: string;
   jenis: "Ganjil" | "Genap";

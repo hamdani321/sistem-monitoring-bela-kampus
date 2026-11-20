@@ -1,4 +1,3 @@
-import DatePicker from "@/components/form/date-picker";
 import ComponentCard from "../../../components/common/ComponentCard";
 import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
@@ -10,6 +9,14 @@ import Form from "@/components/form/Form";
 import getTahunAjaran from "@/modules/tahun_ajaran/services/tahun-ajaran.service";
 import type { TahunAjaran } from "@/modules/models/tahun_ajaran";
 import { createPortal } from "@/modules/portal/services/portal.service";
+interface CreatePortalValidationErrors {
+  message: string;
+  errors: {
+    tahun_ajaran_id: string[];
+    waktu_mulai: string[];
+    waktu_selesai: string[];
+  };
+}
 
 export function CreatePortalPage() {
   const [tahunAjar, setTahunAjar] = useState("");
@@ -18,8 +25,7 @@ export function CreatePortalPage() {
   const [loading, setLoading] = useState(false);
   const [loadingTahunAjaran, setLoadingTahunAjaran] = useState(true);
   const [dataTahunAjaran, setDataTahunAjaran] = useState<TahunAjaran[]>([]);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [errorTahunAjaran, setErrorTahunAjaran] = useState("");
+  const [errors, setErrors] = useState<CreatePortalValidationErrors>();
 
   useEffect(() => {
     let isMounted = true;
@@ -32,11 +38,6 @@ export function CreatePortalPage() {
           setDataTahunAjaran(data ?? []);
         }
       } catch {
-        if (isMounted) {
-          setErrorTahunAjaran(
-            "Gagal memuat data tahun ajaran. Silakan coba kembali."
-          );
-        }
       } finally {
         if (isMounted) {
           setLoadingTahunAjaran(false);
@@ -53,31 +54,6 @@ export function CreatePortalPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setErrors({});
-
-    const validationErrors: Record<string, string> = {};
-
-    if (!tahunAjar) {
-      validationErrors.tahunAjar = "Silakan pilih tahun ajaran.";
-    }
-
-    if (!waktuMulai) {
-      validationErrors.waktuMulai = "Tanggal mulai wajib diisi.";
-    }
-
-    if (!waktuSelesai) {
-      validationErrors.waktuSelesai = "Tanggal selesai wajib diisi.";
-    }
-
-    if (waktuMulai && waktuSelesai && waktuSelesai < waktuMulai) {
-      validationErrors.waktuSelesai =
-        "Tanggal selesai tidak boleh sebelum tanggal mulai.";
-    }
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
 
     setLoading(true);
 
@@ -88,50 +64,19 @@ export function CreatePortalPage() {
         waktuSelesai,
       });
 
-      if (result.success) {
-        await Swal.fire({
-          icon: "success",
-          title: "Sukses!",
-          text: result.message,
-        });
-
-        setTahunAjar("");
-        setWaktuMulai("");
-        setWaktuSelesai("");
-        setErrors({});
-      } else {
-        setErrors((result.errors as Record<string, string>) ?? {});
-
-        if (!result.errors) {
-          await Swal.fire({
-            icon: "error",
-            title: "Gagal membuat portal",
-            text: result.message,
-            confirmButtonColor: "#2563eb",
-          });
-        }
-      }
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Terjadi kesalahan yang tidak diketahui.";
-
-      await Swal.fire({
-        icon: "error",
-        title: "Terjadi Kesalahan",
-        text: message,
-        confirmButtonText: "Tutup",
-        confirmButtonColor: "#2563eb",
+      Swal.fire({
+        icon: "success",
+        title: "Sukses!",
+        text: result.message,
       });
+      setTahunAjar("");
+      setWaktuMulai("");
+      setWaktuSelesai("");
+    } catch (error: any) {
+      setErrors(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSelectChange = (value: string) => {
-    setTahunAjar(value);
-    setErrors((prev) => ({ ...prev, tahunAjar: "" }));
   };
 
   return (
@@ -222,42 +167,21 @@ export function CreatePortalPage() {
                       ? "Memuat tahun ajaran..."
                       : "Pilih tahun ajaran"
                   }
-                  onChange={handleSelectChange}
-                  className="dark:bg-dark-900"
+                  onChange={(value) => {
+                    setTahunAjar(value);
+                  }}
+                  className={`${
+                    errors?.errors.tahun_ajaran_id ? "border-red-700" : ""
+                  }`}
                 />
               </div>
-
-              {errors.tahunAjar && (
-                <p className="mt-2 flex items-center gap-1.5 text-sm text-red-500">
-                  <span>!</span>
-                  {errors.tahunAjar}
-                </p>
-              )}
-
-              {errorTahunAjaran && (
-                <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-500/10 dark:text-red-300">
-                  {errorTahunAjaran}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setErrorTahunAjaran("");
-                      setLoadingTahunAjaran(true);
-
-                      getTahunAjaran()
-                        .then((data) => setDataTahunAjaran(data ?? []))
-                        .catch(() =>
-                          setErrorTahunAjaran(
-                            "Gagal memuat data tahun ajaran. Silakan coba kembali."
-                          )
-                        )
-                        .finally(() => setLoadingTahunAjaran(false));
-                    }}
-                    className="ml-2 font-semibold underline underline-offset-2"
-                  >
-                    Coba lagi
-                  </button>
-                </div>
-              )}
+              {errors?.errors?.tahun_ajaran_id?.map((message) => {
+                return (
+                  <p className="mt-2 flex items-center gap-1.5 text-sm text-red-500">
+                    {message}
+                  </p>
+                );
+              })}
             </div>
 
             {/* Periode portal */}
@@ -300,24 +224,25 @@ export function CreatePortalPage() {
                   Hari pertama portal dapat digunakan.
                 </p>
 
-                <DatePicker
-                  id="waktu_mulai"
-                  placeholder="Pilih tanggal mulai"
-                  onChange={(_, dateString) => {
-                    setWaktuMulai(dateString);
-                    setErrors((prev) => ({
-                      ...prev,
-                      waktuMulai: "",
-                      waktuSelesai: "",
-                    }));
+                <input
+                  type="datetime-local"
+                  value={waktuMulai}
+                  onChange={(event) => {
+                    setWaktuMulai(event.target.value);
                   }}
+                  className={`block w-full rounded-xl border ${
+                    errors?.errors?.waktu_mulai
+                      ? "border-red-700"
+                      : "border-gray-200"
+                  } bg-white py-3 pl-3 pr-3 text-sm text-gray-700 shadow-sm outline-none transition hover:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                 />
-
-                {errors.waktuMulai && (
-                  <p className="mt-2 text-sm text-red-500">
-                    {errors.waktuMulai}
-                  </p>
-                )}
+                {errors?.errors?.waktu_mulai?.map((message) => {
+                  return (
+                    <p className="mt-2 flex items-center gap-1.5 text-sm text-red-500">
+                      {message}
+                    </p>
+                  );
+                })}
               </div>
 
               {/* Tanggal selesai */}
@@ -330,23 +255,25 @@ export function CreatePortalPage() {
                   Hari terakhir portal menerima registrasi.
                 </p>
 
-                <DatePicker
-                  id="waktu_selesai"
-                  placeholder="Pilih tanggal selesai"
-                  onChange={(_, dateString) => {
-                    setWaktuSelesai(dateString);
-                    setErrors((prev) => ({
-                      ...prev,
-                      waktuSelesai: "",
-                    }));
+                <input
+                  type="datetime-local"
+                  value={waktuSelesai}
+                  onChange={(event) => {
+                    setWaktuSelesai(event.target.value);
                   }}
+                  className={`block w-full rounded-xl border ${
+                    errors?.errors?.waktu_selesai
+                      ? "border-red-700"
+                      : "border-gray-200"
+                  } bg-white py-3 pl-3 pr-3 text-sm text-gray-700 shadow-sm outline-none transition hover:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                 />
-
-                {errors.waktuSelesai && (
-                  <p className="mt-2 text-sm text-red-500">
-                    {errors.waktuSelesai}
-                  </p>
-                )}
+                {errors?.errors?.waktu_selesai?.map((message) => {
+                  return (
+                    <p className="mt-2 flex items-center gap-1.5 text-sm text-red-500">
+                      {message}
+                    </p>
+                  );
+                })}
               </div>
             </div>
 
@@ -388,7 +315,6 @@ export function CreatePortalPage() {
                   setTahunAjar("");
                   setWaktuMulai("");
                   setWaktuSelesai("");
-                  setErrors({});
                 }}
               >
                 Reset Form
@@ -409,132 +335,3 @@ export function CreatePortalPage() {
     </div>
   );
 }
-
-// Lama
-
-// import DatePicker from "@/components/form/date-picker";
-// import ComponentCard from "../../../components/common/ComponentCard";
-// import Label from "../../../components/form/Label";
-// import Select from "@/components/form/Select";
-// import Button from "@/components/ui/button/Button";
-// import { FormEvent, useEffect, useState } from "react";
-// // import { createPortal } from "../services/portal.service";
-// import Swal from "sweetalert2";
-// import Form from "@/components/form/Form";
-// import getTahunAjaran from "@/modules/tahun_ajaran/services/tahun-ajaran.service";
-// import { TahunAjaran } from "@/modules/models/tahun_ajaran";
-
-// export function CreatePortal() {
-//   const [tahunAjar, setTahunAjar] = useState("");
-//   const [waktuMulai, setWaktuMulai] = useState("");
-//   const [waktuSelesai, setWaktuSelesai] = useState("");
-//   const [loading, setLoading] = useState(false);
-//   const [dataTahunAjaran, setDataTahunAjaran] = useState<TahunAjaran[]>();
-//   const [errors, setErrors] = useState({});
-
-//   useEffect(() => {
-//     const tahunAjaran = async () => {
-//       const dataTahunAjaran = await getTahunAjaran();
-
-//       setDataTahunAjaran(dataTahunAjaran);
-//     };
-
-//     tahunAjaran();
-//   }, []);
-
-//   const handleSubmit = async (event: FormEvent) => {
-//     // event.preventDefault();
-
-//     setLoading(true);
-
-//     try {
-//       const result = await createPortal({
-//         tahunAjar,
-//         waktuMulai,
-//         waktuSelesai,
-//       });
-//       if (result.success) {
-//         Swal.fire({
-//           icon: result.icon,
-//           text: result.message,
-//         });
-//       } else {
-//         setErrors(result.errors);
-//       }
-//     } catch (error) {
-//       // console.error("Gagal membuat portal : ", error);
-
-//       if (error instanceof Error) {
-//         console.log(error.message);
-//         setErrors(error.message);
-//       } else {
-//         console.log("Terjadi kesalahan yang tidak diketahui.");
-//       }
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleSelectChange = (value: string) => {
-//     setTahunAjar(value);
-//   };
-//   return (
-//     <>
-//       <ComponentCard title="Form Tambah Portal">
-//         <Form onSubmit={handleSubmit}>
-//           <div className="mt-3">
-//             <Label htmlFor="nama">
-//               Tahun Ajaran <span className="text-red-600">*</span>
-//             </Label>
-//             <Select
-//               options={
-//                 dataTahunAjaran?.map((tahunAjaran) => ({
-//                   value: tahunAjaran.id,
-//                   label: `${tahunAjaran.nama} (${tahunAjaran.jenis})`,
-//                 })) ?? []
-//               }
-//               placeholder="Select Option"
-//               onChange={handleSelectChange}
-//               className="dark:bg-dark-900"
-//             />
-//             {/* <Input type="text" id="nama" /> */}
-//           </div>
-
-//           <div className="mt-3">
-//             <Label htmlFor="nama">
-//               Tanggal Mulai <span className="text-red-600">*</span>
-//             </Label>
-//             <DatePicker
-//               id="waktu_mulai"
-//               placeholder="Pilih Tanggal Mulai"
-//               onChange={(dates, currentDateString) => {
-//                 // Handle your logic
-//                 setWaktuMulai(currentDateString);
-//               }}
-//             />
-//           </div>
-
-//           <div className="mt-3">
-//             <Label htmlFor="nama">
-//               Tanggal Selesai <span className="text-red-600">*</span>
-//             </Label>
-//             <DatePicker
-//               id="waktu_selesai"
-//               placeholder="Pilih Tanggal Selesai"
-//               onChange={(dates, currentDateString) => {
-//                 // Handle your logic
-//                 setWaktuSelesai(currentDateString);
-//               }}
-//             />
-//           </div>
-
-//           <div className="mt-3">
-//             <Button disabled={loading} variant="primary">
-//               Simpan
-//             </Button>
-//           </div>
-//         </Form>
-//       </ComponentCard>
-//     </>
-//   );
-// }

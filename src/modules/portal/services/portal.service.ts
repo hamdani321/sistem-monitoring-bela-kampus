@@ -64,8 +64,8 @@ export async function createPortal({
   waktuSelesai: string;
 }) {
   const portal: Portal = {
-    id: 0,
-    tahun_ajaran_id: Number(tahunAjar),
+    id: "",
+    tahun_ajaran_id: tahunAjar,
     waktu_mulai: waktuMulai,
     waktu_selesai: waktuSelesai,
     tahun_ajaran: null,
@@ -83,17 +83,21 @@ export async function createPortal({
   });
 
   const responseBody = await response.json();
-
-  if (response.ok) {
-    console.log(responseBody);
-    return { success: true, message: "Berhasil simpan data!", icon: "success" };
-  } else {
-    return {
-      success: false,
-      message: "Gagal simpan data!",
-      errors: responseBody.errors,
-    };
+  if (!response.ok) {
+    throw responseBody;
   }
+  return responseBody;
+
+  // if (response.ok) {
+  //   console.log(responseBody);
+  //   return { success: true, message: "Berhasil simpan data!", icon: "success" };
+  // } else {
+  //   return {
+  //     success: false,
+  //     message: "Gagal simpan data!",
+  //     errors: responseBody.errors,
+  //   };
+  // }
 }
 
 export async function registrasiPortal(dataRegistrasi: RegistrasiPortal) {

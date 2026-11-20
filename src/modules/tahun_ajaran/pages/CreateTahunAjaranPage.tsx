@@ -9,25 +9,23 @@ import Button from "@/components/ui/button/Button";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 import { Link } from "react-router";
 import { createTahunAjaran } from "../services/tahun-ajaran.service";
-
-interface ValidationErrors {
-  nama?: string[];
-  tahun?: string[];
-  tipe?: string[];
-}
-
-interface ValidationError {
-  message?: string;
-  errors?: ValidationErrors;
-}
+import Swal from "sweetalert2";
 
 interface CreateTahunAjaranState {
   nama: string;
   tahun: string;
   tipe: "Ganjil" | "Genap" | "";
   loading: boolean;
-  errors: ValidationErrors;
-  generalError: string;
+  validationErrors?: CreateTahunAjaranValidationErrors;
+}
+
+interface CreateTahunAjaranValidationErrors {
+  message: string;
+  errors: {
+    nama?: string[];
+    tahun?: string[];
+    tipe?: string[];
+  } | null;
 }
 
 export default class CreateTahunAjaranPage extends Component<
@@ -39,8 +37,10 @@ export default class CreateTahunAjaranPage extends Component<
     tahun: "",
     tipe: "",
     loading: false,
-    errors: {},
-    generalError: "",
+    validationErrors: {
+      message: "",
+      errors: null,
+    },
   };
 
   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -48,80 +48,29 @@ export default class CreateTahunAjaranPage extends Component<
 
     const { nama, tahun, tipe } = this.state;
 
-    // Validasi dasar di sisi client
-    const errors: ValidationErrors = {};
-
-    if (!nama.trim()) {
-      errors.nama = ["Nama tahun ajaran wajib diisi."];
-    }
-
-    if (!tahun.trim()) {
-      errors.tahun = ["Tahun wajib diisi."];
-    } else if (!/^\d{4}$/.test(tahun)) {
-      errors.tahun = ["Tahun harus terdiri dari 4 digit."];
-    }
-
-    if (!tipe) {
-      errors.tipe = ["Silakan pilih tipe semester."];
-    }
-
-    if (Object.keys(errors).length > 0) {
-      this.setState({ errors, generalError: "" });
-      return;
-    }
-
     this.setState({
       loading: true,
-      errors: {},
-      generalError: "",
     });
 
     try {
-      const result = await createTahunAjaran(nama.trim(), tahun, tipe);
+      const result = await createTahunAjaran(nama.trim(), tahun.trim(), tipe);
 
-      if (result?.success) {
-        // Sesuaikan jika service menggunakan struktur respons berbeda.
-        this.setState({
-          nama: "",
-          tahun: "",
-          tipe: "",
-          errors: {},
-          generalError: "",
-        });
-      } else {
-        const response = result as ValidationError | undefined;
-
-        this.setState({
-          errors: response?.errors ?? {},
-          generalError: response?.message ?? "Tahun ajaran gagal disimpan.",
-        });
-      }
-    } catch (error: unknown) {
+      Swal.fire({
+        icon: "success",
+        title: "Sukses!",
+        text: result.message,
+      });
+    } catch (error: any) {
       this.setState({
-        generalError:
-          error instanceof Error
-            ? error.message
-            : "Terjadi kesalahan saat menyimpan tahun ajaran.",
+        validationErrors: error,
       });
     } finally {
       this.setState({ loading: false });
     }
   };
 
-  clearFieldError = (field: keyof ValidationErrors) => {
-    this.setState((prevState) => {
-      const errors = { ...prevState.errors };
-      delete errors[field];
-
-      return {
-        errors,
-        generalError: "",
-      };
-    });
-  };
-
   render(): ReactNode {
-    const { nama, tahun, loading, errors, generalError } = this.state;
+    const { nama, tahun, loading, validationErrors } = this.state;
 
     return (
       <div className="space-y-6">
@@ -194,30 +143,6 @@ export default class CreateTahunAjaranPage extends Component<
                 </div>
               </div>
 
-              {/* Error umum */}
-              {generalError && (
-                <div
-                  role="alert"
-                  className="flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
-                >
-                  <svg
-                    className="h-5 w-5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="12" cy="12" r="9" />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 8v5M12 16h.01"
-                    />
-                  </svg>
-                  <p>{generalError}</p>
-                </div>
-              )}
-
               {/* Nama */}
               <div>
                 <Label htmlFor="nama">
@@ -231,20 +156,19 @@ export default class CreateTahunAjaranPage extends Component<
                     value={nama}
                     placeholder="Contoh: Tahun Ajaran 2026/2027"
                     disabled={loading}
-                    error={Boolean(errors.nama?.length)}
+                    error={validationErrors?.errors?.nama != null}
                     onChange={(event) => {
                       this.setState({ nama: event.target.value });
-                      this.clearFieldError("nama");
+                      // this.clearFieldError("nama");
                     }}
                   />
                 </div>
 
-                {errors.nama?.map((message, index) => (
+                {validationErrors?.errors?.nama?.map((message, index) => (
                   <p
                     key={`nama-${index}`}
                     className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
                   >
-                    <span>!</span>
                     {message}
                   </p>
                 ))}
@@ -267,20 +191,18 @@ export default class CreateTahunAjaranPage extends Component<
                     value={tahun}
                     placeholder="Contoh: 2026"
                     disabled={loading}
-                    error={Boolean(errors.tahun?.length)}
+                    error={validationErrors?.errors?.tahun != null}
                     onChange={(event) => {
                       this.setState({ tahun: event.target.value });
-                      this.clearFieldError("tahun");
                     }}
                   />
                 </div>
 
-                {errors.tahun?.map((message, index) => (
+                {validationErrors?.errors?.tahun?.map((message, index) => (
                   <p
                     key={`tahun-${index}`}
                     className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
                   >
-                    <span>!</span>
                     {message}
                   </p>
                 ))}
@@ -304,23 +226,23 @@ export default class CreateTahunAjaranPage extends Component<
                     ]}
                     placeholder="Pilih tipe semester"
                     className={
-                      errors.tipe?.length ? "border border-red-500" : ""
+                      validationErrors?.errors?.tipe
+                        ? "border border-red-500"
+                        : ""
                     }
                     onChange={(value) => {
                       this.setState({
                         tipe: value as "Ganjil" | "Genap",
                       });
-                      this.clearFieldError("tipe");
                     }}
                   />
                 </div>
 
-                {errors.tipe?.map((message, index) => (
+                {validationErrors?.errors?.tipe?.map((message, index) => (
                   <p
                     key={`tipe-${index}`}
                     className="mt-2 flex items-center gap-1.5 text-sm text-red-500"
                   >
-                    <span>!</span>
                     {message}
                   </p>
                 ))}
@@ -386,135 +308,3 @@ export default class CreateTahunAjaranPage extends Component<
     );
   }
 }
-
-// Lama
-
-// import ComponentCard from "@/components/common/ComponentCard";
-// import Form from "@/components/form/Form";
-// import Input from "@/components/form/input/InputField";
-// import Label from "@/components/form/Label";
-// import Select from "@/components/form/Select";
-// import Button from "@/components/ui/button/Button";
-// import { Component, FormEvent, ReactNode } from "react";
-// import { createTahunAjaran } from "../services/tahun-ajaran.service";
-// import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
-// import { Link } from "react-router";
-
-// interface CreateTahunAjaranState {
-//   nama: string;
-//   tahun: string;
-//   tipe: "Ganjil" | "Genap" | undefined;
-//   loading: boolean;
-//   errors: ValidationError | undefined;
-// }
-
-// interface ValidationError {
-//   message: string;
-//   errors: [];
-// }
-
-// export default class CreateTahunAjaran extends Component<
-//   {},
-//   CreateTahunAjaranState
-// > {
-//   state: CreateTahunAjaranState = {
-//     nama: "",
-//     tahun: "",
-//     tipe: undefined,
-//     loading: false,
-//     errors: undefined,
-//   };
-
-//   handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-//     this.setState({
-//       loading: true,
-//     });
-//     const { nama, tahun, tipe } = this.state;
-
-//     try {
-//       const result = await createTahunAjaran(nama, tahun, tipe);
-//       this.setState({ errors: result });
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       this.setState({
-//         loading: false,
-//       });
-//     }
-//   };
-//   render(): ReactNode {
-//     const { nama, tahun, tipe, loading, errors } = this.state;
-//     return (
-//       <ComponentCard title="Form Tambah Tahun Ajaran">
-//         <Form onSubmit={this.handleSubmit}>
-//           <div className="mt-3">
-//             <Label>Nama</Label>
-//             <Input
-//               value={nama}
-//               error={errors?.errors.nama != null}
-//               onChange={(event) => {
-//                 this.setState({
-//                   nama: event.target.value,
-//                 });
-//               }}
-//             />
-//             {errors?.errors?.nama?.map((item) => {
-//               return <span className="text-red-600 text-sm">{item}</span>;
-//             })}
-//           </div>
-
-//           <div className="mt-3">
-//             <Label>Tahun</Label>
-//             <Input
-//               value={tahun}
-//               type="number"
-//               error={errors?.errors.tahun != null}
-//               onChange={(event) => {
-//                 this.setState({
-//                   tahun: event.target.value,
-//                 });
-//               }}
-//             />
-//             {errors?.errors?.tahun?.map((item) => {
-//               return <span className="text-red-600 text-sm">{item}</span>;
-//             })}
-//           </div>
-
-//           <div className="mt-3">
-//             <Label>Tipe</Label>
-//             <Select
-//               className={`border ${
-//                 errors?.errors?.tipe != null ? "border-red-600" : ""
-//               }`}
-//               placeholder="Pilih tipe"
-//               options={[
-//                 { value: "Ganjil", label: "Ganjil" },
-//                 { value: "Genap", label: "Genap" },
-//               ]}
-//               onChange={(value) => {
-//                 this.setState({
-//                   tipe: value,
-//                 });
-//               }}
-//             />
-//             {errors?.errors?.tipe?.map((item) => {
-//               return <span className="text-red-600 text-sm">{item}</span>;
-//             })}
-//           </div>
-//           <Link to={"/tahun-ajaran"} className="me-2">
-//             <Button variant="outline">Kembali</Button>
-//           </Link>
-//           <Button disabled={loading} className="mt-3">
-//             {loading ? (
-//               <>
-//                 <ButtonSpinner text="Menyimpan..." />
-//               </>
-//             ) : (
-//               <>Simpan</>
-//             )}
-//           </Button>
-//         </Form>
-//       </ComponentCard>
-//     );
-//   }
-// }

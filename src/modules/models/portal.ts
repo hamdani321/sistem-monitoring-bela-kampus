@@ -2,8 +2,8 @@ import { Registrasi } from "./registrasi";
 import { TahunAjaran } from "./tahun_ajaran";
 
 export type Portal = {
-  id: number;
-  tahun_ajaran_id: number;
+  id: string;
+  tahun_ajaran_id: string;
   waktu_mulai: string;
   waktu_selesai: string;
   status: "AKTIF" | "NONAKTIF";
