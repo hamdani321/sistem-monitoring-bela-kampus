@@ -3,7 +3,7 @@ import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
 import { Component, ReactNode } from "react";
 import { Link, useParams } from "react-router";
 import {
-  createReportKegiatan,
+  // createReportKegiatan,
   getRegistrasi,
 } from "../services/portal.service";
 import {
@@ -15,10 +15,10 @@ import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { Registrasi } from "@/modules/models/registrasi";
 import { ReportKegiatan as DataReportKegiatan } from "@/modules/models/report_kegiatan";
 import { FormatDate } from "@/modules/utils/date-formatter";
-import ModalLaporanKegiatan from "../components/ModalLaporanKegiatan";
+// import ModalLaporanKegiatan from "../components/ModalLaporanKegiatan";
 import MapView from "../components/MapView";
 import Button from "@/components/ui/button/Button";
-import Buttons from "@/pages/UiElements/Buttons";
+// import Buttons from "@/pages/UiElements/Buttons";
 import { ArrowUpRight, Eye } from "lucide-react";
 
 const modules = [AllCommunityModule];
@@ -257,8 +257,7 @@ class ReportKegiatan extends Component<
   };
 
   render(): ReactNode {
-    const { registrasi, loading, loadingSubmit, openModalLaporanKegiatan } =
-      this.state;
+    const { registrasi, loading } = this.state;
     return (
       <>
         {/* data portal dan registrasi */}

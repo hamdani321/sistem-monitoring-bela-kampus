@@ -47,7 +47,7 @@ export async function getPortalByIdForRegistration(id: string | undefined) {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
 
   const responseBody = await response.json();
@@ -118,7 +118,7 @@ class ReportKegiatanResponse {
 }
 
 export async function getRegistrasi(
-  registrasiId: string | undefined
+  registrasiId: string | undefined,
 ): Promise<ReportKegiatanResponse | null> {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}registrasi-anggota/${registrasiId}`,
@@ -128,7 +128,7 @@ export async function getRegistrasi(
         Accept: "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    }
+    },
   );
 
   const responseBody: ReportKegiatanResponse = await response.json();
@@ -137,14 +137,15 @@ export async function getRegistrasi(
 }
 
 export async function createReportKegiatan(
-  payloadReportKegiatan: ReportKegiatanPayload
+  payloadReportKegiatan: ReportKegiatanPayload,
 ) {
   const formData: FormData = new FormData();
   formData.append("nama_pic", payloadReportKegiatan.nama_pic);
   formData.append("nomor_hp_pic", payloadReportKegiatan.nomor_hp_pic);
-  if (payloadReportKegiatan.foto) {
-    formData.append("foto", payloadReportKegiatan.foto);
-  }
+  payloadReportKegiatan.foto?.forEach((item) => {
+    formData.append("foto[]", item);
+  });
+
   formData.append("video", payloadReportKegiatan.link_video);
   formData.append("deskripsi", payloadReportKegiatan.deskripsi);
   formData.append("registrasi_id", String(payloadReportKegiatan.registrasi_id));
@@ -157,20 +158,25 @@ export async function createReportKegiatan(
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: formData,
-    }
+    },
   );
 
-  if (response.ok) {
-    Swal.fire({
-      title: "Sukses!",
-      text: "Berhasil simpan data report!",
-      icon: "success",
-    });
-  } else {
-    Swal.fire({
-      title: "Oops!",
-      text: "Gagal simpan data report!",
-      icon: "error",
-    });
+  const responseBody = await response.json();
+  if (!response.ok) {
+    throw responseBody;
   }
+  return responseBody;
+  // if (response.ok) {
+  //   Swal.fire({
+  //     title: "Sukses!",
+  //     text: "Berhasil simpan data report!",
+  //     icon: "success",
+  //   });
+  // } else {
+  //   Swal.fire({
+  //     title: "Oops!",
+  //     text: "Gagal simpan data report!",
+  //     icon: "error",
+  //   });
+  // }
 }

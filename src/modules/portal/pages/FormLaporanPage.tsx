@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Camera,
   Video,
@@ -10,9 +10,34 @@ import {
   Image as ImageIcon,
   ClipboardList,
 } from "lucide-react";
+import { createReportKegiatan } from "../services/portal.service";
+import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
+import { useNavigate, useParams } from "react-router";
+import Swal from "sweetalert2";
+
+interface CreateLaporanValidationErrors {
+  message: string;
+  errors: {
+    nama_pic: string[] | null;
+    nomor_hp_pic: string[] | null;
+    foto: string[] | null;
+    video: string[] | null;
+    deskripsi: string[] | null;
+  };
+}
 
 export default function FormLaporanPage() {
+  const { registrasiId } = useParams();
+  const navigate = useNavigate();
+
+  const [namaPic, setNamaPIC] = useState<string>("");
+  const [nomorHpPIC, setNomorHpPIC] = useState<string>("");
   const [foto, setFoto] = useState<File[]>([]);
+  const [linkVideo, setLinkVideo] = useState<string>("");
+  const [deskripsi, setDeskripsi] = useState<string>("");
+
+  const [errors, setErrors] = useState<CreateLaporanValidationErrors>();
+
   const [preview, setPreview] = useState<string[]>([]);
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +57,31 @@ export default function FormLaporanPage() {
 
     preview.forEach((url) => URL.revokeObjectURL(url));
     setPreview(newFiles.map((file) => URL.createObjectURL(file)));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const payload: ReportKegiatanPayload = {
+        nama_pic: namaPic,
+        nomor_hp_pic: nomorHpPIC,
+        foto: foto,
+        link_video: linkVideo,
+        registrasi_id: registrasiId,
+        deskripsi: deskripsi,
+      };
+      const result = await createReportKegiatan(payload);
+      Swal.fire({
+        title: "Sukses!",
+        text: result.message,
+        icon: "success",
+      }).then(() => {
+        navigate(`/portal/registrasi/${registrasiId}/report`);
+      });
+    } catch (error: any) {
+      setErrors(error);
+    }
   };
 
   return (
@@ -64,7 +114,10 @@ export default function FormLaporanPage() {
       </div>
 
       {/* Form */}
-      <form className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <form
+        onSubmit={handleSubmit}
+        className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+      >
         {/* Form Header */}
         <div className="border-b border-gray-100 bg-gray-50/70 px-5 py-5 md:px-7">
           <div className="flex items-center gap-3">
@@ -104,9 +157,11 @@ export default function FormLaporanPage() {
                   />
                   <input
                     type="text"
-                    name="nama_pic"
+                    value={namaPic}
+                    onChange={(event) => {
+                      setNamaPIC(event.target.value);
+                    }}
                     placeholder="Masukkan nama penanggung jawab"
-                    required
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   />
                 </div>
@@ -122,10 +177,12 @@ export default function FormLaporanPage() {
                     size={18}
                   />
                   <input
-                    type="tel"
-                    name="nomor_hp_pic"
+                    type="number"
+                    value={nomorHpPIC}
+                    onChange={(event) => {
+                      setNomorHpPIC(event.target.value);
+                    }}
                     placeholder="Contoh: 081234567890"
-                    required
                     className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   />
                 </div>
@@ -215,7 +272,10 @@ export default function FormLaporanPage() {
               />
               <input
                 type="url"
-                name="link_video"
+                value={linkVideo}
+                onChange={(event) => {
+                  setLinkVideo(event.target.value);
+                }}
                 placeholder="https://youtube.com/watch?v=..."
                 className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
               />
@@ -243,9 +303,11 @@ export default function FormLaporanPage() {
               Deskripsi <span className="text-red-500">*</span>
             </label>
             <textarea
-              name="deskripsi"
               rows={6}
-              required
+              value={deskripsi}
+              onChange={(event) => {
+                setDeskripsi(event.target.value);
+              }}
               placeholder="Jelaskan kegiatan yang dilaksanakan, lokasi kegiatan, sasaran peserta, proses pelaksanaan, serta hasil yang diperoleh..."
               className="w-full resize-y rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
             />

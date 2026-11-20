@@ -67,7 +67,6 @@ class DetailReport extends Component<
 
     try {
       const result = await getDataReportKegiatan(this.props.reportKegiatanId);
-      console.log("report ", result);
 
       this.setState({
         report_kegiatan: result ?? null,
@@ -90,7 +89,7 @@ class DetailReport extends Component<
     label: string,
     value: string | number | null | undefined,
     icon: ReactNode,
-    color: string
+    color: string,
   ) {
     return (
       <div className="flex items-start gap-3">
@@ -167,7 +166,7 @@ class DetailReport extends Component<
             onClick={() => {
               this.setState(
                 { loading: true, error: null },
-                () => void this.getReportKegiatan()
+                () => void this.getReportKegiatan(),
               );
             }}
             className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
@@ -261,6 +260,63 @@ class DetailReport extends Component<
           <div className="space-y-6 lg:col-span-3">
             {/* Foto */}
             <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+              {/* Header */}
+              <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="m21 15-5-5L5 21" />
+                  </svg>
+                </div>
+
+                <div>
+                  <h2 className="font-bold text-slate-800">Foto Kegiatan</h2>
+                  <p className="text-xs text-slate-500">
+                    Dokumentasi pelaksanaan kegiatan
+                  </p>
+                </div>
+              </div>
+
+              {/* Foto Grid */}
+              <div className="p-5 sm:p-6">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                  {report_kegiatan.foto.map((foto, index) => (
+                    <div
+                      key={index}
+                      className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100"
+                    >
+                      <a
+                        target="_blank"
+                        href={import.meta.env.VITE_ASSETS_URL + foto.path}
+                      >
+                        <img
+                          src={import.meta.env.VITE_ASSETS_URL + foto.path}
+                          alt={`Dokumentasi kegiatan ${index + 1}`}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          onError={(event) => {
+                            event.currentTarget.style.display = "none";
+                          }}
+                        />
+                      </a>
+
+                      {/* Nomor Foto */}
+                      <div className="absolute bottom-2 left-2 rounded-lg bg-black/50 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                        Foto {index + 1}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+            {/* <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
               <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
                   <svg
@@ -292,7 +348,7 @@ class DetailReport extends Component<
                   event.currentTarget.style.display = "none";
                 }}
               />
-            </section>
+            </section> */}
 
             {/* Deskripsi */}
             <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
@@ -359,7 +415,7 @@ class DetailReport extends Component<
                   >
                     <path d="M8 4h8l4 4v12H4V4h4ZM14 4v5h5M8 13h8M8 17h5" />
                   </svg>,
-                  "bg-indigo-50 text-indigo-600"
+                  "bg-indigo-50 text-indigo-600",
                 )}
 
                 {this.renderInfo(
@@ -376,7 +432,7 @@ class DetailReport extends Component<
                     <path d="m2 10 10-6 10 6-10 6-10-6Z" />
                     <path d="M6 13v5c4 3 8 3 12 0v-5M22 10v6" />
                   </svg>,
-                  "bg-blue-50 text-blue-600"
+                  "bg-blue-50 text-blue-600",
                 )}
 
                 {this.renderInfo(
@@ -393,7 +449,7 @@ class DetailReport extends Component<
                     <path d="m2 10 10-6 10 6-10 6-10-6Z" />
                     <path d="M6 13v5c4 3 8 3 12 0v-5M22 10v6" />
                   </svg>,
-                  "bg-blue-50 text-blue-600"
+                  "bg-blue-50 text-blue-600",
                 )}
 
                 {this.renderInfo(
@@ -410,7 +466,7 @@ class DetailReport extends Component<
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 21a8 8 0 0 1 16 0" />
                   </svg>,
-                  "bg-violet-50 text-violet-600"
+                  "bg-violet-50 text-violet-600",
                 )}
 
                 <div className="border-t border-slate-100 pt-5">

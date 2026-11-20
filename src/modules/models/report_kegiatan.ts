@@ -1,3 +1,4 @@
+import { FotoKegiatan } from "./foto_kegiatan";
 import { Mahasiswa } from "./mahasiswa";
 
 export type ReportKegiatan = {
@@ -6,7 +7,6 @@ export type ReportKegiatan = {
   nim_mahasiswa: string;
   nama_pic: string;
   nomor_hp_pic: string;
-  foto: string;
   video: string;
   deskripsi: string;
   created_at: string;
@@ -14,4 +14,5 @@ export type ReportKegiatan = {
 
   //relasi
   mahasiswa: Mahasiswa;
+  foto: FotoKegiatan[];
 };
