@@ -40,9 +40,9 @@ export default function CreateMahasiswaPage() {
       }).then(() => {
         navigate("/mahasiswa");
       });
-      setLoading(false);
     } catch (error: any) {
       setErrors(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -53,8 +53,6 @@ export default function CreateMahasiswaPage() {
     } bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`;
   };
 
-  // const inputClass =
-  //   "w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 hover:border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10";
   const labelClass = "mb-2 block text-sm font-semibold text-gray-700";
 
   async function fetchDataForm() {
@@ -144,6 +142,14 @@ export default function CreateMahasiswaPage() {
                     className={inputClass(errors?.errors?.nama != null)}
                     autoComplete="name"
                   />
+
+                  {errors?.errors?.nama?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -160,6 +166,13 @@ export default function CreateMahasiswaPage() {
                     placeholder="Masukkan NIM mahasiswa"
                     className={inputClass(errors?.errors?.nim != null)}
                   />
+                  {errors?.errors?.nim?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -176,6 +189,13 @@ export default function CreateMahasiswaPage() {
                     placeholder="Masukkan Email mahasiswa"
                     className={inputClass(errors?.errors?.email != null)}
                   />
+                  {errors?.errors?.email?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -189,16 +209,23 @@ export default function CreateMahasiswaPage() {
                       setForm({ ...form, jenis_kelamin: e.target.value });
                     }}
                     className={inputClass(
-                      errors?.errors?.jenis_kelamin != null
+                      errors?.errors?.jenis_kelamin != null,
                     )}
                   >
                     <option selected>Pilih</option>
                     <option value="Laki-Laki">Laki-Laki</option>
                     <option value="Perempuan">Perempuan</option>
                   </select>
+                  {errors?.errors?.jenis_kelamin?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
-                <div className="sm:col-span-2">
+                {/* <div className="sm:col-span-2">
                   <label htmlFor="email" className={labelClass}>
                     Email <span className="text-red-500">*</span>
                   </label>
@@ -213,7 +240,14 @@ export default function CreateMahasiswaPage() {
                     className={inputClass(errors?.errors?.email != null)}
                     autoComplete="email"
                   />
-                </div>
+                  {errors?.errors?.email?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
+                </div> */}
 
                 <div>
                   <label htmlFor="prodi_id" className={labelClass}>
@@ -233,6 +267,13 @@ export default function CreateMahasiswaPage() {
                       </option>
                     ))}
                   </select>
+                  {errors?.errors?.kode_prodi?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -255,6 +296,13 @@ export default function CreateMahasiswaPage() {
                       </option>
                     ))}
                   </select>
+                  {errors?.errors?.kelas_id?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -294,14 +342,18 @@ export default function CreateMahasiswaPage() {
                     id="username"
                     value={form.nama}
                     readOnly
-                    onChange={(e) => {
-                      // setForm({ ...form, username: e.target.value });
-                    }}
                     type="text"
                     placeholder="Buat username mahasiswa"
                     className={inputClass(errors?.errors?.nama != null)}
                     autoComplete="username"
                   />
+                  {errors?.errors?.nama?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -320,6 +372,13 @@ export default function CreateMahasiswaPage() {
                     className={inputClass(errors?.errors?.password != null)}
                     autoComplete="new-password"
                   />
+                  {errors?.errors?.password?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -339,10 +398,17 @@ export default function CreateMahasiswaPage() {
                     placeholder="Ulangi password"
                     minLength={8}
                     className={inputClass(
-                      errors?.errors?.password_confirmation != null
+                      errors?.errors?.password_confirmation != null,
                     )}
                     autoComplete="new-password"
                   />
+                  {errors?.errors?.password_confirmation?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 

@@ -162,8 +162,15 @@ export default function FormLaporanPage() {
                       setNamaPIC(event.target.value);
                     }}
                     placeholder="Masukkan nama penanggung jawab"
-                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className={`w-full rounded-xl border ${errors?.errors.nama_pic ? "border-red-700" : "border-gray-300"}  bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                   />
+                  {errors?.errors.nama_pic?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -183,8 +190,15 @@ export default function FormLaporanPage() {
                       setNomorHpPIC(event.target.value);
                     }}
                     placeholder="Contoh: 081234567890"
-                    className="w-full rounded-xl border border-gray-300 bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                    className={`w-full rounded-xl border ${errors?.errors.nomor_hp_pic ? "border-red-700" : "border-gray-300"}  bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                   />
+                  {errors?.errors.nomor_hp_pic?.map((message) => {
+                    return (
+                      <span className="text-red-500">
+                        <small>{message}</small>
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -203,7 +217,9 @@ export default function FormLaporanPage() {
               </p>
             </div>
 
-            <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/70 px-5 py-8 transition hover:border-blue-400 hover:bg-blue-50/40">
+            <label
+              className={`border-2 border-dashed ${errors?.errors?.foto ? "border-red-500" : "border-gray-300"}  flex cursor-pointer flex-col items-center justify-center rounded-2xl bg-gray-50/70 px-5 py-8 transition hover:border-blue-400 hover:bg-blue-50/40`}
+            >
               <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-600">
                 <Camera size={26} />
               </div>
@@ -225,6 +241,13 @@ export default function FormLaporanPage() {
                 className="hidden"
               />
             </label>
+            {errors?.errors.foto?.map((message) => {
+              return (
+                <span className="text-red-500">
+                  <small>{message}</small>
+                </span>
+              );
+            })}
 
             {preview.length > 0 && (
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
@@ -309,8 +332,15 @@ export default function FormLaporanPage() {
                 setDeskripsi(event.target.value);
               }}
               placeholder="Jelaskan kegiatan yang dilaksanakan, lokasi kegiatan, sasaran peserta, proses pelaksanaan, serta hasil yang diperoleh..."
-              className="w-full resize-y rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+              className={`${errors?.errors?.deskripsi ? "border-red-500" : "border-gray-300"} w-full resize-y rounded-xl border bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
             />
+            {errors?.errors.deskripsi?.map((message) => {
+              return (
+                <span className="text-red-500">
+                  <small>{message}</small>
+                </span>
+              );
+            })}
           </section>
         </div>
 

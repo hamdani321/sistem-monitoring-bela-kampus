@@ -66,13 +66,19 @@ export default class UsersPage extends Component<{}, State> {
   };
   async handleResetPassword(id: string) {
     try {
-      const result = await resetPassword(id);
+      await resetPassword(id);
       Swal.fire({
         title: "Sukses!",
         text: "Berhasil reset password",
         icon: "success",
       });
-    } catch (error) {}
+    } catch (error: any) {
+      Swal.fire({
+        title: "Oops, Something wrong!",
+        text: error,
+        icon: "error",
+      });
+    }
   }
 
   getInitials = (name: string) =>
@@ -247,7 +253,7 @@ export default class UsersPage extends Component<{}, State> {
               {/* Right: Actions */}
               <div className="flex flex-wrap items-center gap-2">
                 {/* Refresh */}
-                <button
+                {/* <button
                   type="button"
                   // onClick={this.handleRefresh}
                   className="inline-flex h-10 items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -266,10 +272,10 @@ export default class UsersPage extends Component<{}, State> {
                     />
                   </svg>
                   Refresh
-                </button>
+                </button> */}
 
                 {/* Add User */}
-                <button
+                {/* <button
                   type="button"
                   // onClick={this.handleAddUser}
                   className="inline-flex h-10 items-center gap-2 rounded-lg bg-blue-600 px-4 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -288,7 +294,7 @@ export default class UsersPage extends Component<{}, State> {
                     />
                   </svg>
                   Tambah User
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

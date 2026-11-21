@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import {
   AllCommunityModule,
@@ -6,9 +6,6 @@ import {
   type ICellRendererParams,
 } from "ag-grid-community";
 
-// AG Grid CSS
-// import "ag-grid-community/styles/ag-grid.css";
-// import "ag-grid-community/styles/ag-theme-quartz.css";
 import { FormatDate } from "@/modules/utils/date-formatter";
 import { Registrasi } from "@/modules/models/registrasi";
 import { RegistrasiAnggota } from "@/modules/models/registrasi_anggota";
@@ -18,7 +15,6 @@ const modules = [AllCommunityModule];
 interface RegistrasiGridProps {
   registrasi: Registrasi[];
   registrasiAnggota: RegistrasiAnggota[];
-  //   onDetail: (item: any) => void;
 }
 
 export default function RegistrasiGrid({
@@ -26,8 +22,6 @@ export default function RegistrasiGrid({
   registrasiAnggota,
 }: //   onDetail,
 RegistrasiGridProps) {
-  const [search, setSearch] = useState("");
-
   const columnDefsRegistrasi = useMemo<ColDef<Registrasi>[]>(
     () => [
       {
@@ -216,8 +210,7 @@ RegistrasiGridProps) {
         ),
       },
     ],
-    []
-    // [onDetail]
+    [],
   );
 
   const columnDefsRegistrasiAnggota = useMemo<ColDef<RegistrasiAnggota>[]>(
@@ -275,8 +268,6 @@ RegistrasiGridProps) {
         field: "mahasiswa.nama",
         minWidth: 230,
         flex: 1.3,
-        // filter: "agTextColumnFilter",
-        // valueGetter: (params) => params.data?.mahasiswa?.nama ?? "",
         cellRenderer: (params: ICellRendererParams<RegistrasiAnggota>) => {
           const nama = params.data?.mahasiswa?.nama ?? "-";
           const nim = params.data?.mahasiswa?.nim ?? "-";
@@ -440,8 +431,7 @@ RegistrasiGridProps) {
         ),
       },
     ],
-    []
-    // [onDetail]
+    [],
   );
 
   const defaultColDef = useMemo<ColDef>(
@@ -451,119 +441,14 @@ RegistrasiGridProps) {
       resizable: true,
       suppressHeaderMenuButton: true,
     }),
-    []
+    [],
   );
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      {/* Header */}
-      <div className="border-b border-slate-100 p-5 sm:p-6">
-        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800">
-              Daftar Kegiatan
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Informasi kegiatan promosi yang telah didaftarkan mahasiswa.
-            </p>
-          </div>
-
-          <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 3v12m0 0l4-4m-4 4l-4-4M4 17v3h16v-3"
-              />
-            </svg>
-            Export Data
-          </button>
-        </div>
-
-        <div className="mt-5 flex flex-col gap-3 md:flex-row">
-          <div className="relative flex-1">
-            <svg
-              className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="11" cy="11" r="7" strokeWidth="2" />
-              <path strokeLinecap="round" strokeWidth="2" d="m16 16 4 4" />
-            </svg>
-            <input
-              type="text"
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari nama mahasiswa, sekolah, atau kegiatan..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
-            />
-          </div>
-
-          <select className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 outline-none focus:border-blue-500">
-            <option value="">Semua Status</option>
-            <option value="selesai">Selesai</option>
-            <option value="proses">Dalam Proses</option>
-            <option value="belum">Belum Terlaksana</option>
-          </select>
-
-          <select className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 outline-none focus:border-blue-500">
-            <option value="">Semua Jenis</option>
-            <option value="individu">Individu</option>
-            <option value="kelompok">Kelompok</option>
-          </select>
-        </div>
-      </div>
-      {/* <div className="border-b border-slate-100 p-5 sm:p-6">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800">
-              Daftar Kegiatan
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              Informasi kegiatan Bela Kampus yang telah didaftarkan mahasiswa.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-2.5">
-            <span className="h-2 w-2 rounded-full bg-blue-500" />
-            <span className="text-sm font-semibold text-blue-700">
-              {registrasi.length} Kegiatan
-            </span>
-          </div>
-        </div>
-
-        <div className="relative mt-5 w-full sm:max-w-md">
-          <svg
-            className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <circle cx="11" cy="11" r="7" strokeWidth="2" />
-            <path strokeLinecap="round" strokeWidth="2" d="m16 16 4 4" />
-          </svg>
-
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari mahasiswa, sekolah, status..."
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
-          />
-        </div>
-      </div> */}
-
-      {/* AG Grid*/}
-
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        {/* ================= REGISTRASI ================= */}
-        <section>
+    <>
+      {/* Data Registrasi */}
+      <section className="mt-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
           {/* Header Registrasi */}
           <div className="flex flex-col justify-between gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:p-6">
             <div className="flex items-start gap-3">
@@ -608,66 +493,20 @@ RegistrasiGridProps) {
                   rowData={registrasi}
                   columnDefs={columnDefsRegistrasi}
                   defaultColDef={defaultColDef}
-                  // loading={}
                   pagination
                   paginationAutoPageSize
-                  //   quickFilterText={quickFilter}
                   animateRows
                   suppressCellFocus
                 />
               </div>
             </div>
           </AgGridProvider>
-          {/* <div className="w-full min-w-0 overflow-x-auto">
-            <div className="ag-theme-quartz min-w-[950px]">
-              <AgGridReact
-                rowData={registrasi}
-                columnDefs={columnDefsRegistrasi}
-                defaultColDef={defaultColDef}
-                quickFilterText={search}
-                pagination={true}
-                paginationPageSize={10}
-                paginationPageSizeSelector={[10, 20, 50]}
-                rowHeight={76}
-                headerHeight={48}
-                animateRows={true}
-                suppressCellFocus={true}
-                theme="legacy"
-                domLayout="autoHeight"
-                overlayNoRowsTemplate={
-                  '<span class="text-sm text-slate-500">Belum ada data registrasi</span>'
-                }
-              />
-            </div>
-          </div> */}
-        </section>
-
-        {/* ================= PEMISAH ================= */}
-        <div className="relative flex items-center justify-center border-y border-slate-200 bg-slate-50 px-5 py-5">
-          <div className="absolute inset-x-6 top-1/2 border-t border-dashed border-slate-300" />
-
-          <div className="relative flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
-            <svg
-              className="h-4 w-4 text-slate-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M7 10l5 5 5-5"
-              />
-            </svg>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Detail Keanggotaan
-            </span>
-          </div>
         </div>
+      </section>
 
-        {/* ================= REGISTRASI ANGGOTA ================= */}
-        <section>
+      {/* Data Keanggotaan registrasi */}
+      <section className="mt-3">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
           {/* Header Anggota */}
           <div className="flex flex-col justify-between gap-3 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:p-6">
             <div className="flex items-start gap-3">
@@ -712,89 +551,16 @@ RegistrasiGridProps) {
                   rowData={registrasiAnggota}
                   columnDefs={columnDefsRegistrasiAnggota}
                   defaultColDef={defaultColDef}
-                  // loading={}
                   pagination
                   paginationAutoPageSize
-                  //   quickFilterText={quickFilter}
                   animateRows
                   suppressCellFocus
                 />
               </div>
             </div>
           </AgGridProvider>
-          {/* <div className="w-full min-w-0 overflow-x-auto">
-            <div className="ag-theme-quartz min-w-[950px]">
-              <AgGridReact
-                rowData={registrasiAnggota}
-                columnDefs={columnDefsRegistrasiAnggota}
-                defaultColDef={defaultColDef}
-                // quickFilterText={search}
-                pagination={true}
-                paginationPageSize={10}
-                paginationPageSizeSelector={[10, 20, 50]}
-                rowHeight={76}
-                headerHeight={48}
-                animateRows={true}
-                suppressCellFocus={true}
-                theme="legacy"
-                domLayout="autoHeight"
-                overlayNoRowsTemplate={
-                  '<span class="text-sm text-slate-500">Belum ada data keanggotaan</span>'
-                }
-              />
-            </div>
-          </div> */}
-        </section>
-      </div>
-
-      {/* AG Grid Registrasi */}
-      {/* <div className="w-full min-w-0 overflow-x-auto">
-        <div className="ag-theme-quartz min-w-[950px]">
-          <AgGridReact
-            rowData={registrasi}
-            columnDefs={columnDefsRegistrasi}
-            defaultColDef={defaultColDef}
-            quickFilterText={search}
-            pagination={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10, 20, 50]}
-            rowHeight={76}
-            headerHeight={48}
-            animateRows={true}
-            suppressCellFocus={true}
-            theme="legacy"
-            domLayout="autoHeight"
-            overlayNoRowsTemplate={
-              '<span class="text-sm text-slate-500">Belum ada data kegiatan</span>'
-            }
-          />
         </div>
-      </div> */}
-
-      {/* Registrasi Anggota */}
-
-      {/* <div className="w-full min-w-0 overflow-x-auto">
-        <div className="ag-theme-quartz min-w-[950px]">
-          <AgGridReact
-            rowData={registrasiAnggota}
-            columnDefs={columnDefsRegistrasiAnggota}
-            defaultColDef={defaultColDef}
-            quickFilterText={search}
-            pagination={true}
-            paginationPageSize={10}
-            paginationPageSizeSelector={[10, 20, 50]}
-            rowHeight={76}
-            headerHeight={48}
-            animateRows={true}
-            suppressCellFocus={true}
-            theme="legacy"
-            domLayout="autoHeight"
-            overlayNoRowsTemplate={
-              '<span class="text-sm text-slate-500">Belum ada data kegiatan</span>'
-            }
-          />
-        </div>
-      </div> */}
-    </div>
+      </section>
+    </>
   );
 }

@@ -15,7 +15,7 @@ import { getProdi } from "../services/prodi.service";
 
 const dummyProdi: DataProdi[] = [
   {
-    id: 1,
+    id: "1",
     kode_prodi: 55201,
     nama: "Teknik Informatika",
     singkatan: "TI",
@@ -25,7 +25,7 @@ const dummyProdi: DataProdi[] = [
     updated_at: "2026-01-10T08:00:00",
   },
   {
-    id: 2,
+    id: "2",
     kode_prodi: 57201,
     nama: "Sistem Informasi",
     singkatan: "SI",
@@ -35,7 +35,7 @@ const dummyProdi: DataProdi[] = [
     updated_at: "2026-01-12T08:00:00",
   },
   {
-    id: 3,
+    id: "3",
     kode_prodi: 57401,
     nama: "Manajemen Informatika",
     singkatan: "MI",

@@ -1,10 +1,9 @@
 import { Component } from "react";
-import type { FormEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
 import ComponentCard from "@/components/common/ComponentCard";
 import Form from "@/components/form/Form";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
-import Select from "@/components/form/Select";
 import Button from "@/components/ui/button/Button";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 import { Link, useParams } from "react-router";
@@ -59,7 +58,7 @@ class EditTahunAjaran extends Component<
     }
   }
 
-  handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  handleSubmit = async () => {
     const { nama, tahun, tipe } = this.state;
 
     this.setState({

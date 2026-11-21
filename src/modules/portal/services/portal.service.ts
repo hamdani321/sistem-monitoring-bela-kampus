@@ -4,8 +4,6 @@ import { Registrasi } from "@/modules/models/registrasi";
 import { Sekolah } from "@/modules/models/sekolah";
 import { RegistrasiPortal } from "@/modules/types/registrasi-portal";
 import { ReportKegiatanPayload } from "@/modules/types/report-kegiatan-payload";
-import Swal from "sweetalert2";
-
 export async function getPortal() {
   return await fetch(`${import.meta.env.VITE_API_URL}portal`, {
     method: "GET",

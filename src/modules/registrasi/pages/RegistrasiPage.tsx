@@ -97,20 +97,6 @@ export default class RegistrasiPage extends Component<
   }
 
   /**
-   * Warna badge berdasarkan tipe registrasi.
-   */
-  private getTipeColor = (tipe?: string): BadgeColor => {
-    switch (tipe?.toLowerCase()) {
-      case "individu":
-        return "primary";
-      case "kelompok":
-        return "warning";
-      default:
-        return "info";
-    }
-  };
-
-  /**
    * Warna badge berdasarkan status registrasi.
    */
   private getStatusColor = (status?: string): BadgeColor => {
@@ -333,15 +319,15 @@ export default class RegistrasiPage extends Component<
     const { registrasi, quickFilter, loading, error } = this.state;
 
     const totalIndividu = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "individu"
+      (item) => item.tipe?.toLowerCase() === "individu",
     ).length;
 
     const totalKelompok = registrasi.filter(
-      (item) => item.tipe?.toLowerCase() === "kelompok"
+      (item) => item.tipe?.toLowerCase() === "kelompok",
     ).length;
 
     const totalPending = registrasi.filter(
-      (item) => item.status?.toLowerCase() === "pending"
+      (item) => item.status?.toLowerCase() === "pending",
     ).length;
 
     return (

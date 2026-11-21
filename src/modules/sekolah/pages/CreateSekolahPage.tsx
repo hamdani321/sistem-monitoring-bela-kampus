@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import ButtonSpinner from "@/components/ui/spinner/ButtonSpinner";
 
 const initialForm: Sekolah = {
-  id: 0,
+  id: "0",
   npsn: "",
   nama: "",
   email: "",
@@ -21,12 +21,12 @@ const initialForm: Sekolah = {
 export default function CreateSekolahPage() {
   const [form, setForm] = useState<Sekolah>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof Sekolah, string>>>(
-    {}
+    {},
   );
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = event.target;
 

@@ -190,7 +190,6 @@ class DetailReport extends Component<
     }
 
     const report = report_kegiatan;
-    const fotoUrl = `${import.meta.env.VITE_ASSETS_URL}${report.foto}`;
     const videoUrl = this.getValidUrl(report.video);
     const nomorHp = report.nomor_hp_pic?.trim();
     const whatsappUrl = this.getWhatsAppUrl(nomorHp);
@@ -316,39 +315,6 @@ class DetailReport extends Component<
                 </div>
               </div>
             </section>
-            {/* <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
-              <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    className="h-5 w-5"
-                    aria-hidden="true"
-                  >
-                    <rect x="3" y="3" width="18" height="18" rx="3" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <path d="m21 15-5-5L5 21" />
-                  </svg>
-                </div>
-
-                <div>
-                  <h2 className="font-bold text-slate-800">Foto Kegiatan</h2>
-                  <p className="text-xs text-slate-500">
-                    Dokumentasi pelaksanaan kegiatan
-                  </p>
-                </div>
-              </div>
-              <img
-                src={fotoUrl}
-                alt="Dokumentasi kegiatan"
-                className="max-h-[480px] w-full bg-slate-100 object-contain"
-                onError={(event) => {
-                  event.currentTarget.style.display = "none";
-                }}
-              />
-            </section> */}
 
             {/* Deskripsi */}
             <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6">
