@@ -335,26 +335,6 @@ export default function FormRegistrasiPortalPage() {
             ))}
           </div>
 
-          {/* <div className="mt-3">
-            <Label>
-              Tipe <span className="text-red-600">*</span>
-            </Label>
-            <Select
-              options={[
-                { value: "Individu", label: "Individu" },
-                { value: "Kelompok", label: "Kelompok" },
-              ]}
-              onChange={handleChangeTipe}
-              placeholder="Pilih Tipe"
-              className={`border ${errors.errors.tipe ? "border-red-600" : ""}`}
-            />
-            {errors.errors.tipe?.map((message, index) => (
-              <span className="text-red-600" key={`error-tipe${index}`}>
-                {message}
-              </span>
-            ))}
-          </div> */}
-
           {tipe === "Kelompok" ? (
             <>
               <div className="mt-3">
@@ -534,34 +514,34 @@ export default function FormRegistrasiPortalPage() {
                       </table>
                     </div>
                   </div>
-                  {errors.errors.anggota_registrasi?.map((error) => (
+                  {errors?.errors?.anggota_registrasi?.map((error) => (
                     <span className="text-red-400">{error}</span>
                   ))}
-                  {errors.errors["anggota_registrasi.0.nim"]?.map((error) => (
+                  {errors?.errors["anggota_registrasi.0.nim"]?.map((error) => (
                     <>
                       <span className="text-red-400">{error}</span>
                       <br />
                     </>
                   ))}
-                  {errors.errors["anggota_registrasi.1.nim"]?.map((error) => (
+                  {errors?.errors["anggota_registrasi.1.nim"]?.map((error) => (
                     <>
                       <span className="text-red-400">{error}</span>
                       <br />
                     </>
                   ))}
-                  {errors.errors["anggota_registrasi.2.nim"]?.map((error) => (
+                  {errors?.errors["anggota_registrasi.2.nim"]?.map((error) => (
                     <>
                       <span className="text-red-400">{error}</span>
                       <br />
                     </>
                   ))}
-                  {errors.errors["anggota_registrasi.3.nim"]?.map((error) => (
+                  {errors?.errors["anggota_registrasi.3.nim"]?.map((error) => (
                     <>
                       <span className="text-red-400">{error}</span>
                       <br />
                     </>
                   ))}
-                  {errors.errors["anggota_registrasi.4.nim"]?.map((error) => (
+                  {errors?.errors["anggota_registrasi.4.nim"]?.map((error) => (
                     <>
                       <span className="text-red-400">{error}</span>
                       <br />
@@ -644,16 +624,6 @@ export default function FormRegistrasiPortalPage() {
 
                           const handleTambahAnggota = () => {
                             if (!mahasiswa) return;
-
-                            // if (anggotaRegistrasi.length >= 5) {
-                            //   Swal.fire({
-                            //     title: "Kapasitas Penuh!",
-                            //     text: "Maksimal anggota dalam satu kelompok adalah 5 mahasiswa.",
-                            //     icon: "warning",
-                            //     confirmButtonColor: "#2563eb",
-                            //   });
-                            //   return;
-                            // }
 
                             if (
                               anggotaRegistrasi.some(
