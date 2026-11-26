@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(responseBody.user);
       setRoles(responseBody.roles);
     } catch (error) {
+      console.log("error get user login!");
       console.log(error);
     } finally {
       setLoading(false);

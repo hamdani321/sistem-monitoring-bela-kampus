@@ -167,12 +167,12 @@ export default function FormLaporanPage() {
                     }}
                     placeholder="Masukkan nama penanggung jawab"
                     className={`w-full rounded-xl border ${
-                      errors?.errors.nama_pic
+                      errors?.errors?.nama_pic
                         ? "border-red-700"
                         : "border-gray-300"
                     }  bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                   />
-                  {errors?.errors.nama_pic?.map((message) => {
+                  {errors?.errors?.nama_pic?.map((message) => {
                     return (
                       <span className="text-red-500">
                         <small>{message}</small>
@@ -199,12 +199,12 @@ export default function FormLaporanPage() {
                     }}
                     placeholder="Contoh: 081234567890"
                     className={`w-full rounded-xl border ${
-                      errors?.errors.nomor_hp_pic
+                      errors?.errors?.nomor_hp_pic
                         ? "border-red-700"
                         : "border-gray-300"
                     }  bg-white py-3 pl-10 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
                   />
-                  {errors?.errors.nomor_hp_pic?.map((message) => {
+                  {errors?.errors?.nomor_hp_pic?.map((message) => {
                     return (
                       <span className="text-red-500">
                         <small>{message}</small>
@@ -255,7 +255,7 @@ export default function FormLaporanPage() {
                 className="hidden"
               />
             </label>
-            {errors?.errors.foto?.map((message) => {
+            {errors?.errors?.foto?.map((message) => {
               return (
                 <span className="text-red-500">
                   <small>{message}</small>
@@ -350,7 +350,7 @@ export default function FormLaporanPage() {
                 errors?.errors?.deskripsi ? "border-red-500" : "border-gray-300"
               } w-full resize-y rounded-xl border bg-white px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10`}
             />
-            {errors?.errors.deskripsi?.map((message) => {
+            {errors?.errors?.deskripsi?.map((message) => {
               return (
                 <span className="text-red-500">
                   <small>{message}</small>

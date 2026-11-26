@@ -37,12 +37,12 @@ export async function getUserLogin() {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
-  if (response.ok) {
-    const responseBody = await response.json();
-    return responseBody;
+  const responseBody = await response.json();
+  if (!response.ok) {
+    throw responseBody;
   }
 
-  return null;
+  return responseBody;
 }
 
 export async function logout() {
