@@ -91,7 +91,7 @@ class DetailReport extends Component<
     label: string,
     value: string | number | null | undefined,
     icon: ReactNode,
-    color: string,
+    color: string
   ) {
     return (
       <div className="flex items-start gap-3">
@@ -168,7 +168,7 @@ class DetailReport extends Component<
             onClick={() => {
               this.setState(
                 { loading: true, error: null },
-                () => void this.getReportKegiatan(),
+                () => void this.getReportKegiatan()
               );
             }}
             className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-700"
@@ -302,10 +302,10 @@ class DetailReport extends Component<
                     >
                       <a
                         target="_blank"
-                        href={import.meta.env.VITE_ASSETS_URL + foto.path}
+                        href={`${import.meta.env.VITE_API_URL}file/${foto.id}`}
                       >
                         <img
-                          src={import.meta.env.VITE_ASSETS_URL + foto.path}
+                          src={`${import.meta.env.VITE_API_URL}file/${foto.id}`}
                           alt={`Dokumentasi kegiatan ${index + 1}`}
                           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                           onError={(event) => {
@@ -423,7 +423,7 @@ class DetailReport extends Component<
                   >
                     <path d="M8 4h8l4 4v12H4V4h4ZM14 4v5h5M8 13h8M8 17h5" />
                   </svg>,
-                  "bg-indigo-50 text-indigo-600",
+                  "bg-indigo-50 text-indigo-600"
                 )}
 
                 {this.renderInfo(
@@ -440,7 +440,7 @@ class DetailReport extends Component<
                     <path d="m2 10 10-6 10 6-10 6-10-6Z" />
                     <path d="M6 13v5c4 3 8 3 12 0v-5M22 10v6" />
                   </svg>,
-                  "bg-blue-50 text-blue-600",
+                  "bg-blue-50 text-blue-600"
                 )}
 
                 {this.renderInfo(
@@ -457,7 +457,7 @@ class DetailReport extends Component<
                     <path d="m2 10 10-6 10 6-10 6-10-6Z" />
                     <path d="M6 13v5c4 3 8 3 12 0v-5M22 10v6" />
                   </svg>,
-                  "bg-blue-50 text-blue-600",
+                  "bg-blue-50 text-blue-600"
                 )}
 
                 {this.renderInfo(
@@ -474,7 +474,7 @@ class DetailReport extends Component<
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 21a8 8 0 0 1 16 0" />
                   </svg>,
-                  "bg-violet-50 text-violet-600",
+                  "bg-violet-50 text-violet-600"
                 )}
 
                 <div className="border-t border-slate-100 pt-5">
